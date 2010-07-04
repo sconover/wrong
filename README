@@ -1,0 +1,12 @@
+Wrong provides an assert method that takes a block, and interrogates the block to create rich assertion failure messages.
+
+It's an offshoot of predicated.
+http://github.com/sconover/predicated
+
+Inspired by assert { 2.0 }
+http://assert2.rubyforge.org/
+
+Tracker project:
+http://www.pivotaltracker.com/projects/95014
+
+“I think it's wrong that only one company makes the game Monopoly.” -Steven Wright
