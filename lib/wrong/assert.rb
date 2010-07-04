@@ -20,20 +20,26 @@ module Wrong
     end
     
     def assert(&block)
-      
       unless block.call
         raise failure_class.new(failure_message(:assert, block))
       end
-      
     end
 
 
     def deny(&block)
-      
       if block.call
         raise failure_class.new(failure_message(:deny, block))
       end
-      
+    end
+
+    def catch_raise
+      error = nil
+      begin
+        yield
+      rescue Exception, RuntimeError => e
+        error = e
+      end
+      e
     end
     
     overridable do
