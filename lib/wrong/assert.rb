@@ -4,33 +4,40 @@ require "predicated/to/sentence"
 
 module Wrong
   module Assert
-    def assert(&block)
-      raise FailureMessageForBlock.new(block).failure_str unless block.call
-    end
-
-    def deny(&block)
-      raise FailureMessageForBlock.new(block).reverse_failure_str if block.call
+    
+    class AssertionFailedError < RuntimeError; end
+    
+    def failure_class
+      AssertionFailedError
     end
     
-    class FailureMessageForBlock
-      include Predicated
+    def assert(&block)
       
-      def initialize(block)
-        @block = block
-      end
-
-      def failure_str
-        convert_to_predicate.to_negative_sentence
-      end
-
-      def reverse_failure_str
-        convert_to_predicate.to_sentence
+      unless block.call
+        raise failure_class.new(Predicated::Predicate.from_callable_object(block).to_negative_sentence)
       end
       
-      private
-      def convert_to_predicate
-        Predicate.from_callable_object(@block)
-      end
     end
+
+
+    def deny(&block)
+      
+      if block.call
+        raise failure_class.new(Predicated::Predicate.from_callable_object(block).to_sentence)
+      end
+      
+    end
+    
+    def self.disable_existing_assert_methods(the_class)
+      (the_class.public_instance_methods.
+        select{|m|m =~ /^assert/} - ["assert"]).each do |old_assert_method|
+        the_class.class_eval(%{
+          def #{old_assert_method}(*args)
+            raise "#{old_assert_method} has been disabled.  When you use Wrong, it overrides 'assert', which most test frameworks have defined, and use internally."
+          end
+        })
+      end
+    end  
+    
   end
 end

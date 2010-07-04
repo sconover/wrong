@@ -81,6 +81,13 @@ apropos "failures" do
         end; 1==2
       }}.message)
     end
+
+    test "works even if the assertion is based on stuff set previously in the block" do
+      assert_match("'aaa' is not equal to 'bbb'", get_error{@m.assert{
+        a = "aaa"
+        a=="bbb"
+      }}.message)
+    end
   end
   
   apropos "array comparisons" do
@@ -95,4 +102,12 @@ apropos "failures" do
        get_error{@m.assert{{1=>2}=={"a"=>"b"}}}.message
     end
   end
+  
+  apropos "methods that result in a boolean.  this might be hard." do
+    test "string include" do
+      assert_match "'abc' does not include 'cd'", get_error{@m.assert{"abc".include?("cd")}}.message
+      assert_match "'abc' does include 'bc'", get_error{@m.deny{"abc".include?("bc")}}.message
+    end
+  end
+
 end
