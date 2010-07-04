@@ -2,6 +2,14 @@ require "predicated/predicate"
 require "predicated/from/callable_object"
 require "predicated/to/sentence"
 
+#see http://yehudakatz.com/2009/01/18/other-ways-to-wrap-a-method/
+class Module
+  def overridable(&blk)
+    mod = Module.new(&blk)
+    include mod
+  end
+end
+
 module Wrong
   module Assert
     
@@ -14,7 +22,7 @@ module Wrong
     def assert(&block)
       
       unless block.call
-        raise failure_class.new(Predicated::Predicate.from_callable_object(block).to_negative_sentence)
+        raise failure_class.new(failure_message(:assert, block))
       end
       
     end
@@ -23,9 +31,16 @@ module Wrong
     def deny(&block)
       
       if block.call
-        raise failure_class.new(Predicated::Predicate.from_callable_object(block).to_sentence)
+        raise failure_class.new(failure_message(:deny, block))
       end
       
+    end
+    
+    overridable do
+      def failure_message(method_sym, block)
+        predicate = Predicated::Predicate.from_callable_object(block)
+        method_sym == :deny ? predicate.to_sentence : predicate.to_negative_sentence
+      end
     end
     
     def self.disable_existing_assert_methods(the_class)
