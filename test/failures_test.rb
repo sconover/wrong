@@ -82,4 +82,16 @@ apropos "failures" do
       }}.message)
     end
   end
+  
+  apropos "array comparisons" do
+    test "basic" do
+      assert_match %{'[1, 2]' is not equal to '["a", "b"]'}, get_error{@m.assert{[1,2]==%w{a b}}}.message
+    end
+  end
+  
+  xapropos "hash comparisons" do
+    test "basic" do
+      assert_match "{1=>2} is not equal to {'a'=>'b'}", get_error{@m.assert{{1=>2}=={"a"=>"b"}}}.message
+    end
+  end
 end
