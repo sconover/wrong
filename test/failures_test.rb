@@ -89,9 +89,10 @@ apropos "failures" do
     end
   end
   
-  xapropos "hash comparisons" do
+  apropos "hash comparisons" do
     test "basic" do
-      assert_match "{1=>2} is not equal to {'a'=>'b'}", get_error{@m.assert{{1=>2}=={"a"=>"b"}}}.message
+      assert_match %{'{1=>2}' is not equal to '{"a"=>"b"}'},
+       get_error{@m.assert{{1=>2}=={"a"=>"b"}}}.message
     end
   end
 end
