@@ -20,11 +20,11 @@ apropos "basic assert features" do
     end
   
     test "fails when result is false.  deny does the reverse" do
-      assert_raises(RuntimeError) { @m.assert{false} }
-      assert_raises(RuntimeError) { @m.assert{1==2} }
+      get_error{@m.assert{false}} || fail
+      get_error{@m.assert{1==2}} || fail
       
-      assert_raises(RuntimeError) { @m.deny{true} }
-      assert_raises(RuntimeError) { @m.deny{1==1} }
+      get_error{@m.deny{true}} || fail
+      get_error{@m.deny{1==1}} || fail
     end
   
     class MyError < StandardError; end

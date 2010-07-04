@@ -6,6 +6,16 @@ require "minitest/spec"
 require "minitest/unit"
 require "pp"
 
+def get_error
+  error = nil
+  begin
+    yield
+  rescue Exception, RuntimeError => e
+    error = e
+  end
+  e
+end
+
 class MiniTest::Unit::TestCase
   
 end

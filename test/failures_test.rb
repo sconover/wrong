@@ -10,16 +10,6 @@ apropos "failures" do
     end
   end
   
-  def get_error
-    error = nil
-    begin
-      yield
-    rescue Exception => e
-      error = e
-    end
-    e
-  end
-  
   apropos "simple" do
     test "raw boolean failure" do
       assert_match "false", get_error{@m.assert{false}}.message

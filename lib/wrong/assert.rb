@@ -20,11 +20,16 @@ module Wrong
       end
 
       def failure_str
-        Predicate.from_callable_object(@block).to_negative_sentence
+        convert_to_predicate.to_negative_sentence
       end
 
       def reverse_failure_str
-        Predicate.from_callable_object(@block).to_sentence
+        convert_to_predicate.to_sentence
+      end
+      
+      private
+      def convert_to_predicate
+        Predicate.from_callable_object(@block)
       end
     end
   end
