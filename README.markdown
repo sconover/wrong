@@ -1,4 +1,4 @@
-Wrong provides an assert method that takes a block, and interrogates the block to create rich assertion failure messages.
+Wrong provides a general assert method that takes a predicate block.  Assertion failure messages are rich in detail.
 
 It's an offshoot of predicated.
 http://github.com/sconover/predicated
@@ -13,4 +13,4 @@ http://www.pivotaltracker.com/projects/95014
 
 "And it really doesn't matter if I'm wrong 
  I'm right where I belong"
--Fixing a Hole (according to McCartney the song was "another ode to pot")
+-Fixing a Hole
