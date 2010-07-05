@@ -106,7 +106,7 @@ apropos "failures" do
   apropos "methods that result in a boolean.  this might be hard." do
     test "string include" do
       assert_match "'abc' does not include 'cd'", get_error{@m.assert{"abc".include?("cd")}}.message
-      assert_match "'abc' does include 'bc'", get_error{@m.deny{"abc".include?("bc")}}.message
+      assert_match "'abc' includes 'bc'", get_error{@m.deny{"abc".include?("bc")}}.message
     end
   end
 
