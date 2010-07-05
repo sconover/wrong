@@ -50,5 +50,16 @@ a\\rcc
 
   end
 
+  xtest "elides really long matching sections" do
+    left = "x"*100 + "ab" + "y"*100 + "AB" + "z"*100 
+    right = "x"*100 + "acc" + "y"*100 + "ACC" + "z"*100 
+    
+    assert_string_diff_message(proc{"ab"=="acc"}, %{
+...xxabyyy....yyABzzz....
+      ^          ^       
+...xxaccyyy...yyACCzzz...
+      ^^         ^^     
+})
+  end
   
 end
