@@ -21,14 +21,18 @@ module Wrong
     
     def assert(&block)
       unless block.call
-        raise failure_class.new(failure_message(:assert, block))
+        raise failure_class.new(
+          failure_message(:assert, block, Predicated::Predicate.from_callable_object(block))
+        )
       end
     end
 
 
     def deny(&block)
       if block.call
-        raise failure_class.new(failure_message(:deny, block))
+        raise failure_class.new(
+          failure_message(:deny, block, Predicated::Predicate.from_callable_object(block))
+        )
       end
     end
 
@@ -43,8 +47,7 @@ module Wrong
     end
     
     overridable do
-      def failure_message(method_sym, block)
-        predicate = Predicated::Predicate.from_callable_object(block)
+      def failure_message(method_sym, block, predicate)
         method_sym == :deny ? predicate.to_sentence : predicate.to_negative_sentence
       end
     end

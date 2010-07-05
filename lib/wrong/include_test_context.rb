@@ -1,7 +1,7 @@
 module Wrong
   module Assert
     
-    def failure_message(method_sym, block)
+    def failure_message(method_sym, block, predicate)
       upper_portion = super
       
       first_test_line = caller.find{|line|line =~ /(_test.rb|_spec.rb)/}
