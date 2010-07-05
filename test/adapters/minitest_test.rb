@@ -4,7 +4,7 @@ require "minitest/spec"
 require "minitest/unit"
 
 require "wrong/assert"
-require "wrong/minitest"
+require "wrong/adapters/minitest"
 
 apropos "basic assert features" do
   

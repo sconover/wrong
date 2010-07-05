@@ -1,7 +1,7 @@
 require "test/test_helper"
 
 require "wrong/assert"
-require "wrong/minitest"
+require "wrong/adapters/minitest"
 
 apropos "a tool for rescuing errors" do
   

@@ -1,7 +1,7 @@
 require "test/test_helper"
 require "wrong/assert"
-require "wrong/string_diff"
-require "wrong/minitest"
+require "wrong/message/string_diff"
+require "wrong/adapters/minitest"
 
 apropos "when you're comparing strings and they don't match, show me the diff message" do
   

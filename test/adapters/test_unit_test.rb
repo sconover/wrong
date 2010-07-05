@@ -3,7 +3,7 @@ require "test/test_helper"
 require "test/unit"
 
 require "wrong/assert"
-require "wrong/test_unit"
+require "wrong/adapters/test_unit"
 
 class MyFailingAssertTest <  Test::Unit::TestCase
   

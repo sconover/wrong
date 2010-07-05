@@ -1,6 +1,6 @@
 require "test/test_helper"
 require "wrong/assert"
-require "wrong/include_test_context"
+require "wrong/message/test_context"
 
 apropos "test failures" do
 
