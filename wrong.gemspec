@@ -24,4 +24,7 @@ Wrong provides a general assert method that takes a predicate block.  Assertion 
   s.add_dependency "ParseTree", ">= 3.0.5"
   s.add_dependency "ruby_parser", ">= 2.0.4"
   s.add_dependency "ruby2ruby", ">= 1.2.4"
+
+  s.add_dependency "diff", ">= 0.3.6"
+  s.add_dependency "diff-lcs", ">= 1.1.2"
 end

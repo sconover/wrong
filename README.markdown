@@ -5,10 +5,10 @@ Wrong provides a general assert method that takes a predicate block.  Assertion 
 Wrong is alpha-quality - I'd very much appreciate feedback and bug reports.
 
 It's an offshoot of predicated.
-http://github.com/sconover/predicated
+[http://github.com/sconover/predicated](http://github.com/sconover/predicated)
 
 Inspired by assert { 2.0 }
-http://assert2.rubyforge.org/
+[http://assert2.rubyforge.org/](http://assert2.rubyforge.org/)
 
 ## Usage ##
 
@@ -34,10 +34,20 @@ There's a convenience method for catching errors:
 	assert{ catch_raise{raise "boom!"}.message == "boom!" }
 	 ==> nil
 
+## Adapters ##
+
+Adapters for various test frameworks sit under wrong/adapters.
+TODO
+
+## Message ##
+
+Enhancements for error messages sit under wrong/message.
+TODO
+
 ## Etc ##
 
 Tracker project:
-http://www.pivotaltracker.com/projects/95014
+[http://www.pivotaltracker.com/projects/95014](http://www.pivotaltracker.com/projects/95014)
 
 “I think it's wrong that only one company makes the game Monopoly.” -Steven Wright
 
