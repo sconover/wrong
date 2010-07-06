@@ -43,7 +43,7 @@ module Wrong
       rescue Exception, RuntimeError => e
         error = e
       end
-      e
+      error
     end
     
     overridable do

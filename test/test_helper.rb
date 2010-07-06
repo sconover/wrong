@@ -13,7 +13,7 @@ def get_error
   rescue Exception, RuntimeError => e
     error = e
   end
-  e
+  error
 end
 
 class MiniTest::Unit::TestCase
