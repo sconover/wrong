@@ -1,4 +1,4 @@
-require "test/test_helper"
+require "./test/test_helper"
 require "wrong/assert"
 require "wrong/message/string_diff"
 require "wrong/adapters/minitest"

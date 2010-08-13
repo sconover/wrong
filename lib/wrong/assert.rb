@@ -1,5 +1,5 @@
 require "predicated/predicate"
-require "predicated/from/callable_object"
+require "predicated/from/callable_object" unless RUBY_VERSION =~ /^1.9/
 require "predicated/to/sentence"
 require "wrong/chunk"
 

@@ -17,7 +17,6 @@ def get_error
 end
 
 class MiniTest::Unit::TestCase
-  
 end
 
 module Kernel
