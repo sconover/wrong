@@ -37,8 +37,6 @@ module Wrong
         carrot_string
       end
     end
-      
-    
-    
+
   end
 end
