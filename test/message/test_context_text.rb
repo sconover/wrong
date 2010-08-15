@@ -2,7 +2,7 @@ require "./test/test_helper"
 require "wrong/assert"
 require "wrong/message/test_context"
 
-apropos "test failures" do
+regarding "showing the lines just above where the failure occurs, so you have some context" do
 
   include Wrong::Assert
   

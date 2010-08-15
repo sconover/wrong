@@ -2,7 +2,7 @@ require "./test/test_helper"
 
 require "wrong/assert"
 
-apropos "basic assert features" do
+regarding "basic assert features" do
   
   before do
     @m = Module.new do
@@ -10,7 +10,7 @@ apropos "basic assert features" do
     end
   end
   
-  apropos "pass/fail basics" do
+  regarding "pass/fail basics" do
     test "passes when the result is true.  deny does the reverse" do
       @m.assert{true}
       @m.assert{1==1}
