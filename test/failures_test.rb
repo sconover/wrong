@@ -1,8 +1,8 @@
-require "test/test_helper"
+require "./test/test_helper"
 
 require "wrong/assert"
 
-apropos "failures" do
+regarding "failures" do
 
   before do
     @m = Module.new do
@@ -10,7 +10,8 @@ apropos "failures" do
     end
   end
 
-  apropos "simple" do
+  regarding "simple" do
+
     test "raw boolean assert failure" do
       error = get_error { @m.assert { false } }
       puts error.message
@@ -80,7 +81,7 @@ apropos "failures" do
 
   end
 
-  apropos "accessing and printing values set outside of the assert" do
+  regarding "accessing and printing values set outside of the assert" do
     test "use a value in the assert defined outside of it" do
       a = 1
       assert_match "1 is not equal to 2", get_error {
@@ -92,7 +93,7 @@ apropos "failures" do
     end
   end
 
-  apropos "the assert block has many statements" do
+  regarding "the assert block has many statements" do
     test "only pay attention to the final statement" do
       assert_match("1 is not equal to 2", get_error {
         @m.assert {
@@ -116,7 +117,7 @@ apropos "failures" do
     end
   end
 
-  apropos "array comparisons" do
+  regarding "array comparisons" do
     test "basic" do
       assert_match %{'[1, 2]' is not equal to '["a", "b"]'}, get_error {
         @m.assert { [1, 2]==%w{a b} }
@@ -124,7 +125,7 @@ apropos "failures" do
     end
   end
 
-  apropos "hash comparisons" do
+  regarding "hash comparisons" do
     test "basic" do
       assert_match %{'{1=>2}' is not equal to '{"a"=>"b"}'},
                    get_error {
@@ -133,7 +134,7 @@ apropos "failures" do
     end
   end
 
-  apropos "methods that result in a boolean.  this might be hard." do
+  regarding "methods that result in a boolean.  this might be hard." do
     test "string include" do
       assert_match "'abc' does not include 'cd'", get_error {
         @m.assert { "abc".include?("cd") }

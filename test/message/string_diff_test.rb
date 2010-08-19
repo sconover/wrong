@@ -1,9 +1,9 @@
-require "test/test_helper"
+require "./test/test_helper"
 require "wrong/assert"
 require "wrong/message/string_diff"
 require "wrong/adapters/minitest"
 
-apropos "when you're comparing strings and they don't match, show me the diff message" do
+regarding "when you're comparing strings and they don't match, show me the diff message" do
   
   def assert_string_diff_message(first_string, second_string, str)
     assert{catch_raise{assert{first_string == second_string}}.message.include?(str)}

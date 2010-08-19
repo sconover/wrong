@@ -1,9 +1,9 @@
-require "test/test_helper"
+require "./test/test_helper"
 
 require "wrong/assert"
 require "wrong/adapters/minitest"
 
-apropos "a tool for rescuing errors" do
+regarding "a tool for rescuing errors" do
   
   class RedError < StandardError; end
   class BlueError < StandardError; end

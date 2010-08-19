@@ -1,9 +1,9 @@
-require "test/test_helper"
+require "./test/test_helper"
 require "wrong/assert"
 require "wrong/message/array_diff"
 require "wrong/adapters/minitest"
 
-apropos "when you're comparing strings and they don't match, show me the diff message" do
+regarding "when you're comparing strings and they don't match, show me the diff message" do
   
   def assert_string_diff_message(first_array, second_array, expected_error_message)
     assert{catch_raise{assert{first_array == second_array}}.message.include?(expected_error_message)}

@@ -1,4 +1,4 @@
-require "test/test_helper"
+require "./test/test_helper"
 
 require "minitest/spec"
 require "minitest/unit"
@@ -6,9 +6,9 @@ require "minitest/unit"
 require "wrong/assert"
 require "wrong/adapters/minitest"
 
-apropos "basic assert features" do
+regarding "basic assert features" do
   
-  apropos "pass/fail basics" do
+  regarding "pass/fail basics" do
     test "disables other assert methods" do
       test_case_instance = Class.new(MiniTest::Unit::TestCase).new("x")
       assert{ catch_raise{test_case_instance.assert_equal(1,1)}.

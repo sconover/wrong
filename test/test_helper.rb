@@ -21,14 +21,13 @@ def get_error
 end
 
 class MiniTest::Unit::TestCase
-  
 end
 
 module Kernel
-  alias_method :apropos, :describe
+  alias_method :regarding, :describe
   
-  def xapropos(str)
-    puts "x'd out 'apropos \"#{str}\"'"
+  def xregarding(str)
+    puts "x'd out 'regarding \"#{str}\"'"
   end
 end
 

@@ -1,3 +1,6 @@
+require 'ruby_parser'
+require 'ruby2ruby'
+
 module Wrong
   class Chunk
     def self.from_block(block, depth = 0)
