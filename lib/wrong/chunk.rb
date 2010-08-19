@@ -5,12 +5,16 @@ module Wrong
   class Chunk
     def self.from_block(block, depth = 0)
       file, line = if block.to_proc.respond_to? :source_location
+                     # in Ruby 1.9, it reads the source location from the block
                      block.to_proc.source_location
                    else
+                     # in Ruby 1.8, it reads the source location from the call stack
                      caller[depth].split(":")
                    end
       new(file, line)
     end
+
+    attr_reader :file, :line_number
 
     # line parameter is 1-based
     def initialize(file, line_number)
@@ -30,6 +34,7 @@ module Wrong
     # try to parse the starting line
     # if it parses OK, then we're done!
     # if not, then glom the next line and try again
+    # repeat until it parses or we're out of lines
     def parse
       lines = File.read(@file).split("\n")
       @parser ||= RubyParser.new
@@ -47,32 +52,32 @@ module Wrong
       end
       @sexp
     end
+    
+    # The claim is the part of the assertion inside the curly braces.
+    # E.g. for "assert { x == 5 }" the claim is "x == 5"
+    def claim
+      parse()
 
-    def sexp
-      @sexp || begin
-        parse()
-        
-        if @sexp.nil?
-          raise "Could not parse #{location}"
+      if @sexp.nil?
+        raise "Could not parse #{location}"
+      else
+        assertion = @sexp.assertion
+        statement = assertion && assertion[3]
+        if statement.nil?
+          raise "Could not find assertion in #{location}\n\t#{@chunk.strip}\n\t#{@sexp}"
         else
-          assertion = @sexp.assertion
-          statement = assertion && assertion[3]
-          if statement.nil?
-            raise "Could not find assertion block in #{location}\n\t#{@chunk.strip}\n\t#{@sexp}"
-          else
-            statement
-          end
+          statement
         end
       end
     end
 
     def code
-      self.sexp.to_ruby
+      self.claim.to_ruby
     end
 
     def parts(sexp = nil)
       if sexp.nil?
-        parts(self.sexp).compact.uniq
+        parts(self.claim).compact.uniq
       else
         # todo: extract into Sexp, once I have more unit tests
         parts_list = []
