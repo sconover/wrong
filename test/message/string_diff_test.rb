@@ -6,7 +6,11 @@ require "wrong/adapters/minitest"
 regarding "when you're comparing strings and they don't match, show me the diff message" do
   
   def assert_string_diff_message(first_string, second_string, str)
-    assert{catch_raise{assert{first_string == second_string}}.message.include?(str)}
+    assert{
+      catch_raise{
+        assert{first_string == second_string}
+      }.message.include?(str)
+    }
   end
   
   test "don't attempt to do this if the assertion is not of the form a_string==b_string" do
@@ -25,7 +29,11 @@ regarding "when you're comparing strings and they don't match, show me the diff 
   end
 
   test "simple" do
-    assert{catch_raise{assert{"a"=="b"}}.message.include?("diff")}
+    assert{
+      catch_raise{
+        assert{"a"=="b"}
+      }.message.include?("diff")
+    }
     
     assert_string_diff_message("ab", "acc",  %{
 ab
