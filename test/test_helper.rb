@@ -13,6 +13,10 @@ def get_error
   rescue Exception, RuntimeError => e
     error = e
   end
+
+  puts ""
+  puts error
+
   error
 end
 
@@ -38,6 +42,21 @@ class MiniTest::Spec
       puts "x'd out 'test \"#{str}\"'"
     end
 
+  end
+end
+
+class Color
+  attr_reader :name
+  def initialize(name)
+    @name = name
+  end
+
+  def ==(other)
+    other.is_a?(Color) && @name == other.name
+  end
+
+  def inspect
+    "Color:#{@name}"
   end
 end
 

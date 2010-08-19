@@ -1,6 +1,3 @@
-require 'ruby_parser'
-require 'ruby2ruby'
-
 module Wrong
   class Chunk
     def self.from_block(block, depth = 0)
@@ -18,33 +15,63 @@ module Wrong
     end
 
     def sexp
-      lines = File.read(@file).split("\n")
-      parser = RubyParser.new
-      c = 0
-      sexp = nil
-      while sexp.nil? && @line + c < lines.size
-        begin
-          @chunk = lines[@line..@line+c].join("\n")
-          sexp = parser.parse(@chunk)
-            #      p sexp
-        rescue Racc::ParseError => e
-          # loop and try again
-          c += 1
+      @sexp ||= begin
+        lines = File.read(@file).split("\n")
+        parser = RubyParser.new
+        c = 0
+        sexp = nil
+        while sexp.nil? && @line + c < lines.size
+          begin
+            @chunk = lines[@line..@line+c].join("\n")
+            sexp = parser.parse(@chunk)
+          rescue Racc::ParseError => e
+            # loop and try again
+            c += 1
+          end
         end
+        sexp && sexp[3] # skip the "is do" (or "assert do") part
       end
-      sexp
     end
 
     def code
-      @code ||= begin
-        sexp = sexp()
-        ruby2ruby = Ruby2Ruby.new
-        code = ruby2ruby.process(sexp[3])
-        puts "chunk: #{@chunk.strip}"
-        puts "sexp: #{sexp}"
-        puts "code: #{code.strip}"
-        code
+      self.sexp.to_ruby
+    end
+
+    def parts(sexp = nil)
+      if sexp.nil?
+        parts(self.sexp).compact.uniq
+      else
+        p = []
+        begin
+          code = sexp.to_ruby.strip
+          p << code unless code == ""
+        rescue => e
+          puts "#{e.class}: #{e.message}"
+          puts e.backtrace.join("\n")
+        end
+        sexp.each do |sub|
+          if sub.is_a?(Sexp)
+            p += parts(sub)
+            # else
+            #   puts "#{o.inspect} is a #{o.class}"
+          end
+        end
+        p
       end
     end
+
+  end
+
+end
+# todo: move to monkey patch file
+class Sexp < Array
+  def doop
+    Marshal.load(Marshal.dump(self))
+  end
+
+  def to_ruby
+    d = self.doop
+    x = Ruby2Ruby.new.process(d)
+    x
   end
 end
