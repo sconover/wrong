@@ -15,16 +15,24 @@ regarding "when you're comparing strings and they don't match, show me the diff 
   
   test "don't attempt to do this if the assertion is not of the form a_string==b_string" do
     deny{
-      catch_raise{assert{1==2}}.message.include?("diff")
+      catch_raise{
+        assert{1==2}
+      }.message.include?("diff")
     }
     deny{
-      catch_raise{assert{"a"==2}}.message.include?("diff")
+      catch_raise{
+        assert{"a"==2}
+      }.message.include?("diff")
     }
     deny{
-      catch_raise{assert{1=="a"}}.message.include?("diff")
+      catch_raise{
+        assert{1=="a"}
+      }.message.include?("diff")
     }
     deny{
-      catch_raise{assert{nil=="a"}}.message.include?("diff")
+      catch_raise{
+        assert{nil=="a"}
+      }.message.include?("diff")
     }
   end
 

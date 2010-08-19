@@ -12,42 +12,53 @@ module Wrong
       new(file, line)
     end
 
-    def initialize(file, line)
+    # line parameter is 1-based
+    def initialize(file, line_number)
       @file = file
-      @line = line.to_i - 1
+      @line_number = line_number.to_i
+    end
+
+    def line_index
+      @line_number - 1
+    end
+
+    def location
+      "#{@file}:#{@line_number}"
+    end
+
+    # Algorithm:
+    # try to parse the starting line
+    # if it parses OK, then we're done!
+    # if not, then glom the next line and try again
+    def parse
+      lines = File.read(@file).split("\n")
+      @parser ||= RubyParser.new
+      @chunk = nil
+      c = 0
+      @sexp = nil
+      while @sexp.nil? && line_index + c < lines.size
+        begin
+          @chunk = lines[line_index..line_index+c].join("\n")
+          @sexp = @parser.parse(@chunk)
+        rescue Racc::ParseError => e
+          # loop and try again
+          c += 1
+        end
+      end
+      @sexp
     end
 
     def sexp
-      @sexp ||= begin
-        lines = File.read(@file).split("\n")
-        parser = RubyParser.new
-        c = 0
-        sexp = nil
-        while sexp.nil? && @line + c < lines.size
-          begin
-            @chunk = lines[@line..@line+c].join("\n")
-            sexp = parser.parse(@chunk)
-          rescue Racc::ParseError => e
-            # loop and try again
-            c += 1
-          end
-        end
-        if sexp.nil?
-          raise "Could not parse #{@file}:#{@line}"
+      @sexp || begin
+        parse()
+        
+        if @sexp.nil?
+          raise "Could not parse #{location}"
         else
-          # find the "assert" and its block
-          assertion = if sexp.assertion?
-            sexp
-          else
-            # todo: move into sexp
-            assertions = []
-            sexp.each_of_type(:iter) { |sexp| assertions << sexp if sexp.assertion? }
-            assertions.first
-          end
-
+          assertion = @sexp.assertion
           statement = assertion && assertion[3]
           if statement.nil?
-            raise "Could not find assertion block in #{@file}:#{@line}\n\t#{@chunk.strip}\n\t#{sexp}"
+            raise "Could not find assertion block in #{location}\n\t#{@chunk.strip}\n\t#{@sexp}"
           else
             statement
           end
@@ -63,29 +74,29 @@ module Wrong
       if sexp.nil?
         parts(self.sexp).compact.uniq
       else
-        p = []
+        # todo: extract into Sexp, once I have more unit tests
+        parts_list = []
         begin
           code = sexp.to_ruby.strip
-          p << code unless code == ""
+          parts_list << code unless code == ""
         rescue => e
           puts "#{e.class}: #{e.message}"
           puts e.backtrace.join("\n")
         end
         sexp.each do |sub|
           if sub.is_a?(Sexp)
-            p += parts(sub)
-            # else
-            #   puts "#{o.inspect} is a #{o.class}"
+            parts_list += parts(sub)
           end
         end
-        p
+        parts_list
       end
     end
 
   end
 
 end
-# todo: move to monkey patch file
+
+# todo: move to separate monkey patch file
 class Sexp < Array
   def doop
     Marshal.load(Marshal.dump(self))
@@ -99,9 +110,28 @@ class Sexp < Array
 
   def assertion?
     self.is_a? Sexp and
-    self[0] == :iter and
-    self[1].is_a? Sexp and
-    self[1][0] == :call and
-    [:assert, :deny].include? self[1][2] # todo: allow aliases for assert (e.g. "is")
+      self[0] == :iter and
+      self[1].is_a? Sexp and
+      self[1][0] == :call and
+      [:assert, :deny].include? self[1][2] # todo: allow aliases for assert (e.g. "is")
   end
+
+  def assertion
+    sexp = self
+    assertion = if sexp.assertion?
+                  sexp
+                else
+                  # todo: extract into sexp
+                  nested_assertions.first
+                end
+    assertion
+  end
+
+  private
+  def nested_assertions
+    assertions = []
+    self.each_of_type(:iter) { |sexp| assertions << sexp if sexp.assertion? }
+    assertions
+  end
+
 end

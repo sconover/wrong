@@ -15,10 +15,14 @@ regarding "when you're comparing strings and they don't match, show me the diff 
 
   test "don't attempt to do this if the assertion is not of the form a_array==b_array" do
     deny {
-      catch_raise { assert { [1]==2 } }.message.include?("diff")
+      catch_raise {
+        assert { [1]==2 }
+      }.message.include?("diff")
     }
     deny {
-      catch_raise { assert { nil==[1] } }.message.include?("diff")
+      catch_raise { 
+        assert { nil==[1] }
+      }.message.include?("diff")
     }
   end
 

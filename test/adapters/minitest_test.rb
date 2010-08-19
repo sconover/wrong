@@ -21,7 +21,9 @@ regarding "basic assert features" do
     test "raises minitest assertion failures" do
       test_case_instance = Class.new(MiniTest::Unit::TestCase).new("x")
       assert{
-        catch_raise{test_case_instance.assert{1==2}}.is_a?(MiniTest::Assertion)
+        catch_raise{
+          test_case_instance.assert{1==2}
+        }.is_a?(MiniTest::Assertion)
       }
     end
     
