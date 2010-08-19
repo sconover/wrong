@@ -11,13 +11,18 @@ regarding "basic assert features" do
   regarding "pass/fail basics" do
     test "disables other assert methods" do
       test_case_instance = Class.new(MiniTest::Unit::TestCase).new("x")
-      assert{ catch_raise{test_case_instance.assert_equal(1,1)}.
-               message.include?("has been disabled") }
+      assert{
+        catch_raise{
+          test_case_instance.assert_equal(1,1)
+        }.message.include?("has been disabled")
+      }
     end
     
     test "raises minitest assertion failures" do
       test_case_instance = Class.new(MiniTest::Unit::TestCase).new("x")
-      assert{ catch_raise{test_case_instance.assert{1==2}}.is_a?(MiniTest::Assertion)}
+      assert{
+        catch_raise{test_case_instance.assert{1==2}}.is_a?(MiniTest::Assertion)
+      }
     end
     
     test "assert and deny are available to minitest tests" do
