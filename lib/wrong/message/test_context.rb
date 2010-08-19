@@ -1,6 +1,6 @@
 module Wrong
   module Assert
-    
+    # todo: integrate with / use Chunk somehow?
     def failure_message(method_sym, block, predicate)
       upper_portion = super
       
