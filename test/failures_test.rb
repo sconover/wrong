@@ -12,9 +12,7 @@ apropos "failures" do
 
   apropos "simple" do
     test "raw boolean assert failure" do
-      error = get_error {
-        @m.assert { false }
-      }
+      error = get_error { @m.assert { false } }
       puts error.message
       assert_match "false", error.message
     end

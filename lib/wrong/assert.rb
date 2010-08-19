@@ -59,11 +59,11 @@ module Wrong
 
     private
 
-    def aver(valence, &block)
+    def aver(valence, depth = nil, &block)
       value = block.call
       value = !value if valence == :deny
       unless value
-        chunk = Wrong::Chunk.from_block(block, 2)
+        chunk = Wrong::Chunk.from_block(block, depth || 2)
         code = chunk.code
         predicate = Predicated::Predicate.from_ruby_code_string(code, block.binding)
         message = "#{valence == :deny ? "Didn't expect" : "Expected"} #{code}, but #{failure_message(valence, block, predicate)}"
@@ -79,7 +79,7 @@ module Wrong
             begin
               value = eval(part, block.binding).inspect
               message << "    #{part} is #{value}\n" unless part == value
-            rescue => e
+            rescue Exception => e
               message << "    #{part} : #{e.class}: #{e.message}\n"
               if false
                 puts "#{e.class}: #{e.message} evaluating #{part.inspect}"

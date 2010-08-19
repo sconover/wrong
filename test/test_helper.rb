@@ -14,9 +14,9 @@ def get_error
     error = e
   end
 
-  puts ""
-  puts error
-
+#  puts ""
+#  puts error
+#
   error
 end
 

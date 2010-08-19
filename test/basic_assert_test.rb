@@ -20,7 +20,9 @@ apropos "basic assert features" do
     end
   
     test "fails when result is false.  deny does the reverse" do
-      get_error{@m.assert{false}} || fail
+      get_error{
+        @m.assert{false}
+      } || fail
       get_error{@m.assert{1==2}} || fail
       
       get_error{@m.deny{true}} || fail

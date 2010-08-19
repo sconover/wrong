@@ -42,10 +42,10 @@ apropos "basic assert features" do
       end
       
       msg = catch_raise{MyFailingAssertTest.new.test_fail}.message
-      assert{ "1 is not equal to 2" ==  msg }
+      assert{ msg.include?("1 is not equal to 2") }
 
       msg = catch_raise{MyFailingDenyTest.new.test_fail}.message
-      assert{ "1 is equal to 1" ==  msg }
+      assert{ msg.include?("1 is equal to 1") }
     end
   
   end

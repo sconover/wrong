@@ -29,7 +29,26 @@ module Wrong
             c += 1
           end
         end
-        sexp && sexp[3] # skip the "is do" (or "assert do") part
+        if sexp.nil?
+          raise "Could not parse #{@file}:#{@line}"
+        else
+          # find the "assert" and its block
+          assertion = if sexp.assertion?
+            sexp
+          else
+            # todo: move into sexp
+            assertions = []
+            sexp.each_of_type(:iter) { |sexp| assertions << sexp if sexp.assertion? }
+            assertions.first
+          end
+
+          statement = assertion && assertion[3]
+          if statement.nil?
+            raise "Could not find assertion block in #{@file}:#{@line}\n\t#{@chunk.strip}\n\t#{sexp}"
+          else
+            statement
+          end
+        end
       end
     end
 
@@ -73,5 +92,13 @@ class Sexp < Array
     d = self.doop
     x = Ruby2Ruby.new.process(d)
     x
+  end
+
+  def assertion?
+    self.is_a? Sexp and
+    self[0] == :iter and
+    self[1].is_a? Sexp and
+    self[1][0] == :call and
+    [:assert, :deny].include? self[1][2] # todo: allow aliases for assert (e.g. "is")
   end
 end

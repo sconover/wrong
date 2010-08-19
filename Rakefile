@@ -7,6 +7,7 @@ def gemspec
   end
 end
 
+task :default => :test
 
 desc 'run all tests'
 task :test do
