@@ -1,5 +1,4 @@
 require "test/test_helper"
-
 require "wrong/assert"
 
 regarding "basic assert features" do
@@ -40,6 +39,22 @@ regarding "basic assert features" do
     test "both deny and assert fail when an error is thrown.  bubbles up the error." do
       assert_raises(MyError) { @m.assert{ raise MyError.new } }
       assert_raises(MyError) { @m.deny{ raise MyError.new } }
+    end
+
+    test "assert takes an optional explanation" do
+      e = get_error {
+        sky = "green"
+        @m.assert("the sky should be blue") { sky == "blue" }
+      }
+      assert e.message =~ /^the sky should be blue: /
+    end
+
+    test "deny takes an optional explanation" do
+      e = get_error {
+        sky = "blue"
+        @m.deny("the sky should not be blue") { sky == "blue" }
+      }
+      assert e.message =~ /^the sky should not be blue: /
     end
   end
   

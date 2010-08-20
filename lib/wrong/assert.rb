@@ -21,12 +21,12 @@ module Wrong
       AssertionFailedError
     end
 
-    def assert(&block)
-      aver(:assert, &block)
+    def assert(explanation = nil, &block)
+      aver(:assert, explanation, &block)
     end
 
-    def deny(&block)
-      aver(:deny, &block)
+    def deny(explanation = nil, &block)
+      aver(:deny, explanation, &block)
     end
 
     def catch_raise
@@ -85,14 +85,16 @@ module Wrong
       details
     end
 
-    def aver(valence, depth = nil, &block)
+    def aver(valence, explanation = nil, depth = nil, &block)
       value = block.call
       value = !value if valence == :deny
       unless value
         chunk = Wrong::Chunk.from_block(block, depth || 2)
         code = chunk.code
         predicate = Predicated::Predicate.from_ruby_code_string(code, block.binding)
-        message = "#{valence == :deny ? "Didn't expect" : "Expected"} #{code}, but #{failure_message(valence, block, predicate)}"
+        message = ""
+        message << "#{explanation}: " if explanation
+        message << "#{valence == :deny ? "Didn't expect" : "Expected"} #{code}, but #{failure_message(valence, block, predicate)}"
         message << details(block, chunk)
         raise failure_class.new(message)
       end
