@@ -83,8 +83,10 @@ module Wrong
         # todo: extract into Sexp, once I have more unit tests
         parts_list = []
         begin
-          code = sexp.to_ruby.strip
-          parts_list << code unless code == ""
+          unless sexp.first == :arglist
+            code = sexp.to_ruby.strip
+            parts_list << code unless code == "" || parts_list.include?(code)
+          end
         rescue => e
           puts "#{e.class}: #{e.message}"
           puts e.backtrace.join("\n")

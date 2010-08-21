@@ -59,22 +59,35 @@ module Wrong
 
     private
 
+    def indent(indent)
+      ("  " * indent)
+    end
+
+    def newline(indent)
+      "\n" + self.indent(indent)
+    end
+
+    # todo: test
     def details(block, chunk)
+#      p chunk.claim
       details = ""
       parts = chunk.parts
       parts.shift # remove the first part, since it's the same as the code
       if parts.size > 0
         details = "\n"
         parts.each do |part|
-          if part =~ /\n/m
-            part.gsub!(/\n/, "\n    ")
-            part += "\n      "
-          end
           begin
-            value = eval(part, block.binding).inspect
-            details << "    #{part} is #{value}\n" unless part == value
+            value = eval(part, block.binding)
+            unless part == value.inspect
+              if part =~ /\n/m
+                part.gsub!(/\n/, newline(2))
+                part += newline(3)
+              end
+              value = value.inspect.gsub("\n", "\n#{indent(3)}")
+              details << indent(2) << "#{part} is #{value}\n"
+            end
           rescue Exception => e
-            details << "    #{part} : #{e.class}: #{e.message}\n"
+            details << indent(2) << "#{part} raises #{e.class}: #{e.message.gsub("\n", "\n#{indent(3)}")}\n"
             if false
               puts "#{e.class}: #{e.message} evaluating #{part.inspect}"
               puts "\t" + e.backtrace.join("\n\t")
