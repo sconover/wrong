@@ -1,3 +1,0 @@
-[submodule "lib/predicated"]
-	path = lib/predicated
-	url = git@github.com:alexch/predicated.git
