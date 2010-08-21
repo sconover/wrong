@@ -14,7 +14,7 @@ regarding "failures" do
 
     test "raw boolean assert failure" do
       error = get_error { @m.assert { false } }
-      puts error.message
+#      puts error.message
       assert_match "false", error.message
     end
 
@@ -22,7 +22,7 @@ regarding "failures" do
       error = get_error {
         @m.deny { true }
       }
-      puts error.message
+#      puts error.message
       assert_match "true", error.message
     end
 
@@ -64,7 +64,7 @@ regarding "failures" do
     end
 
     test "object failure" do
-      assert_match "'Color:red' is not equal to 2", get_error {
+      assert_match "Color:red is not equal to 2", get_error {
         @m.assert { Color.new("red")==2 }
       }.message
     end
@@ -108,7 +108,7 @@ regarding "failures" do
     end
 
     test "works even if the assertion is based on stuff set previously in the block" do
-      assert_match("'aaa' is not equal to 'bbb'", get_error {
+      assert_match("\"aaa\" is not equal to \"bbb\"", get_error {
         @m.assert {
           a = "aaa"
           a=="bbb"
@@ -119,7 +119,7 @@ regarding "failures" do
 
   regarding "array comparisons" do
     test "basic" do
-      assert_match %{'[1, 2]' is not equal to '["a", "b"]'}, get_error {
+      assert_match %{[1, 2] is not equal to ["a", "b"]}, get_error {
         @m.assert { [1, 2]==%w{a b} }
       }.message
     end
@@ -127,7 +127,7 @@ regarding "failures" do
 
   regarding "hash comparisons" do
     test "basic" do
-      assert_match %{'{1=>2}' is not equal to '{"a"=>"b"}'},
+      assert_match '{1=>2} is not equal to {"a"=>"b"}',
                    get_error {
                      @m.assert { {1=>2}=={"a"=>"b"} }
                    }.message
@@ -136,10 +136,10 @@ regarding "failures" do
 
   regarding "methods that result in a boolean.  this might be hard." do
     test "string include" do
-      assert_match "'abc' does not include 'cd'", get_error {
+      assert_match "\"abc\" does not include \"cd\"", get_error {
         @m.assert { "abc".include?("cd") }
       }.message
-      assert_match "'abc' includes 'bc'", get_error {
+      assert_match "\"abc\" includes \"bc\"", get_error {
         @m.deny { "abc".include?("bc") }
       }.message
     end
