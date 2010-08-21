@@ -84,12 +84,6 @@ Before you get your knickers in a twist about how this is totally unacceptable b
   * You can't use metaprogramming to write your assert blocks.
   * All variables and methods must be available in the binding of the assertion block.
 
-## Helper Assert Methods ##
-
-If you really want to, you can define your procs in one method, pass it in to another method, and have that method assert it. This is very bizarre and you probably shouldn't do it. Wrong will do its best to figure out where the actual assertion code is but it might not succeed.
-
-If you're in Ruby 1.8, you **really** shouldn't do it! But if you do, you can use the "depth" parameter to give Wrong a better hint about how far up the stack it should crawl to find the code. See `assert_test.rb` for more details, if you dare.
-
 ## Adapters ##
 
 Adapters for various test frameworks sit under wrong/adapters.
@@ -125,6 +119,12 @@ Currently we support special messages for
   * Enumerable ==
     * including nested string elements
 
+## Helper Assert Methods ##
+
+If you really want to, you can define your procs in one method, pass it in to another method, and have that method assert it. This is very bizarre and you probably shouldn't do it. Wrong will do its best to figure out where the actual assertion code is but it might not succeed.
+
+If you're in Ruby 1.8, you **really** shouldn't do it! But if you do, you can use the "depth" parameter to give Wrong a better hint about how far up the stack it should crawl to find the code. See `assert_test.rb` for more details, if you dare.
+
 ## Authors ##
 
 * Steve Conover - <sconover@gmail.com>
@@ -133,4 +133,4 @@ Currently we support special messages for
 ## Etc ##
 
 Tracker project:
-[http://www.pivotaltracker.com/projects/95014](http://www.pivotaltracker.com/projects/95014)
+<http://www.pivotaltracker.com/projects/95014>
