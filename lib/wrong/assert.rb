@@ -21,12 +21,12 @@ module Wrong
       AssertionFailedError
     end
 
-    def assert(explanation = nil, &block)
-      aver(:assert, explanation, &block)
+    def assert(explanation = nil, depth = 0, &block)
+      aver(:assert, explanation, depth, &block)
     end
 
-    def deny(explanation = nil, &block)
-      aver(:deny, explanation, &block)
+    def deny(explanation = nil, depth = 0, &block)
+      aver(:deny, explanation, depth, &block)
     end
 
     def catch_raise
@@ -63,7 +63,7 @@ module Wrong
       details = ""
       parts = chunk.parts
       parts.shift # remove the first part, since it's the same as the code
-      if parts.size > 1
+      if parts.size > 0
         details = "\n"
         parts.each do |part|
           if part =~ /\n/m
@@ -85,16 +85,23 @@ module Wrong
       details
     end
 
-    def aver(valence, explanation = nil, depth = nil, &block)
+    def aver(valence, explanation = nil, depth = 0, &block)
       value = block.call
       value = !value if valence == :deny
       unless value
-        chunk = Wrong::Chunk.from_block(block, depth || 2)
+        chunk = Wrong::Chunk.from_block(block, depth + 2)
         code = chunk.code
-        predicate = Predicated::Predicate.from_ruby_code_string(code, block.binding)
+        predicate = begin
+          Predicated::Predicate.from_ruby_code_string(code, block.binding)
+        rescue Predicated::Predicate::DontKnowWhatToDoWithThisSexpError
+          nil
+        rescue Exception
+          nil
+        end
         message = ""
         message << "#{explanation}: " if explanation
-        message << "#{valence == :deny ? "Didn't expect" : "Expected"} #{code}, but #{failure_message(valence, block, predicate)}"
+        message << "#{valence == :deny ? "Didn't expect" : "Expected"} #{code}, but"
+        message << " #{failure_message(valence, block, predicate)}" if predicate
         message << details(block, chunk)
         raise failure_class.new(message)
       end

@@ -121,14 +121,12 @@ regarding Chunk do
 #      test "goes crazy if you try to nest two asserts on the same line"
     end
 
-    test "fails if it can't find an assertion" do
+    test "if it can't find an assertion, it uses the whole chunk" do
       chunk = Chunk.new(__FILE__, __LINE__ + 1); <<-CODE
         yielding { x == 5 }
       CODE
-      error = get_error {
-        chunk.claim
-      }
-      assert error.message.include?("Could not find assertion")
+      code = chunk.claim.to_ruby
+      assert code == "yielding { (x == 5) }"
     end
 
     test "fails if it can't parse the code" do

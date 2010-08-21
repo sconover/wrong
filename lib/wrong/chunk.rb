@@ -64,7 +64,8 @@ module Wrong
         assertion = @sexp.assertion
         statement = assertion && assertion[3]
         if statement.nil?
-          raise "Could not find assertion in #{location}\n\t#{@chunk.strip}\n\t#{@sexp}"
+          @sexp
+#          raise "Could not find assertion in #{location}\n\t#{@chunk.strip}\n\t#{@sexp}"
         else
           statement
         end

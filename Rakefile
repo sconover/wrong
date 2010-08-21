@@ -1,4 +1,6 @@
 require "rubygems"
+require "bundler"
+Bundler.setup
 
 def gemspec
   @gemspec ||= begin
