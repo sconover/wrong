@@ -4,13 +4,16 @@ require File.expand_path('../lib/wrong/version.rb', __FILE__)
 Gem::Specification.new do |s|
   s.name      = "wrong"
   s.version   = Wrong::VERSION
-  s.authors   = ["Steve Conover"]
-  s.date      = %q{2010-07-06}
+  s.authors   = ["Steve Conover", "Alex Chaffee"]
   s.email     = "sconover@gmail.com"
   s.homepage  = "http://github.com/sconover/wrong"
   s.summary   = "Wrong provides a general assert method that takes a predicate block.  Assertion failure messages are rich in detail."
   s.description  = <<-EOS.strip
-Wrong provides a general assert method that takes a predicate block.  Assertion failure messages are rich in detail.
+Wrong provides a general assert method that takes a predicate block. Assertion failure
+messages are rich in detail. The Wrong idea is to replace all those countless assert_this,
+assert_that library methods which only exist to give a more useful failure message than
+"assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it
+in Ruby, Wrong can make a sensible failure message out of it.
   EOS
   s.rubyforge_project = "wrong"
 
