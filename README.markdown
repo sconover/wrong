@@ -2,9 +2,15 @@
 
 ## Abstract ##
 
-Wrong provides a general assert method that takes any Ruby block.  Assertion failure messages are rich in detail.
+Wrong provides a general assert method that takes a predicate block. Assertion failure
+messages are rich in detail. The Wrong idea is to replace all those countless assert_this,
+assert_that library methods which only exist to give a more useful failure message than
+"assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it
+in Ruby, Wrong can make a sensible failure message out of it.
 
-Wrong is alpha-quality. We'd very much appreciate feedback and bug reports.
+Wrong is alpha-quality. We'd very much appreciate feedback and bug reports. There are plenty of things left to be done
+to make the results look uniformly clean and beautiful. We want your feedback, and especially to give us cases where
+either it blows up or the output is ugly or uninformative.
 
 It relies on [Predicated](http://github.com/sconover/predicated) for its main failure message.
 
@@ -49,7 +55,7 @@ There's also a convenience method for catching errors:
 
 So does the world need another assertion framework? In fact, it does not! We actually believe the world needs **fewer** assert methods.
 
-The Wrong idea is to replace all those countless assert_this, assert_that library methods which only exist to give a more useful failure message than "assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it in Ruby, Wrong can make a sensible failure message out of it.
+The Wrong idea is to replace all those countless assert\_this, assert\_that library methods which only exist to give a more useful failure message than "assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it in Ruby, Wrong can make a sensible failure message out of it.
 
 Even the lowly workhorse `assert_equal` is bloated compared to Wrong: would you rather write this
 
@@ -77,7 +83,8 @@ So wait a second. How do we do it? Doesn't Ruby have [poor support for AST intro
 Before you get your knickers in a twist about how this is totally unacceptable because it doesn't support this or that use case, here are our caveats and excuses:
 
 * It works! Tested in 1.8.6, 1.8.7, 1.9.1, and 1.9.2-rc2. (Thank you, [rvm](http://rvm.beginrescueend.com/)!)
-* It's a development-time library, not a production runtime library, so there are no security or filesystem issues. (If you're developing Ruby code without saving it to a mounted disk, then sorry, Wrong is not right for you.)
+* Your code needs to be in a file. That means it doesn't work in IRB. (If you're developing Ruby code without saving it to a mounted disk, then sorry, Wrong is not right for you.)
+* It's a development-time testing library, not a production runtime library, so there are no security or filesystem issues.
 * `eval` isn't evil, it's just misunderstood.
 * It makes a few assumptions about the structure of your code, leading to some restrictions:
   * You can't have more than one call to `assert` per line. (This should not be a problem since even if you're nesting asserts for some bizarre reason, we assume you know where your Return key is. And actually, technically you can put two asserts on a line, but it always describes the first one it sees, which means that if the second one executes, its failure message will be incorrect or broken.)
@@ -89,10 +96,12 @@ Before you get your knickers in a twist about how this is totally unacceptable b
 Adapters for various test frameworks sit under wrong/adapters.
 
 Currently we support
+
   * Test::Unit
   * Minitest
 
 Coming soon
+
   * RSpec
   * ???
 
@@ -115,6 +124,7 @@ And if your assertion code isn't self-explanatory, then that's a hint that you m
 Enhancements for error messages sit under wrong/message.
 
 Currently we support special messages for
+
   * String ==
   * Enumerable ==
     * including nested string elements
