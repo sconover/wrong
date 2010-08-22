@@ -3,10 +3,8 @@
 ## Abstract ##
 
 Wrong provides a general assert method that takes a predicate block. Assertion failure
-messages are rich in detail. The Wrong idea is to replace all those countless assert_this,
-assert_that library methods which only exist to give a more useful failure message than
-"assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it
-in Ruby, Wrong can make a sensible failure message out of it.
+messages are rich in detail.
+The Wrong idea is to replace all those countless assert\_this, assert\_that, should\_something library methods which only exist to give a more useful failure message than "assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it in Ruby, Wrong can make a sensible failure message out of it.
 
 Wrong is alpha-quality. We'd very much appreciate feedback and bug reports. There are plenty of things left to be done
 to make the results look uniformly clean and beautiful. We want your feedback, and especially to give us cases where
@@ -55,7 +53,7 @@ There's also a convenience method for catching errors:
 
 So does the world need another assertion framework? In fact, it does not! We actually believe the world needs **fewer** assert methods.
 
-The Wrong idea is to replace all those countless assert\_this, assert\_that library methods which only exist to give a more useful failure message than "assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it in Ruby, Wrong can make a sensible failure message out of it.
+The Wrong idea is to replace all those countless assert\_this, assert\_that, should\_something library methods which only exist to give a more useful failure message than "assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it in Ruby, Wrong can make a sensible failure message out of it.
 
 Even the lowly workhorse `assert_equal` is bloated compared to Wrong: would you rather write this
 

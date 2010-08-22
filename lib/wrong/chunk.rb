@@ -101,44 +101,52 @@ module Wrong
       end
     end
 
-    # todo: test
     def details
       s = ""
       parts = self.parts
       parts.shift # remove the first part, since it's the same as the code
+
+      details = []
+
       if parts.size > 0
-        s = "\n"
         parts.each do |part|
           begin
             value = eval(part, block.binding)
-            unless part == value.inspect
+            unless part == value.inspect  # this skips literals or tautologies
               if part =~ /\n/m
                 part.gsub!(/\n/, newline(2))
                 part += newline(3)
               end
-              value = value.inspect.gsub("\n", "\n#{indent(3)}")
-              s << indent(2) << "#{part} is #{value}\n"
+              value = indent_all(3, value.inspect)
+              details << indent(2, "#{part} is #{value}")
             end
           rescue Exception => e
-            s << indent(2) << "#{part} raises #{e.class}: #{e.message.gsub("\n", "\n#{indent(3)}")}\n"
-            if false
-              puts "#{e.class}: #{e.message} evaluating #{part.inspect}"
-              puts "\t" + e.backtrace.join("\n\t")
-            end
+            details << indent(2, "#{part} raises #{e.class}: #{indent_all(3, e.message)}")
           end
         end
       end
-      s
+
+      details.uniq!
+      if details.empty?
+        ""
+      else
+        "\n" + details.join("\n") + "\n"
+      end
+      
     end
 
     private
     
-    def indent(indent)
-      ("  " * indent)
+    def indent(indent, s = nil)
+      "#{"  " * indent}#{s}"
     end
 
     def newline(indent)
       "\n" + self.indent(indent)
+    end
+
+    def indent_all(amount, s)
+      s.gsub("\n", "\n#{indent(amount)}")
     end
 
   end
