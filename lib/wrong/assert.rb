@@ -59,45 +59,6 @@ module Wrong
 
     private
 
-    def indent(indent)
-      ("  " * indent)
-    end
-
-    def newline(indent)
-      "\n" + self.indent(indent)
-    end
-
-    # todo: test
-    def details(block, chunk)
-#      p chunk.claim
-      details = ""
-      parts = chunk.parts
-      parts.shift # remove the first part, since it's the same as the code
-      if parts.size > 0
-        details = "\n"
-        parts.each do |part|
-          begin
-            value = eval(part, block.binding)
-            unless part == value.inspect
-              if part =~ /\n/m
-                part.gsub!(/\n/, newline(2))
-                part += newline(3)
-              end
-              value = value.inspect.gsub("\n", "\n#{indent(3)}")
-              details << indent(2) << "#{part} is #{value}\n"
-            end
-          rescue Exception => e
-            details << indent(2) << "#{part} raises #{e.class}: #{e.message.gsub("\n", "\n#{indent(3)}")}\n"
-            if false
-              puts "#{e.class}: #{e.message} evaluating #{part.inspect}"
-              puts "\t" + e.backtrace.join("\n\t")
-            end
-          end
-        end
-      end
-      details
-    end
-
     def aver(valence, explanation = nil, depth = 0, &block)
       value = block.call
       value = !value if valence == :deny
@@ -115,7 +76,7 @@ module Wrong
         message << "#{explanation}: " if explanation
         message << "#{valence == :deny ? "Didn't expect" : "Expected"} #{code}, but"
         message << " #{failure_message(valence, block, predicate)}" if predicate
-        message << details(block, chunk)
+        message << chunk.details
         raise failure_class.new(message)
       end
     end

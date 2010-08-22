@@ -11,15 +11,16 @@ module Wrong
                      # in Ruby 1.8, it reads the source location from the call stack
                      caller[depth].split(":")
                    end
-      new(file, line)
+      new(file, line, block)
     end
 
-    attr_reader :file, :line_number
+    attr_reader :file, :line_number, :block
 
     # line parameter is 1-based
-    def initialize(file, line_number)
+    def initialize(file, line_number, block = nil)
       @file = file
       @line_number = line_number.to_i
+      @block = block
     end
 
     def line_index
@@ -98,6 +99,46 @@ module Wrong
         end
         parts_list
       end
+    end
+
+    # todo: test
+    def details
+      s = ""
+      parts = self.parts
+      parts.shift # remove the first part, since it's the same as the code
+      if parts.size > 0
+        s = "\n"
+        parts.each do |part|
+          begin
+            value = eval(part, block.binding)
+            unless part == value.inspect
+              if part =~ /\n/m
+                part.gsub!(/\n/, newline(2))
+                part += newline(3)
+              end
+              value = value.inspect.gsub("\n", "\n#{indent(3)}")
+              s << indent(2) << "#{part} is #{value}\n"
+            end
+          rescue Exception => e
+            s << indent(2) << "#{part} raises #{e.class}: #{e.message.gsub("\n", "\n#{indent(3)}")}\n"
+            if false
+              puts "#{e.class}: #{e.message} evaluating #{part.inspect}"
+              puts "\t" + e.backtrace.join("\n\t")
+            end
+          end
+        end
+      end
+      s
+    end
+
+    private
+    
+    def indent(indent)
+      ("  " * indent)
+    end
+
+    def newline(indent)
+      "\n" + self.indent(indent)
     end
 
   end
