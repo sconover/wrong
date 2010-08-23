@@ -4,7 +4,7 @@
 * rename catch_raise to rescuing
 
 
-== 0.2.0
+== 0.2.0 - 2010/08/21
 
 * Announced to the world
 * Using Chunk

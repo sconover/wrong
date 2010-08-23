@@ -26,13 +26,13 @@ Wrong provides a simple assert method that takes a block:
 	 ==> nil
 	
 	assert {2==1}
-	 ==> Wrong::Assert::AssertionFailedError: Expected (2 == 1), but 2 is not equal to 1
+	 ==> Expected (2 == 1), but 2 is not equal to 1
 
 If your assertion is more than a simple predicate, then Wrong will split it into parts and show you the values of all the relevant subexpressions.
 
     x = 7; y = 10; assert { x == 7 && y == 11 }
      ==>
-    Wrong::Assert::AssertionFailedError: Expected ((x == 7) and (y == 11)), but
+    Expected ((x == 7) and (y == 11)), but
         (x == 7) is true
         x is 7
         (y == 11) is false
@@ -41,13 +41,15 @@ If your assertion is more than a simple predicate, then Wrong will split it into
 And a companion, 'deny':
 
 	deny{'abc'.include?('bc')}
-	 ==> Wrong::Assert::AssertionFailedError: Didn't expect "abc".include?("bc"), but 'abc' includes 'bc'
+	 ==> Didn't expect "abc".include?("bc"), but 'abc' includes 'bc'
 
 There's also a convenience method for catching errors:
 
     assert{ rescuing{raise "vanilla"}.message == "chocolate" }
 	 ==>
     Wrong::Assert::AssertionFailedError: Expected (rescuing { raise("vanilla") }.message == "chocolate"), but 'vanilla' is not equal to 'chocolate'
+
+More examples are in the file `[examples.rb](http://github.com/alexch/wrong/blob/master/examples.rb)`.
 
 ## Apology ##
 
@@ -127,6 +129,14 @@ Currently we support special messages for
   * Enumerable ==
     * including nested string elements
 
+## Color ##
+
+Apparently, no test framework is successful unless and until it supports console colors. So now we do. Put
+
+    Wrong.config[:color] = true
+
+in your test helper or rakefile or wherever and get ready to be **bedazzled**.
+
 ## Helper Assert Methods ##
 
 If you really want to, you can define your procs in one method, pass it in to another method, and have that method assert it. This is very bizarre and you probably shouldn't do it. Wrong will do its best to figure out where the actual assertion code is but it might not succeed.
@@ -140,4 +150,5 @@ If you're in Ruby 1.8, you **really** shouldn't do it! But if you do, you can us
 
 ## Etc ##
 
+Github projects: <http://github.com/alexch/wrong>, <http://github.com/sconover/wrong>
 Tracker project: <http://www.pivotaltracker.com/projects/109993>
