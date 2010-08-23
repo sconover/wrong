@@ -2,6 +2,7 @@ require "predicated/predicate"
 require "predicated/from/callable_object"
 require "predicated/to/sentence"
 require "wrong/chunk"
+require "wrong/config"
 
 #see http://yehudakatz.com/2009/01/18/other-ways-to-wrap-a-method/
 class Module
@@ -60,6 +61,8 @@ module Wrong
     private
 
     def aver(valence, explanation = nil, depth = 0, &block)
+      require "wrong/rainbow" if Wrong.config[:color]
+      
       value = block.call
       value = !value if valence == :deny
       unless value
@@ -72,10 +75,16 @@ module Wrong
         rescue Exception
           nil
         end
+
+        code = code.color(:blue) if Wrong.config[:color]
         message = ""
         message << "#{explanation}: " if explanation
-        message << "#{valence == :deny ? "Didn't expect" : "Expected"} #{code}, but"
-        message << " #{failure_message(valence, block, predicate)}" if predicate
+        message << "#{valence == :deny ? "Didn't expect" : "Expected"} #{code}, but "
+        if predicate
+          failure = failure_message(valence, block, predicate)
+          failure = failure.bold if Wrong.config[:color] 
+          message << failure
+        end
         message << chunk.details
         raise failure_class.new(message)
       end

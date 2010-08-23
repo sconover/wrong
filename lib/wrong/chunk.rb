@@ -1,5 +1,6 @@
 require 'ruby_parser'
 require 'ruby2ruby'
+require "wrong/config"
 require "wrong/sexp_ext"
 
 module Wrong
@@ -82,7 +83,7 @@ module Wrong
       if sexp.nil?
         parts(self.claim).compact.uniq
       else
-        # todo: extract into Sexp, once I have more unit tests
+        # todo: extract some of this into Sexp
         parts_list = []
         begin
           unless sexp.first == :arglist
@@ -103,6 +104,7 @@ module Wrong
     end
 
     def details
+      require "wrong/rainbow" if Wrong.config[:color]
       s = ""
       parts = self.parts
       parts.shift # remove the first part, since it's the same as the code
@@ -119,10 +121,19 @@ module Wrong
                 part += newline(3)
               end
               value = indent_all(3, value.inspect)
-              details << indent(2, "#{part} is #{value}")
+              if Wrong.config[:color]
+                part = part.color(:blue)
+                value = value.color(:magenta)
+              end
+              details << indent(2, part, " is ", value)
             end
           rescue Exception => e
-            details << indent(2, "#{part} raises #{e.class}: #{indent_all(3, e.message)}")
+            raises = "raises #{e.class}"
+            if Wrong.config[:color]
+              part = part.color(:blue)
+              raises = raises.bold.color(:red)
+            end
+            details << indent(2, part, " ", raises, ": ", indent_all(3, e.message))
           end
         end
       end
@@ -138,8 +149,8 @@ module Wrong
 
     private
     
-    def indent(indent, s = nil)
-      "#{"  " * indent}#{s}"
+    def indent(indent, *s)
+      "#{"  " * indent}#{s.join('')}"
     end
 
     def newline(indent)

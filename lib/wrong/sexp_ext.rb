@@ -8,8 +8,8 @@ class Sexp < Array
 
   def to_ruby
     d = self.doop
-    x = Ruby2Ruby.new.process(d)
-    x
+    ruby = Ruby2Ruby.new.process(d)
+    ruby
   end
 
   def assertion?
@@ -25,7 +25,6 @@ class Sexp < Array
     assertion = if sexp.assertion?
                   sexp
                 else
-                  # todo: extract into sexp
                   nested_assertions.first
                 end
     assertion
