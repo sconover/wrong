@@ -9,8 +9,8 @@ regarding "a tool for rescuing errors" do
   class BlueError < StandardError; end
   
   test "catch the error and assert on it" do
-    assert{ catch_raise{raise RedError.new}.is_a?(RedError) }
-    assert{ catch_raise{"x"}.nil? }
+    assert{ rescuing{raise RedError.new}.is_a?(RedError) }
+    assert{ rescuing{"x"}.nil? }
   end
   
 end

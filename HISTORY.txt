@@ -1,0 +1,10 @@
+== 0.3.0
+
+* color
+* rename catch_raise to rescuing
+
+
+== 0.2.0
+
+* Announced to the world
+* Using Chunk

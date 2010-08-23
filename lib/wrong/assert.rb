@@ -30,7 +30,7 @@ module Wrong
       aver(:deny, explanation, depth, &block)
     end
 
-    def catch_raise
+    def rescuing
       error = nil
       begin
         yield

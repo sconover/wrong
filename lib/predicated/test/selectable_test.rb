@@ -20,7 +20,7 @@ regarding "part one: selectors on an array (simple enumerable).  proving them ou
     assert{ @arr.select(:numbers).select(:less_than_3) == [1,2] }
     
     assert do
-      catch_raise{ @arr.select(:less_than_3) }.is_a?(ArgumentError)
+      rescuing{ @arr.select(:less_than_3) }.is_a?(ArgumentError)
       #because strings don't respond to <
       #...there's no substitute for knowing what you're doing.
     end

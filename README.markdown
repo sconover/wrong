@@ -45,9 +45,9 @@ And a companion, 'deny':
 
 There's also a convenience method for catching errors:
 
-    assert{ catch_raise{raise "vanilla"}.message == "chocolate" }
+    assert{ rescuing{raise "vanilla"}.message == "chocolate" }
 	 ==>
-    Wrong::Assert::AssertionFailedError: Expected (catch_raise { raise("vanilla") }.message == "chocolate"), but 'vanilla' is not equal to 'chocolate'
+    Wrong::Assert::AssertionFailedError: Expected (rescuing { raise("vanilla") }.message == "chocolate"), but 'vanilla' is not equal to 'chocolate'
 
 ## Apology ##
 

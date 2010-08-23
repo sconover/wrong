@@ -7,7 +7,7 @@ regarding "when you're comparing strings and they don't match, show me the diff 
   
   def assert_string_diff_message(first_string, second_string, str)
     assert{
-      catch_raise{
+      rescuing{
         assert{first_string == second_string}
       }.message.include?(str)
     }
@@ -15,22 +15,22 @@ regarding "when you're comparing strings and they don't match, show me the diff 
   
   test "don't attempt to do this if the assertion is not of the form a_string==b_string" do
     deny{
-      catch_raise{
+      rescuing{
         assert{1==2}
       }.message.include?("diff")
     }
     deny{
-      catch_raise{
+      rescuing{
         assert{"a"==2}
       }.message.include?("diff")
     }
     deny{
-      catch_raise{
+      rescuing{
         assert{1=="a"}
       }.message.include?("diff")
     }
     deny{
-      catch_raise{
+      rescuing{
         assert{nil=="a"}
       }.message.include?("diff")
     }
@@ -38,7 +38,7 @@ regarding "when you're comparing strings and they don't match, show me the diff 
 
   test "simple" do
     assert{
-      catch_raise{
+      rescuing{
         assert{"a"=="b"}
       }.message.include?("diff")
     }

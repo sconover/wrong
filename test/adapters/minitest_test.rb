@@ -12,7 +12,7 @@ regarding "basic assert features" do
     test "disables other assert methods" do
       test_case_instance = Class.new(MiniTest::Unit::TestCase).new("x")
       assert{
-        catch_raise{
+        rescuing{
           test_case_instance.assert_equal(1,1)
         }.message.include?("has been disabled")
       }
@@ -21,7 +21,7 @@ regarding "basic assert features" do
     test "raises minitest assertion failures" do
       test_case_instance = Class.new(MiniTest::Unit::TestCase).new("x")
       assert{
-        catch_raise{
+        rescuing{
           test_case_instance.assert{1==2}
         }.is_a?(MiniTest::Assertion)
       }
@@ -48,10 +48,10 @@ regarding "basic assert features" do
         end
       end
       
-      msg = catch_raise{MyFailingAssertTest.new.test_fail}.message
+      msg = rescuing{MyFailingAssertTest.new.test_fail}.message
       assert{ msg.include?("1 is not equal to 2") }
 
-      msg = catch_raise{MyFailingDenyTest.new.test_fail}.message
+      msg = rescuing{MyFailingDenyTest.new.test_fail}.message
       assert{ msg.include?("1 is equal to 1") }
     end
   
