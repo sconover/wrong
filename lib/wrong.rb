@@ -3,3 +3,5 @@ require "predicated/lib/predicated"
 
 require "wrong/assert"
 require "wrong/chunk"
+require "wrong/sexp_ext"
+require "wrong/version"
