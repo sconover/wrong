@@ -47,9 +47,9 @@ There's also a convenience method for catching errors:
 
     assert{ rescuing{raise "vanilla"}.message == "chocolate" }
 	 ==>
-    Wrong::Assert::AssertionFailedError: Expected (rescuing { raise("vanilla") }.message == "chocolate"), but 'vanilla' is not equal to 'chocolate'
+    Expected (rescuing { raise("vanilla") }.message == "chocolate"), but 'vanilla' is not equal to 'chocolate'
 
-More examples are in the file `[examples.rb](http://github.com/alexch/wrong/blob/master/examples.rb)`.
+More examples are in the file `examples.rb` <http://github.com/alexch/wrong/blob/master/examples.rb>
 
 ## Apology ##
 
