@@ -37,3 +37,11 @@ end
 
 failing { assert { Foo.new(1, Foo.new(3,4) ,3) == 4  } }
 
+assert { capturing { puts "hi" } == "hi\n" }
+assert { capturing(:stderr) { $stderr.puts "hi" } == "hi\n" }
+
+out, err = capturing(:stdout, :stderr) do
+  print "hi"
+  $stderr.print "bye"
+end
+assert { out == "hi" and err == "bye"}

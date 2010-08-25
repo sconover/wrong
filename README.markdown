@@ -1,14 +1,10 @@
-"Feels so right, it can't be Wrong"
+## "Feels so right, it can't be Wrong"
 
 ## Abstract ##
 
-Wrong provides a general assert method that takes a predicate block. Assertion failure
-messages are rich in detail.
-The Wrong idea is to replace all those countless assert\_this, assert\_that, should\_something library methods which only exist to give a more useful failure message than "assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it in Ruby, Wrong can make a sensible failure message out of it.
+Wrong provides a general assert method that takes a predicate block. Assertion failure messages are rich in detail. The Wrong idea is to replace all those countless assert\_this, assert\_that, should\_something library methods which only exist to give a more useful failure message than "assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it in Ruby, Wrong can make a sensible failure message out of it.
 
-Wrong is alpha-quality. We'd very much appreciate feedback and bug reports. There are plenty of things left to be done
-to make the results look uniformly clean and beautiful. We want your feedback, and especially to give us cases where
-either it blows up or the output is ugly or uninformative.
+Wrong is alpha-quality. We'd very much appreciate feedback and bug reports. There are plenty of things left to be done to make the results look uniformly clean and beautiful. We want your feedback, and especially to give us cases where either it blows up or the output is ugly or uninformative.
 
 It relies on [Predicated](http://github.com/sconover/predicated) for its main failure message.
 
@@ -48,6 +44,12 @@ There's also a convenience method for catching errors:
     assert{ rescuing{raise "vanilla"}.message == "chocolate" }
 	 ==>
     Expected (rescuing { raise("vanilla") }.message == "chocolate"), but 'vanilla' is not equal to 'chocolate'
+
+And one for capturing output streams:
+
+    assert { capturing { puts "hi" } == "hi\n" }
+    assert { capturing(:stderr) { $stderr.puts "hi" } == "hi\n" }
+    out, err = capturing(:stdout, :stderr) { ... }
 
 More examples are in the file `examples.rb` <http://github.com/alexch/wrong/blob/master/examples.rb>
 
@@ -97,13 +99,11 @@ Adapters for various test frameworks sit under wrong/adapters.
 
 Currently we support
 
-  * Test::Unit
-  * Minitest
+  * Test::Unit - `require 'wrong/adapters/test_unit'`
+  * Minitest - `require 'wrong/adapters/minitest'`
+  * RSpec - `require 'wrong/adapters/rspec'`
 
-Coming soon
-
-  * RSpec
-  * ???
+To use these, put the appropriate `require` in your helper; it should extend the framework enough that you can use `assert { }` in your test cases without extra fussing around.
 
 ## Explanations ##
 
@@ -115,7 +115,7 @@ Since the point of Wrong is to make asserts self-explanatory, you should feel fr
 
       assert("the sky should be blue") { sky.blue? } # redundant
 
-The failure message of the above would be something like "Expected sky.blue? but sky is :green" which is not made clearer by the addition of "the sky should be blue". We already know it should be blue since we see right there that we're expecting it to be blue.
+The failure message of the above would be something like "Expected sky.blue? but sky is :green" which is not made clearer by the addition of "the sky should be blue". We already know it should be blue since we see right there ("`Expected (sky.blue?)`") that we're expecting it to be blue.
 
 And if your assertion code isn't self-explanatory, then that's a hint that you might need to do some refactoring until it is. (Yes, even test code should be clean as a whistle. **Especially** test code.)
 
@@ -150,5 +150,5 @@ If you're in Ruby 1.8, you **really** shouldn't do it! But if you do, you can us
 
 ## Etc ##
 
-Github projects: <http://github.com/alexch/wrong>, <http://github.com/sconover/wrong>
-Tracker project: <http://www.pivotaltracker.com/projects/109993>
+* Github projects: <http://github.com/alexch/wrong>, <http://github.com/sconover/wrong>
+* Tracker project: <http://www.pivotaltracker.com/projects/109993>

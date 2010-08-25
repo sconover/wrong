@@ -2,7 +2,8 @@
 
 * color
 * rename catch_raise to rescuing
-
+* add capturing helper
+* rspec adapter
 
 == 0.2.0 - 2010/08/21
 
