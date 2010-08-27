@@ -29,10 +29,22 @@ failing do
   age = 24
   name = "Gaga"
   assert { age >= 18 && ["Britney", "Snooki"].include?(name) }
-
 end
 
 failing { deny{'abc'.include?('bc')} }
+
+
+#require "wrong/message/string_diff"  TODO: make string_diff use "diff-lcs" not "diff" gem
+failing do
+  assert { "the quick brown fox jumped over the lazy dog" ==
+           "the quick brown hamster jumped over the lazy gerbil" }
+end
+
+require "wrong/message/array_diff"
+failing do
+  assert { ["venus", "mars", "pluto", "saturn"] ==
+           ["venus", "earth", "pluto", "neptune"] }
+end
 
 failing do
   assert{ rescuing{raise "vanilla"}.message == "chocolate" }

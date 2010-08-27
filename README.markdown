@@ -41,7 +41,7 @@ If your assertion is more than a simple predicate, then Wrong will split it into
     name = "Gaga"
     assert { age >= 18 && ["Britney", "Snooki"].include?(name) }
      ==>
-    Expected ((age >= 18) and ["Britney", "Snooki"].include?(name)), but This is not true: 24 is greater than or equal to 18 and ["Britney", "Snooki"] includes "Gaga"
+    Expected ((age >= 18) and ["Britney", "Snooki"].include?(name)), but
         (age >= 18) is true
         age is 24
         ["Britney", "Snooki"].include?(name) is false
@@ -152,6 +152,34 @@ Currently we support special messages for
   * String ==
   * Enumerable ==
     * including nested string elements
+
+To use these formatters, you have to explicitly `require` them! You may also need to `gem install diff-lcs` (since it's an optional dependency).
+
+    require "wrong/message/string_diff"
+    assert { "the quick brown fox jumped over the lazy dog" ==
+             "the quick brown hamster jumped over the lazy gerbil" }
+     ==>
+    Expected ("the quick brown fox jumped over the lazy dog" == "the quick brown hamster jumped over the lazy gerbil"), but "the quick brown fox jumped over the lazy dog" is not equal to "the quick brown hamster jumped over the lazy gerbil"
+
+    string diff:
+    the quick brown fox jumped over the lazy dog
+                    ^^^
+    the quick brown hamster jumped over the lazy gerbil
+                    ^^^^^^^
+--
+
+    require "wrong/message/array_diff"
+    assert { ["venus", "mars", "pluto", "saturn"] ==
+             ["venus", "earth", "pluto", "neptune"] }
+     ==>
+    Expected (["venus", "mars", "pluto", "saturn"] == ["venus", "earth", "pluto", "neptune"]), but ["venus", "mars", "pluto", "saturn"] is not equal to ["venus", "earth", "pluto", "neptune"]
+
+    array diff:
+    ["venus", "mars" , "pluto", "saturn" ]
+    ["venus", "earth", "pluto", "neptune"]
+              ^                 ^
+
+[Bug: turns out 'diff' and 'diff-lcs' are incompatible with each other. We're working on a fix.]
 
 ## Color ##
 
