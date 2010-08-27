@@ -130,7 +130,7 @@ module Wrong
         message = ""
         message << "#{explanation}: " if explanation
         message << "#{valence == :deny ? "Didn't expect" : "Expected"} #{code}, but "
-        if predicate
+        if predicate && !(predicate.is_a? Predicated::And or predicate.is_a? Predicated::Or) # todo: replace with .is_a? Conjunction
           failure = failure_message(valence, block, predicate)
           failure = failure.bold if Wrong.config[:color] 
           message << failure

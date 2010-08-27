@@ -93,6 +93,16 @@ regarding "failures" do
     end
   end
 
+  regarding "conjunctions (and and or)" do
+    test "omit a primary failure message since 'This is not true etc.' is more obscuring than clarifying" do
+      m = get_error {
+        x = 5
+        @m.assert { x == 5 && x != 5}
+      }.message
+      assert m == "Expected ((x == 5) and (not (x == 5))), but \n    (x == 5) is true\n    x is 5\n    (not (x == 5)) is false\n"
+    end
+  end
+
   regarding "the assert block has many statements" do
     test "only pay attention to the final statement" do
       assert_match("1 is not equal to 2", get_error {

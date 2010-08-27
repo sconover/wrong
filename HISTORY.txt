@@ -1,3 +1,7 @@
+== 0.3.1
+
+* remove "This is not true" messages, since they were more confusing than clarifying
+
 == 0.3.0 - 2010/08/26
 
 * color

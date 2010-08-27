@@ -11,9 +11,11 @@ end
 
 task :default => :test
 
-desc 'run all tests'
+desc 'run all tests (in all ruby versions if rvm is installed)'
 task :test do
-  sh %{ruby test/suite.rb}
+  rvm = `which rvm`.strip
+  ruby = rvm == "" ? "ruby" : "#{rvm} ruby,1.8.6,1.8.7,1.9.1,1.9.2"
+  sh "#{ruby} test/suite.rb"
 end
 
 desc "Build pkg/#{gemspec.full_name}.gem"
