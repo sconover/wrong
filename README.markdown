@@ -10,7 +10,7 @@ Wrong is alpha-quality. We'd very much appreciate feedback and bug reports. Ther
 
 It relies on [Predicated](http://github.com/sconover/predicated) for its main failure message.
 
-Inspired by [assert { 2.0 }](http://assert2.rubyforge.org/) but rewritten from scratch to be compatible with Ruby 1.8 and 1.9.
+Inspired by [assert { 2.0 }](http://assert2.rubyforge.org/) but rewritten from scratch. Compatible with Ruby 1.8 and 1.9.
 
 ## Usage ##
 
@@ -20,10 +20,10 @@ Wrong provides a simple assert method that takes a block:
 	
 	include Wrong::Assert
 	
-	assert {1==1}
+	assert { 1 == 1 }
 	 ==> nil
 	
-	assert {2==1}
+	assert { 2 == 1 }
 	 ==> Expected (2 == 1), but 2 is not equal to 1
 
 If your assertion is more than a simple predicate, then Wrong will split it into parts and show you the values of all the relevant subexpressions.
@@ -35,7 +35,18 @@ If your assertion is more than a simple predicate, then Wrong will split it into
         x is 7
         (y == 11) is false
         y is 10
-    
+
+
+    age = 24
+    name = "Gaga"
+    assert { age >= 18 && ["Britney", "Snooki"].include?(name) }
+     ==>
+    Expected ((age >= 18) and ["Britney", "Snooki"].include?(name)), but This is not true: 24 is greater than or equal to 18 and ["Britney", "Snooki"] includes "Gaga"
+        (age >= 18) is true
+        age is 24
+        ["Britney", "Snooki"].include?(name) is false
+        name is "Gaga"
+
 And a companion, 'deny':
 
 	deny{'abc'.include?('bc')}
@@ -53,7 +64,18 @@ And one for capturing output streams:
     assert { capturing(:stderr) { $stderr.puts "hi" } == "hi\n" }
     out, err = capturing(:stdout, :stderr) { ... }
 
+If you want to compare floats, try this:
+
+    require "wrong/close_to"
+
+    assert { 5.0.close_to?(5.0001) }   # default tolerance = 0.001
+    assert { 5.0.close_to?(5.1, 0.5) } # optional tolerance parameter
+
 More examples are in the file `examples.rb` <http://github.com/alexch/wrong/blob/master/examples.rb>
+
+There's also a spreadsheet showing a translation from Test::Unit and RSpec to Wrong, with notes, at [this Google Doc](https://spreadsheets.google.com/pub?key=0AouPn6oLrimWdE0tZDVOWnFGMzVPZy0tWHZwdnhFYkE&hl=en&output=html). (Ask <alexch@gmail.com> if you want editing privileges.)
+
+And don't miss the [slideshare presentation](http://www.slideshare.net/alexchaffee/wrong-5069976).
 
 ## Apology ##
 
@@ -69,7 +91,7 @@ or this
 
     assert { time == money }
 
-? The Wrong version has the advantage of being plain, transparent Ruby code, not an awkward DSL that moves "equal" out of its natural place between the comparands. Plus, WYSIWYG! You know just from looking at it that "equal" means `==`, not `eql?` or `===` or `=~`.
+? The Wrong way has the advantage of being plain, transparent Ruby code, not an awkward DSL that moves "equal" out of its natural place between the comparands. Plus, WYSIWYG! You know just from looking at it that "equal" means `==`, not `eql?` or `===` or `=~`.
 
 Moreover, much like TDD itself, Wrong encourages you to write cleaner code. If your assertion messages are not clear and "Englishy", then maybe it's time for you to refactor a bit -- extract an informatively named variable or method, maybe push some function onto its natural object *a la* the [Law of Demeter](http://en.wikipedia.org/wiki/Law_of_Demeter)...
 
@@ -154,3 +176,5 @@ If you're in Ruby 1.8, you **really** shouldn't do it! But if you do, you can us
 
 * Github projects: <http://github.com/alexch/wrong>, <http://github.com/sconover/wrong>
 * Tracker project: <http://www.pivotaltracker.com/projects/109993>
+* [Test::Unit and RSpec to Wrong translation table](https://spreadsheets.google.com/pub?key=0AouPn6oLrimWdE0tZDVOWnFGMzVPZy0tWHZwdnhFYkE&hl=en&output=html). (Ask <alexch@gmail.com> if you want editing privileges.)
+* [Wrong slideshow](http://www.slideshare.net/alexchaffee/wrong-5069976)

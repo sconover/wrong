@@ -19,9 +19,18 @@ def failing
   puts
 end
 
+# ignore all the "failing" statements in this file; they're so the failed assertions don't exit the process
+
 failing { assert {2==1} }
 
 failing { x = 7; y = 10; assert { x == 7 && y == 11 } }
+
+failing do
+  age = 24
+  name = "Gaga"
+  assert { age >= 18 && ["Britney", "Snooki"].include?(name) }
+
+end
 
 failing { deny{'abc'.include?('bc')} }
 
