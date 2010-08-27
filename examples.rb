@@ -45,3 +45,9 @@ out, err = capturing(:stdout, :stderr) do
   $stderr.print "bye"
 end
 assert { out == "hi" and err == "bye"}
+
+failing do
+  time = 6
+  money = 27
+  assert { time == money }
+end

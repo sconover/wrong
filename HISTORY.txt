@@ -1,9 +1,10 @@
-== 0.3.0
+== 0.3.0 - 2010/08/26
 
 * color
 * rename catch_raise to rescuing
 * add capturing helper
 * rspec adapter
+* add a #close_to? predicate to Float and Fixnum (require "wrong/close_to")
 
 == 0.2.0 - 2010/08/21
 
