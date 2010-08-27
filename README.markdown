@@ -1,5 +1,7 @@
 ## "Feels so right, it can't be Wrong"
 
+![Someone is Wrong on the Internet](http://imgs.xkcd.com/comics/duty_calls.png)
+
 ## Abstract ##
 
 Wrong provides a general assert method that takes a predicate block. Assertion failure messages are rich in detail. The Wrong idea is to replace all those countless assert\_this, assert\_that, should\_something library methods which only exist to give a more useful failure message than "assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it in Ruby, Wrong can make a sensible failure message out of it.
