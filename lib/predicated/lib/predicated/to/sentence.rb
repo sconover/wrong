@@ -3,7 +3,7 @@ require "predicated/evaluate"
 
 module Predicated
   
-  module ContainerSentence
+  module Conjunction
     def to_sentence
       left.to_sentence + joining_str + right.to_sentence
     end
@@ -12,9 +12,9 @@ module Predicated
       "This is not true: " + to_sentence
     end
   end
-  
-  class And; include ContainerSentence; def joining_str; " and " end; end
-  class Or; include ContainerSentence; def joining_str; " or " end;end
+
+  class And; include Conjunction; def joining_str; " and " end; end
+  class Or; include Conjunction; def joining_str; " or " end;end
   
   class Not
     def to_sentence

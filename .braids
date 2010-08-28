@@ -2,7 +2,7 @@
 lib/predicated: 
   branch: master
   remote: braid/lib/predicated
-  revision: 696a7062f03a94619c0a85fae0e3de86584f4a11
+  revision: f4e6825c6fde74721143c1e2da8ac6c93695a2da
   squashed: true
   type: git
   url: git://github.com/alexch/predicated
