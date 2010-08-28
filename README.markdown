@@ -36,6 +36,7 @@ If your assertion is more than a simple predicate, then Wrong will split it into
         (y == 11) is false
         y is 10
 
+--
 
     age = 24
     name = "Gaga"
@@ -143,7 +144,7 @@ The failure message of the above would be something like "Expected sky.blue? but
 
 And if your assertion code isn't self-explanatory, then that's a hint that you might need to do some refactoring until it is. (Yes, even test code should be clean as a whistle. **Especially** test code.)
 
-## Special Formatting ##
+## Formatters ##
 
 Enhancements for error messages sit under wrong/message.
 
@@ -204,5 +205,5 @@ If you're in Ruby 1.8, you **really** shouldn't do it! But if you do, you can us
 
 * Github projects: <http://github.com/alexch/wrong>, <http://github.com/sconover/wrong>
 * Tracker project: <http://www.pivotaltracker.com/projects/109993>
-* [Test::Unit and RSpec to Wrong translation table](https://spreadsheets.google.com/pub?key=0AouPn6oLrimWdE0tZDVOWnFGMzVPZy0tWHZwdnhFYkE&hl=en&output=html). (Ask <alexch@gmail.com> if you want editing privileges.)
-* [Wrong slideshow](http://www.slideshare.net/alexchaffee/wrong-5069976)
+* [Wrong way translation table (from RSpec and Test::Unit)](https://spreadsheets.google.com/pub?key=0AouPn6oLrimWdE0tZDVOWnFGMzVPZy0tWHZwdnhFYkE&hl=en&output=html). (Ask <alexch@gmail.com> if you want editing privileges.)
+* [the Wrong slides I presented at Carbon Five](http://www.slideshare.net/alexchaffee/wrong-5069976)

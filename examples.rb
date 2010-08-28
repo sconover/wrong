@@ -31,6 +31,9 @@ failing do
   assert { age >= 18 && ["Britney", "Snooki"].include?(name) }
 end
 
+failing { assert{'hand'.include?('bird')} }
+
+
 failing { deny{'abc'.include?('bc')} }
 
 
@@ -42,8 +45,9 @@ end
 
 require "wrong/message/array_diff"
 failing do
-  assert { ["venus", "mars", "pluto", "saturn"] ==
-           ["venus", "earth", "pluto", "neptune"] }
+  fun_planets = ["venus", "mars", "pluto", "saturn"]
+  smart_planets = ["venus", "earth", "pluto", "neptune"]
+  assert { fun_planets == smart_planets }
 end
 
 failing do
