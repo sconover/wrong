@@ -25,7 +25,12 @@ module Wrong
     # Actual signature: assert(explanation = nil, depth = 0, block)
     def assert(*args, &block)
       if block.nil?
-        super
+        begin
+          super
+        rescue NoMethodError => e
+          # note: we're not raising an AssertionFailedError because this is a programmer error, not a failed assertion
+          raise "You must pass a block to Wrong's assert and deny methods"
+        end
       else
         aver(:assert, *args, &block)
       end
