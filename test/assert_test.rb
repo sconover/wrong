@@ -38,7 +38,7 @@ describe "basic assert features" do
     end
 
     describe "assert" do
-      it "fails when an error is thrown.  bubbles up the error." do
+      it "fails when an error is thrown and bubbles up the error" do
         assert_raises(MyError) { @m.assert { raise MyError.new } }
       end
 
@@ -59,7 +59,7 @@ describe "basic assert features" do
     end
 
     describe "deny" do
-      it "fails when an error is thrown.  bubbles up the error." do
+      it "fails when an error is thrown and bubbles up the error" do
         assert_raises(MyError) { @m.deny { raise MyError.new } }
       end
 
@@ -98,6 +98,23 @@ describe "advanced assert features" do
 
     assert { e.message =~ /^Expected failures.empty\?/ }
     assert { e.message =~ /x is 10/ }
+  end
+
+  xit "can parse a here doc defined inside the block" do
+    # todo: test in Chunk too
+    assert { "123\n456" == <<-TEXT
+123
+456
+    TEXT
+    }
+  end
+
+  xit "can parse a here doc defined outside the block" do
+    # todo: test in Chunk too
+    assert { "123\n456" == <<-TEXT }
+123
+456
+    TEXT
   end
 
 end

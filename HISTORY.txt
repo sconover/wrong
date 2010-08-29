@@ -1,6 +1,8 @@
 == 0.3.1
 
 * remove "This is not true" messages, since they were more confusing than clarifying
+* Test::Unit and Minitest pass assert/deny with no block up to the framework's assert method
+
 
 == 0.3.0 - 2010/08/26
 

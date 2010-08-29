@@ -22,7 +22,7 @@ end
 
 module Kernel
   def xdescribe(str)
-    puts "x'd out 'describe \"#{str}\"'"
+    puts "x'd out describe \"#{str}\""
   end
 end
 
@@ -31,7 +31,7 @@ class MiniTest::Spec
   
   class << self
     def xit(str)
-      puts "x'd out 'test \"#{str}\"'"
+      puts "x'd out test \"#{str}\""
     end
   end
 end

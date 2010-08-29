@@ -190,6 +190,29 @@ Apparently, no test framework is successful unless and until it supports console
 
 in your test helper or rakefile or wherever and get ready to be **bedazzled**.
 
+## Aliases ##
+
+An end to the language wars! Name your "assert" and "deny" methods anything you want. Here are some suggestions:
+
+      Wrong.config.alias_assert(:expect)
+      Wrong.config.alias_assert(:should) # This looks nice with RSpec
+      Wrong.config.alias_assert(:confirm)
+      Wrong.config.alias_assert(:be)
+
+      Wrong.config.alias_assert(:is)
+      Wrong.config.alias_deny(:aint)
+
+      Wrong.config.alias_assert(:assure)
+      Wrong.config.alias_deny(:refute)
+
+      Wrong.config.alias_assert(:yep)
+      Wrong.config.alias_deny(:nope)
+
+      Wrong.config.alias_assert(:yay!)
+      Wrong.config.alias_deny(:boo!)
+
+Just don't use "`aver`" since we took that one for an internal method in `Wrong::Assert`.
+
 ## Helper Assert Methods ##
 
 If you really want to, you can define your procs in one method, pass it in to another method, and have that method assert it. This is very bizarre and you probably shouldn't do it. Wrong will do its best to figure out where the actual assertion code is but it might not succeed.
