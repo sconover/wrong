@@ -22,12 +22,24 @@ module Wrong
       AssertionFailedError
     end
 
-    def assert(explanation = nil, depth = 0, &block)
-      aver(:assert, explanation, depth, &block)
+    # Actual signature: assert(explanation = nil, depth = 0, block)
+    def assert(*args, &block)
+      if block.nil?
+        super
+      else
+        aver(:assert, *args, &block)
+      end
     end
 
-    def deny(explanation = nil, depth = 0, &block)
-      aver(:deny, explanation, depth, &block)
+    # Actual signature: deny(explanation = nil, depth = 0, block)    
+    def deny(*args, &block)
+      if block.nil?
+        test = args.first
+        msg = args[1]
+        assert !test, msg  # this makes it get passed up to the framework
+      else
+        aver(:deny, *args, &block)
+      end
     end
 
     def rescuing
@@ -93,18 +105,6 @@ module Wrong
     overridable do
       def failure_message(method_sym, block, predicate)
         method_sym == :deny ? predicate.to_sentence : predicate.to_negative_sentence
-      end
-    end
-
-    def self.disable_existing_assert_methods(the_class)
-      (the_class.public_instance_methods.
-        map { |m| m.to_s }.
-        select { |m| m =~ /^assert/ } - ["assert"]).each do |old_assert_method|
-        the_class.class_eval(%{
-          def #{old_assert_method}(*args)
-            raise "#{old_assert_method} has been disabled.  When you use Wrong, it overrides 'assert', which most test frameworks have defined, and use internally."
-          end
-        })
       end
     end
 

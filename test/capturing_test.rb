@@ -3,21 +3,21 @@ require "./test/test_helper"
 require "wrong/assert"
 require "wrong/adapters/minitest"
 
-regarding "a tool for capturing output" do
+describe "a tool for capturing output" do
 
-  test "captures stdout" do
+  it "captures stdout" do
     assert {
       capturing { puts "hi" } == "hi\n"
     }
   end
 
-  test "captures stderr" do
+  it "captures stderr" do
     assert {
       capturing(:stderr) { $stderr.puts "hi" } == "hi\n"
     }
   end
 
-  test "captures both" do
+  it "captures both" do
     out, err = capturing(:stdout, :stderr) do
        $stdout.puts "hi"
        $stderr.puts "bye"
@@ -28,7 +28,7 @@ regarding "a tool for capturing output" do
 
   end
 
-  test "supports nesting" do
+  it "supports nesting" do
     outside = nil
     inside = nil
     outside = capturing do
@@ -44,7 +44,7 @@ regarding "a tool for capturing output" do
   end
 
 
-  test "bails if stream was reassigned" do
+  it "bails if stream was reassigned" do
     e = rescuing do
       capturing do
         $stdout = StringIO.new # uh-oh!

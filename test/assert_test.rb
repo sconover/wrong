@@ -1,7 +1,7 @@
 require "./test/test_helper"
 require "wrong/assert"
 
-regarding "basic assert features" do
+describe "basic assert features" do
 
   before do
     @m = Module.new do
@@ -9,8 +9,8 @@ regarding "basic assert features" do
     end
   end
 
-  regarding "pass/fail basics" do
-    test "passes when the result is true.  deny does the reverse" do
+  describe "pass/fail basics" do
+    it "passes when the result is true.  deny does the reverse" do
       @m.assert { true }
       @m.assert { 1==1 }
 
@@ -18,7 +18,7 @@ regarding "basic assert features" do
       @m.deny { 1==2 }
     end
 
-    test "fails when result is false.  deny does the reverse" do
+    it "fails when result is false.  deny does the reverse" do
       get_error {
         @m.assert { false }
       } || fail
@@ -37,12 +37,12 @@ regarding "basic assert features" do
     class MyError < StandardError;
     end
 
-    test "both deny and assert fail when an error is thrown.  bubbles up the error." do
+    it "both deny and assert fail when an error is thrown.  bubbles up the error." do
       assert_raises(MyError) { @m.assert { raise MyError.new } }
       assert_raises(MyError) { @m.deny { raise MyError.new } }
     end
 
-    test "assert takes an optional explanation" do
+    it "assert takes an optional explanation" do
       e = get_error {
         sky = "green"
         @m.assert("the sky should be blue") { sky == "blue" }
@@ -50,7 +50,7 @@ regarding "basic assert features" do
       assert e.message =~ /^the sky should be blue: /
     end
 
-    test "deny takes an optional explanation" do
+    it "deny takes an optional explanation" do
       e = get_error {
         sky = "blue"
         @m.deny("the sky should not be blue") { sky == "blue" }
@@ -61,7 +61,7 @@ regarding "basic assert features" do
 end
 
 
-regarding "advanced assert features" do
+describe "advanced assert features" do
   include Wrong::Assert
 
   def assert_many(*procs)
@@ -76,7 +76,7 @@ regarding "advanced assert features" do
     assert { failures.empty? }
   end
 
-  test "it's possible (but not advisable) to define procs in different places from the assert call" do
+  it "it's possible (but not advisable) to define procs in different places from the assert call" do
     x = 10
     e = rescuing do
       assert_many(lambda { x == 10 })

@@ -2,7 +2,7 @@ require "./test/test_helper"
 
 require "wrong/assert"
 
-regarding "failures" do
+describe "failures" do
 
   before do
     @m = Module.new do
@@ -10,15 +10,15 @@ regarding "failures" do
     end
   end
 
-  regarding "simple" do
+  describe "simple" do
 
-    test "raw boolean assert failure" do
+    it "raw boolean assert failure" do
       error = get_error { @m.assert { false } }
 #      puts error.message
       assert_match "false", error.message
     end
 
-    test "raw boolean deny failure" do
+    it "raw boolean deny failure" do
       error = get_error {
         @m.deny { true }
       }
@@ -26,7 +26,7 @@ regarding "failures" do
       assert_match "true", error.message
     end
 
-    test "equality failure" do
+    it "equality failure" do
       assert_match "1 is not equal to 2", get_error {
         @m.assert { 1==2 }
       }.message
@@ -35,7 +35,7 @@ regarding "failures" do
       }.message
     end
 
-    test "failure of basic operations" do
+    it "failure of basic operations" do
       assert_match "1 is not greater than 2", get_error {
         @m.assert { 1>2 }
       }.message
@@ -63,13 +63,13 @@ regarding "failures" do
       }.message
     end
 
-    test "object failure" do
+    it "object failure" do
       assert_match "Color:red is not equal to 2", get_error {
         @m.assert { Color.new("red")==2 }
       }.message
     end
 
-    test %{multiline assert block shouldn't look any different
+    it %{multiline assert block shouldn't look any different
            than when there everything is on one line} do
       assert_match("1 is not equal to 2", get_error {
         @m.assert {
@@ -81,8 +81,8 @@ regarding "failures" do
 
   end
 
-  regarding "accessing and printing values set outside of the assert" do
-    test "use a value in the assert defined outside of it" do
+  describe "accessing and printing values set outside of the assert" do
+    it "use a value in the assert defined outside of it" do
       a = 1
       assert_match "1 is not equal to 2", get_error {
         @m.assert { a==2 }
@@ -93,8 +93,8 @@ regarding "failures" do
     end
   end
 
-  regarding "conjunctions (and and or)" do
-    test "omit a primary failure message since 'This is not true etc.' is more obscuring than clarifying" do
+  describe "conjunctions (and and or)" do
+    it "omit a primary failure message since 'This is not true etc.' is more obscuring than clarifying" do
       m = get_error {
         x = 5
         @m.assert { x == 5 && x != 5}
@@ -103,8 +103,8 @@ regarding "failures" do
     end
   end
 
-  regarding "the assert block has many statements" do
-    test "only pay attention to the final statement" do
+  describe "the assert block has many statements" do
+    it "only pay attention to the final statement" do
       assert_match("1 is not equal to 2", get_error {
         @m.assert {
           a = "aaa"
@@ -117,7 +117,7 @@ regarding "failures" do
       }.message)
     end
 
-    test "works even if the assertion is based on stuff set previously in the block" do
+    it "works even if the assertion is based on stuff set previously in the block" do
       assert_match("\"aaa\" is not equal to \"bbb\"", get_error {
         @m.assert {
           a = "aaa"
@@ -127,16 +127,16 @@ regarding "failures" do
     end
   end
 
-  regarding "array comparisons" do
-    test "basic" do
+  describe "array comparisons" do
+    it "basic" do
       assert_match %{[1, 2] is not equal to ["a", "b"]}, get_error {
         @m.assert { [1, 2]==%w{a b} }
       }.message
     end
   end
 
-  regarding "hash comparisons" do
-    test "basic" do
+  describe "hash comparisons" do
+    it "basic" do
       assert_match '{1=>2} is not equal to {"a"=>"b"}',
                    get_error {
                      @m.assert { {1=>2}=={"a"=>"b"} }
@@ -144,8 +144,8 @@ regarding "failures" do
     end
   end
 
-  regarding "methods that result in a boolean.  this might be hard." do
-    test "string include" do
+  describe "methods that result in a boolean.  this might be hard." do
+    it "string include" do
       assert_match "\"abc\" does not include \"cd\"", get_error {
         @m.assert { "abc".include?("cd") }
       }.message

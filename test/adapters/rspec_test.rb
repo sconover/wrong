@@ -1,7 +1,7 @@
 require "./test/test_helper"
 require "wrong/adapters/rspec"
 
-regarding "testing rspec" do
+describe "testing rspec" do
   it "works" do
     # I would use
     #    out, err = capturing(:stdout, :stderr) do

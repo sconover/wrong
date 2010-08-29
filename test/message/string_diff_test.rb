@@ -3,7 +3,7 @@ require "wrong/assert"
 require "wrong/message/string_diff"
 require "wrong/adapters/minitest"
 
-regarding "when you're comparing strings and they don't match, show me the diff message" do
+describe "when you're comparing strings and they don't match, show me the diff message" do
   
   def assert_string_diff_message(first_string, second_string, str)
     assert{
@@ -13,7 +13,7 @@ regarding "when you're comparing strings and they don't match, show me the diff 
     }
   end
   
-  test "don't attempt to do this if the assertion is not of the form a_string==b_string" do
+  it "don't attempt to do this if the assertion is not of the form a_string==b_string" do
     deny{
       rescuing{
         assert{1==2}
@@ -36,7 +36,7 @@ regarding "when you're comparing strings and they don't match, show me the diff 
     }
   end
 
-  test "simple" do
+  it "simple" do
     assert{
       rescuing{
         assert{"a"=="b"}
@@ -51,7 +51,7 @@ acc
 })
   end
 
-  test "whitespace" do
+  it "whitespace" do
     assert_string_diff_message("a\nb", "a\ncc",  %{
 a\\nb
   ^ 
@@ -74,7 +74,7 @@ a\\rcc
 
   end
 
-  xtest "elides really long matching sections" do
+  xit "elides really long matching sections" do
     left = "x"*100 + "ab" + "y"*100 + "AB" + "z"*100 
     right = "x"*100 + "acc" + "y"*100 + "ACC" + "z"*100 
     

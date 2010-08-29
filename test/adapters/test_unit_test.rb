@@ -6,19 +6,8 @@ require "wrong/assert"
 require "wrong/adapters/test_unit"
 
 class MyFailingAssertTest <  Test::Unit::TestCase
-  
-  def test_strip_out_other_assert_methods
-    #because they call into assert and we're redfining that method so it's potentially confusing
-    
-    begin
-      Class.new(Test::Unit::TestCase).assert_equal(1, 1)
-    rescue StandardError => e
-      e.message.include?("has been disabled")
-    end
-  end
-  
-  
-  def test_assert_and_deny_are_available_to_test_unit_tests
+
+  def test_wrong_assert_and_deny_are_available_to_test_unit_tests
     my_failing_assert_test = Class.new(Test::Unit::TestCase)
     my_failing_assert_test.class_eval do
       def test_fail
@@ -46,5 +35,20 @@ class MyFailingAssertTest <  Test::Unit::TestCase
     assert{ failures.length==1 }
     assert{ failures.first.long_display.include?("1 is equal to 1") }
   end
-  
+
+  def test_passes_asserts_with_no_block_up_to_the_frameworks_assert_method
+    e = rescuing { assert(1 == 2) }
+    assert { e.message == "<false> is not true." }
+
+    e = rescuing { assert(1 == 2, "black is white") }
+    assert { e.message == "black is white.\n<false> is not true." }
+  end
+
+  def test_passes_denys_with_no_block_up_to_the_frameworks_assert_method
+    e = rescuing { deny(2 + 2 == 4) }
+    assert { e.message == "<false> is not true." }
+
+    e = rescuing { deny(2 + 2 == 4, "up is down") }
+    assert { e.message == "up is down.\n<false> is not true." }
+  end
 end

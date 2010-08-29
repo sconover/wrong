@@ -2,7 +2,7 @@ require "./test/test_helper"
 require "wrong/close_to"
 require "wrong/assert"
 
-regarding "#close_to? (monkey patch for float comparison)" do
+describe "#close_to? (monkey patch for float comparison)" do
   include Wrong::Assert
 
   it "says two equal floats are equal" do
