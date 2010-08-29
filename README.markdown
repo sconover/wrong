@@ -140,7 +140,7 @@ Since the point of Wrong is to make asserts self-explanatory, you should feel fr
 
       assert("the sky should be blue") { sky.blue? } # redundant
 
-The failure message of the above would be something like "Expected sky.blue? but sky is :green" which is not made clearer by the addition of "the sky should be blue". We already know it should be blue since we see right there ("`Expected (sky.blue?)`") that we're expecting it to be blue.
+The failure message of the above would be something like "`Expected sky.blue? but sky is :green`" which is not made clearer by the addition of "`the sky should be blue`". We already know it should be blue since we see right there ("`Expected (sky.blue?)`") that we're expecting it to be blue.
 
 And if your assertion code isn't self-explanatory, then that's a hint that you might need to do some refactoring until it is. (Yes, even test code should be clean as a whistle. **Especially** test code.)
 
