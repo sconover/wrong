@@ -5,9 +5,10 @@ gem "ParseTree"
 
 gem "minitest"
 gem "test-unit"
+gem "rspec"
 
 # until predicated is a released gem, I've put it directly into this project
-# gem "predicated"
+gem "predicated", :path => "lib/predicated"
 
 gem "diff"
 gem "diff-lcs"
