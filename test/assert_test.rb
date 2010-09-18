@@ -52,7 +52,7 @@ describe "basic assert features" do
 
       it "gives a meaningful error when passed no block" do
         e = get_error {
-          @m.assert (2+2 == 5)
+          @m.assert(2+2 == 5)
         }
         assert e.message =~ /a block/
       end
