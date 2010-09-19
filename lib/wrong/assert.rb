@@ -1,5 +1,5 @@
 require "predicated/predicate"
-require "predicated/from/callable_object"
+require "predicated/from/ruby_code_string"
 require "predicated/to/sentence"
 require "wrong/chunk"
 require "wrong/config"

@@ -14,7 +14,7 @@ task :default => :test
 desc 'run all tests (in all ruby versions if rvm is installed)'
 task :test do
   rvm = `which rvm`.strip
-  ruby = rvm == "" ? "ruby" : "#{rvm} ruby,1.8.6,1.8.7,1.9.1,1.9.2"
+  ruby = rvm == "" ? "ruby" : "#{rvm} ruby,1.8.6,1.8.7,1.9.1,1.9.2,jruby"
   sh "#{ruby} test/suite.rb"
 end
 

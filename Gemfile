@@ -1,7 +1,6 @@
 source :gemcutter
 gem "ruby_parser"
 gem "ruby2ruby"
-gem "ParseTree"
 
 gem "minitest"
 gem "test-unit"
