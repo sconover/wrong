@@ -1,3 +1,7 @@
+==
+
+* make Wrong work inside IRB
+
 == 0.3.1 - 2010/08/29
 
 * remove "This is not true" messages, since they were more confusing than clarifying

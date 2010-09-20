@@ -110,7 +110,9 @@ So wait a second. How do we do it? Doesn't Ruby have [poor support for AST intro
 Before you get your knickers in a twist about how this is totally unacceptable because it doesn't support this or that use case, here are our caveats and excuses:
 
 * It works! Tested in 1.8.6, 1.8.7, 1.9.1, and 1.9.2-rc2. (Thank you, [rvm](http://rvm.beginrescueend.com/)!)
-* Your code needs to be in a file. That means it doesn't work in IRB. (If you're developing Ruby code without saving it to a mounted disk, then sorry, Wrong is not right for you.)
+* Your code needs to be in a file.
+  * If you're developing Ruby code without saving it to a mounted disk, then sorry, Wrong is not right for you.
+  * We monkey-patch IRB so if you do `irb -rwrong` it'll save off your session in a place Wrong can read it.
 * It's a development-time testing library, not a production runtime library, so there are no security or filesystem issues.
 * `eval` isn't evil, it's just misunderstood.
 * It makes a few assumptions about the structure of your code, leading to some restrictions:
