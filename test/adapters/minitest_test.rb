@@ -77,5 +77,10 @@ describe 'reports number of assertions' do
     @test.assert {true}
     assert {@test._assertions == 1}
   end
+
+  it 'deny should bump number of assertions' do
+    @test.deny {false}
+    assert {@test._assertions == 1}
+  end  
 end
 
