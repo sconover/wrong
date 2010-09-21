@@ -1,5 +1,6 @@
 require 'ruby_parser'
 require 'ruby2ruby'
+require 'sourcify'
 require "wrong/config"
 require "wrong/sexp_ext"
 
@@ -39,28 +40,30 @@ module Wrong
     # if not, then glom the next line and try again
     # repeat until it parses or we're out of lines
     def parse
-      lines = File.read(@file).split("\n")
-      @parser ||= RubyParser.new
-      @chunk = nil
-      c = 0
-      @sexp = nil
-      while @sexp.nil? && line_index + c < lines.size
-        begin
-          @chunk = lines[line_index..line_index+c].join("\n")
-          @sexp = @parser.parse(@chunk)
-        rescue Racc::ParseError => e
-          # loop and try again
-          c += 1
-        end
-      end
-      @sexp
+      # lines = File.read(@file).split("\n")
+      # @parser ||= RubyParser.new
+      # @chunk = nil
+      # c = 0
+      # @sexp = nil
+      # while @sexp.nil? && line_index + c < lines.size
+      #   begin
+      #     @chunk = lines[line_index..line_index+c].join("\n")
+      #     @sexp = @parser.parse(@chunk)
+      #   rescue Racc::ParseError => e
+      #     # loop and try again
+      #     c += 1
+      #   end
+      # end
+      # @sexp
+      # 
+      @sexp = @block.to_sexp
     end
     
     # The claim is the part of the assertion inside the curly braces.
     # E.g. for "assert { x == 5 }" the claim is "x == 5"
     def claim
       parse()
-
+result = 
       if @sexp.nil?
         raise "Could not parse #{location}"
       else
@@ -73,6 +76,13 @@ module Wrong
           statement
         end
       end
+      
+      #sourcify sexp's start out life like so:
+      #s(:iter, s(:call, nil, :proc, s(:arglist)), nil, s(:call, s(:lvar, :a), :==, s(:arglist, s(:lit, 2))))
+      #we want to strip out
+      #s(:iter, s(:call, nil, :proc, s(:arglist)), nil, 
+      #and get straight at the sexp that's the first child of the (outer, surrounding) proc
+      result[3]
     end
 
     def code

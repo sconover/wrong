@@ -5,7 +5,7 @@ unless Object.const_defined?(:Chunk)
   Chunk = Wrong::Chunk
 end
 
-describe Chunk do
+xdescribe Chunk do
   describe "#from_block" do
     it "reads the source location" do
       file, line = __FILE__, __LINE__
