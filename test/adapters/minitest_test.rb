@@ -66,5 +66,16 @@ describe "basic assert features" do
     msg = rescuing { MyFailingDenyTest.new.test_fail }.message
     assert { msg.include?("1 is equal to 1") }
   end
-
 end
+
+describe 'reports number of assertions' do
+  before do
+    @test = Class.new(MiniTest::Unit::TestCase).new("x")
+  end
+  
+  it 'assert should bump number of assertions' do
+    @test.assert {true}
+    assert {@test._assertions == 1}
+  end
+end
+
