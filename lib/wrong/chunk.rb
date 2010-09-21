@@ -14,13 +14,13 @@ module Wrong
                      # in Ruby 1.8, it reads the source location from the call stack
                      caller[depth].split(":")
                    end
-      new(file, line, block)
+      new(file, line, &block) 
     end
 
     attr_reader :file, :line_number, :block
 
     # line parameter is 1-based
-    def initialize(file, line_number, block = nil)
+    def initialize(file, line_number, &block)
       @file = file
       @line_number = line_number.to_i
       @block = block
@@ -56,14 +56,27 @@ module Wrong
       # end
       # @sexp
       # 
-      @sexp = @block.to_sexp
+
+
+
+
+      #sourcify sexp's start out life like so:
+      #s(:iter, s(:call, nil, :proc, s(:arglist)), nil, s(:call, s(:lvar, :a), :==, s(:arglist, s(:lit, 2))))
+      #we want to strip out
+      #s(:iter, s(:call, nil, :proc, s(:arglist)), nil, 
+      #and get straight at the sexp that's the first child of the (outer, surrounding) proc
+      #so jump to the 4th element
+
+      @sexp = @block.to_sexp[3]
     end
+
+
     
     # The claim is the part of the assertion inside the curly braces.
     # E.g. for "assert { x == 5 }" the claim is "x == 5"
     def claim
       parse()
-result = 
+
       if @sexp.nil?
         raise "Could not parse #{location}"
       else
@@ -77,12 +90,6 @@ result =
         end
       end
       
-      #sourcify sexp's start out life like so:
-      #s(:iter, s(:call, nil, :proc, s(:arglist)), nil, s(:call, s(:lvar, :a), :==, s(:arglist, s(:lit, 2))))
-      #we want to strip out
-      #s(:iter, s(:call, nil, :proc, s(:arglist)), nil, 
-      #and get straight at the sexp that's the first child of the (outer, surrounding) proc
-      result[3]
     end
 
     def code
