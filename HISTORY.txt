@@ -1,6 +1,7 @@
-==
+== 0.3.2
 
 * make Wrong work inside IRB
+* stop embedding predicated and depend on its gem
 
 == 0.3.1 - 2010/08/29
 

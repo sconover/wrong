@@ -16,6 +16,12 @@ task :test do
   sh "ruby test/suite.rb"
 end
 
+# make this a rake task so we can run it with "rvm rake" (may need to be preceded by "rvm gem install bundler")
+desc "run 'bundle install'"
+task :install_gems do
+  system "bundle install"
+end
+
 rubies='1.8.6,1.8.7,1.9.1,1.9.2'
 desc "run all tests with rvm, #{rubies}"
 task :rvm_test do

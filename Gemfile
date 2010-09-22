@@ -5,10 +5,8 @@ gem "ParseTree"
 
 gem "minitest"
 gem "test-unit"
-gem "rspec"
+gem "rspec", '~> 1'
 
-# until predicated is a released gem, I've put it directly into this project
-gem "predicated", :path => "lib/predicated"
-
+gem "predicated", '~> 0.2'
 gem "diff"
 gem "diff-lcs"
