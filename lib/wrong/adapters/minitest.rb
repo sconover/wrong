@@ -12,7 +12,7 @@ class MiniTest::Unit::TestCase
   end
   
   def deny(*args, &block)
-    self._assertions += 1
+    self._assertions += 1 unless block.nil?
     super
   end
 end
