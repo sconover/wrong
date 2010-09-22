@@ -5,4 +5,14 @@ class MiniTest::Unit::TestCase
   def failure_class
     MiniTest::Assertion
   end
+
+  def assert(*args, &block)
+    self._assertions += 1 unless block.nil?
+    super
+  end
+  
+  def deny(*args, &block)
+    self._assertions += 1 unless block.nil?
+    super
+  end
 end

@@ -27,7 +27,7 @@ DEPENDENCIES
   diff-lcs
   minitest
   predicated!
-  rspec
+  rspec (~> 1)
   ruby2ruby
   ruby_parser
   test-unit
