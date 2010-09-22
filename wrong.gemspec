@@ -23,7 +23,7 @@ in Ruby, Wrong can make a sensible failure message out of it.
   s.has_rdoc = true
   s.extra_rdoc_files = %w[README.markdown]
 
-#  s.add_dependency "predicated", ">= 0.1.0"
+  s.add_dependency "predicated", ">= 0.2.1"
   s.add_dependency "ParseTree", ">= 3.0.5"
   s.add_dependency "ruby_parser", ">= 2.0.4"
   s.add_dependency "ruby2ruby", ">= 1.2.4"
