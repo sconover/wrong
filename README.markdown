@@ -225,6 +225,8 @@ If you're in Ruby 1.8, you **really** shouldn't do it! But if you do, you can us
 
 * Steve Conover - <sconover@gmail.com>
 * Alex Chaffee - <alex@stinky.com> - <http://alexch.github.com>
+* John Firebaugh
+* Thierry Henrio
 
 ## Etc ##
 
