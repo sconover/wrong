@@ -1,8 +1,10 @@
 require "./test/test_helper"
-require "wrong/adapters/rspec"
 
 describe "testing rspec" do
   it "works" do
+
+    require "wrong/adapters/rspec" # if we don't require this in here, then it interferes with minitest
+    
     # I would use
     #    out, err = capturing(:stdout, :stderr) do
     # but minitest does its own arcane stream munging and it's not working
@@ -35,7 +37,7 @@ inside rspec land
     failures = Spec::Runner.options.reporter.instance_variable_get(:@failures) # todo: use my own reporter?
     assert !failures.empty?
     exception = failures.first.exception
-    assert(exception.is_a? Spec::Expectations::ExpectationNotMetError)
+    assert(exception.is_a?(Spec::Expectations::ExpectationNotMetError))
     assert(exception.message == "Expected (sky == \"green\"), but \"blue\" is not equal to \"green\"\n    sky is \"blue\"\n")
   end
 end
