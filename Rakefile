@@ -18,7 +18,7 @@ end
 
 namespace :rvm do
 
-  @rubies='1.8.6,1.8.7,1.9.1,1.9.2'
+  @rubies='1.8.6,1.8.7,1.9.1,1.9.2,jruby'
 
   def rvm
     rvm = `which rvm`.strip
@@ -30,13 +30,14 @@ namespace :rvm do
     # Bundler inherits its environment by default, so clear it here
     %w{BUNDLE_PATH BUNDLE_BIN_PATH BUNDLE_GEMFILE}.each {|var| ENV.delete(var) }
     @rubies.split(',').each do |version|
-      system "#{rvm} use #{version}; bundle install"
+      puts "\n== Using #{version}"
+      system "#{rvm} use #{version}; #{cmd}"
     end
   end
 
   desc "run all tests with rvm in #{@rubies}"
   task :test do
-    sh "#{rvm} #{@rubies} test/suite.rb"
+    rvm_run "ruby test/suite.rb"
   end
 
   desc "run 'bundle install' with rvm in each of #{@rubies}"
