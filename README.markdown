@@ -10,7 +10,7 @@ Wrong is alpha-quality. We'd very much appreciate feedback and bug reports. Ther
 
 It relies on [Predicated](http://github.com/sconover/predicated) for its main failure message.
 
-Inspired by [assert { 2.0 }](http://assert2.rubyforge.org/) but rewritten from scratch. Compatible with Ruby 1.8 and 1.9.
+Inspired by [assert { 2.0 }](http://assert2.rubyforge.org/) but rewritten from scratch. Compatible with Ruby (MRI) 1.8, 1.9, and JRuby 1.5.
 
 ## Usage ##
 
