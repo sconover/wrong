@@ -1,6 +1,12 @@
 dir = File.dirname(__FILE__)
 $LOAD_PATH.unshift "#{dir}/../lib"
-$LOAD_PATH.unshift "../predicated/lib" if File.exist?("../predicated/lib")
+
+if File.exist?("../predicated/lib")
+  $LOAD_PATH.unshift "../predicated/lib" 
+else
+  $LOAD_PATH.unshift "#{dir}/../lib/predicated/lib"
+end
+
 require "rubygems"
 require "minitest/spec"
 require "minitest/unit"
