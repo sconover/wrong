@@ -110,7 +110,9 @@ So wait a second. How do we do it? Doesn't Ruby have [poor support for AST intro
 Before you get your knickers in a twist about how this is totally unacceptable because it doesn't support this or that use case, here are our caveats and excuses:
 
 * It works! Tested in 1.8.6, 1.8.7, 1.9.1, and 1.9.2-rc2. (Thank you, [rvm](http://rvm.beginrescueend.com/)!)
-* Your code needs to be in a file. That means it doesn't work in IRB. (If you're developing Ruby code without saving it to a mounted disk, then sorry, Wrong is not right for you.)
+* Your code needs to be in a file.
+  * If you're developing Ruby code without saving it to a mounted disk, then sorry, Wrong is not right for you.
+  * We monkey-patch IRB so if you do `irb -rwrong` it'll save off your session in a place Wrong can read it.
 * It's a development-time testing library, not a production runtime library, so there are no security or filesystem issues.
 * `eval` isn't evil, it's just misunderstood.
 * It makes a few assumptions about the structure of your code, leading to some restrictions:
@@ -189,6 +191,29 @@ Apparently, no test framework is successful unless and until it supports console
     Wrong.config[:color] = true
 
 in your test helper or rakefile or wherever and get ready to be **bedazzled**.
+
+## Aliases ##
+
+An end to the language wars! Name your "assert" and "deny" methods anything you want. Here are some suggestions:
+
+      Wrong.config.alias_assert(:expect)
+      Wrong.config.alias_assert(:should) # This looks nice with RSpec
+      Wrong.config.alias_assert(:confirm)
+      Wrong.config.alias_assert(:be)
+
+      Wrong.config.alias_assert(:is)
+      Wrong.config.alias_deny(:aint)
+
+      Wrong.config.alias_assert(:assure)
+      Wrong.config.alias_deny(:refute)
+
+      Wrong.config.alias_assert(:yep)
+      Wrong.config.alias_deny(:nope)
+
+      Wrong.config.alias_assert(:yay!)
+      Wrong.config.alias_deny(:boo!)
+
+Just don't use "`aver`" since we took that one for an internal method in `Wrong::Assert`.
 
 ## Helper Assert Methods ##
 

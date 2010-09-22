@@ -39,7 +39,12 @@ module Wrong
     # if not, then glom the next line and try again
     # repeat until it parses or we're out of lines
     def parse
-      lines = File.read(@file).split("\n")
+      source = if @file == "(irb)"
+               IRB.CurrentContext.all_lines
+             else
+               File.read(@file)
+             end
+      lines = source.split("\n")
       @parser ||= RubyParser.new
       @chunk = nil
       c = 0

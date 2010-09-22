@@ -1,6 +1,12 @@
-== 0.3.1
+==
+
+* make Wrong work inside IRB
+
+== 0.3.1 - 2010/08/29
 
 * remove "This is not true" messages, since they were more confusing than clarifying
+* Test::Unit and Minitest pass assert/deny with no block up to the framework's assert method
+* alias_assert and alias_deny (a truce in the language wars!)
 
 == 0.3.0 - 2010/08/26
 

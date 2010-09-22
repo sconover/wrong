@@ -11,11 +11,18 @@ end
 
 task :default => :test
 
-desc 'run all tests (in all ruby versions if rvm is installed)'
+desc 'run all tests (in current ruby)'
 task :test do
+  sh "ruby test/suite.rb"
+end
+
+rubies='1.8.6,1.8.7,1.9.1,1.9.2'
+desc "run all tests with rvm, #{rubies}"
+task :rvm_test do
   rvm = `which rvm`.strip
   ruby = rvm == "" ? "ruby" : "#{rvm} ruby,1.8.6,1.8.7,1.9.1,1.9.2,jruby"
-  sh "#{ruby} test/suite.rb"
+  raise 'rvm not available, go to http://rvm.beginrescueend.com' unless rvm
+  sh "#{rvm} ruby,#{rubies} test/suite.rb"
 end
 
 desc "Build pkg/#{gemspec.full_name}.gem"

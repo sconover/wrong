@@ -1,3 +1,5 @@
+# run this file to see some sample Wrong failures
+
 puts "RUBY_VERSION=#{RUBY_VERSION}"
 puts
 
@@ -21,9 +23,13 @@ end
 
 # ignore all the "failing" statements in this file; they're so the failed assertions don't exit the process
 
-failing { assert {2==1} }
+failing do
+  assert {2==1}
+end
 
-failing { x = 7; y = 10; assert { x == 7 && y == 11 } }
+failing do
+  x = 7; y = 10; assert { x == 7 && y == 11 }
+end
 
 failing do
   age = 24
@@ -31,11 +37,13 @@ failing do
   assert { age >= 18 && ["Britney", "Snooki"].include?(name) }
 end
 
-failing { assert{'hand'.include?('bird')} }
+failing do
+  assert { 'hand'.include?('bird') }
+end
 
-
-failing { deny{'abc'.include?('bc')} }
-
+failing do
+  deny { 'abc'.include?('bc') }
+end
 
 #require "wrong/message/string_diff"  TODO: make string_diff use "diff-lcs" not "diff" gem
 failing do
@@ -60,7 +68,9 @@ class Foo
   end
 end
 
-failing { assert { Foo.new(1, Foo.new(3,4) ,3) == 4  } }
+failing do
+  assert { Foo.new(1, Foo.new(3,4) ,3) == 4  }
+end
 
 assert { capturing { puts "hi" } == "hi\n" }
 assert { capturing(:stderr) { $stderr.puts "hi" } == "hi\n" }

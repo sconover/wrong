@@ -1,5 +1,6 @@
 require 'ruby_parser'
 require 'ruby2ruby'
+require 'wrong/config'
 
 class Sexp < Array
   def doop
@@ -17,7 +18,7 @@ class Sexp < Array
       self[0] == :iter and
       self[1].is_a? Sexp and
       self[1][0] == :call and
-      [:assert, :deny].include? self[1][2] # todo: allow aliases for assert (e.g. "is")
+      Wrong.config.assert_methods.include? self[1][2] # todo: allow aliases for assert (e.g. "is")
   end
 
   def assertion
