@@ -16,18 +16,38 @@ task :test do
   sh "ruby test/suite.rb"
 end
 
-# make this a rake task so we can run it with "rvm rake" (may need to be preceded by "rvm gem install bundler")
-desc "run 'bundle install'"
-task :install_gems do
-  system "bundle install"
-end
+namespace :rvm do
 
-rubies='1.8.6,1.8.7,1.9.1,1.9.2'
-desc "run all tests with rvm, #{rubies}"
-task :rvm_test do
-  rvm = `which rvm`.strip
-  raise 'rvm not available, go to http://rvm.beginrescueend.com' unless rvm
-  sh "#{rvm} ruby,#{rubies} test/suite.rb"
+  @rubies='1.8.6,1.8.7,1.9.1,1.9.2'
+
+  def rvm
+    rvm = `which rvm`.strip
+    raise 'rvm not available; go to http://rvm.beginrescueend.com' unless rvm
+    rvm
+  end
+
+  def rvm_run(cmd)
+    # Bundler inherits its environment by default, so clear it here
+    %w{BUNDLE_PATH BUNDLE_BIN_PATH BUNDLE_GEMFILE}.each {|var| ENV.delete(var) }
+    @rubies.split(',').each do |version|
+      system "#{rvm} use #{version}; bundle install"
+    end
+  end
+
+  desc "run all tests with rvm in #{@rubies}"
+  task :test do
+    sh "#{rvm} #{@rubies} test/suite.rb"
+  end
+
+  desc "run 'bundle install' with rvm in each of #{@rubies}"
+  task :install_gems do
+    rvm_run("bundle install")
+  end
+
+  desc "run 'gem install bundler' with rvm in each of #{@rubies}"
+  task :install_bundler do
+    rvm_run("gem install bundler")
+  end
 end
 
 desc "Build pkg/#{gemspec.full_name}.gem"
