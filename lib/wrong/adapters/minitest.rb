@@ -6,13 +6,21 @@ class MiniTest::Unit::TestCase
     MiniTest::Assertion
   end
 
-  def assert(*args, &block)
-    self._assertions += 1 unless block.nil?
-    super
+  def assert(*args)
+    if block_given? 
+      self._assertions += 1
+      super(explanation=args.first, depth=1)
+    else
+      super
+    end
   end
-  
-  def deny(*args, &block)
-    self._assertions += 1 unless block.nil?
-    super
+
+  def deny(*args)
+    if block_given? 
+      self._assertions += 1
+      super(explanation=args.first, depth=1)
+    else
+      super
+    end
   end
 end

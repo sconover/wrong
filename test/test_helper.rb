@@ -1,6 +1,5 @@
 dir = File.dirname(__FILE__)
 $LOAD_PATH.unshift "#{dir}/../lib"
-
 if File.exist?("../predicated/lib")
   $LOAD_PATH.unshift "../predicated/lib" 
 else

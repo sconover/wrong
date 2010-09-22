@@ -123,6 +123,7 @@ module Wrong
       unless value
         chunk = Wrong::Chunk.from_block(block, depth + 2)
         code = chunk.code
+
         predicate = begin
           Predicated::Predicate.from_ruby_code_string(code, block.binding)
         rescue Predicated::Predicate::DontKnowWhatToDoWithThisSexpError

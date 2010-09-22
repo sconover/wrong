@@ -61,6 +61,7 @@ describe "basic assert features" do
     end
 
     msg = rescuing { MyFailingAssertTest.new.test_fail }.message
+
     assert { msg.include?("1 is not equal to 2") }
 
     msg = rescuing { MyFailingDenyTest.new.test_fail }.message
