@@ -73,10 +73,16 @@ describe 'reports number of assertions' do
     @test = Class.new(MiniTest::Unit::TestCase).new("x")
   end
   
-  it 'assert should bump number of assertions' do
+  it 'assert{} should bump number of assertions' do
     @test.assert {true}
     assert {@test._assertions == 1}
   end
+  
+  it 'assert() should not bump twice number of assertions' do
+    @test.assert(true)
+    assert {@test._assertions == 1}
+  end
+
 
   it 'deny should bump number of assertions' do
     @test.deny {false}
