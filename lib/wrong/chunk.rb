@@ -122,11 +122,17 @@ module Wrong
           puts "#{e.class}: #{e.message}"
           puts e.backtrace.join("\n")
         end
+
+        if sexp.first == :iter
+          sexp.delete_at(1) # remove the method-call-sans-block subnode
+        end
+        
         sexp.each do |sub|
           if sub.is_a?(Sexp)
             parts_list += parts(sub)
           end
         end
+
         parts_list
       end
     end

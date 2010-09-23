@@ -113,7 +113,7 @@ module Wrong
       end
     end
 
-    private
+    protected
 
     def aver(valence, explanation = nil, depth = 0, &block)
       require "wrong/rainbow" if Wrong.config[:color]

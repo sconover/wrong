@@ -6,7 +6,7 @@
 
 Wrong provides a general assert method that takes a predicate block. Assertion failure messages are rich in detail. The Wrong idea is to replace all those countless assert\_this, assert\_that, should\_something library methods which only exist to give a more useful failure message than "assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it in Ruby, Wrong can make a sensible failure message out of it.
 
-Wrong is alpha-quality. We'd very much appreciate feedback and bug reports. There are plenty of things left to be done to make the results look uniformly clean and beautiful. We want your feedback, and especially to give us cases where either it blows up or the output is ugly or uninformative.
+We'd very much appreciate feedback and bug reports. There are plenty of things left to be done to make the results look uniformly clean and beautiful. We want your feedback, and especially to give us cases where either it blows up or the output is ugly or uninformative.
 
 It relies on [Predicated](http://github.com/sconover/predicated) for its main failure message.
 
@@ -146,6 +146,26 @@ The failure message of the above would be something like "`Expected sky.blue? bu
 
 And if your assertion code isn't self-explanatory, then that's a hint that you might need to do some refactoring until it is. (Yes, even test code should be clean as a whistle. **Especially** test code.)
 
+## Details ##
+
+When a failure occurs, the exception message contains all the details you might need to make sense of it. Here's the breakdown:
+
+    Expected [CLAIM], but [PREDICATE]
+      [FORMATTER]
+      [SUBEXP] is [VALUE]
+      ...
+
+* CLAIM is the code inside your assert block
+* PREDICATE is a to-English translation of the claim, via the Predicated library. This tries to be very intelligible; e.g. translating "include?" into "does not include" and so on.
+* If there is a formatter registered for this type of predicate, its output will come next. (See below.)
+* SUBEXP is each of the subtrees of the claim, minus duplicates and truisms (e.g. literals).
+* The word "is" is a very nice separator since it doesn't look like code.
+* VALUE is `eval(SUBEXP).inspect`
+
+We hope this structure lets your eyes focus on the meaningful values and differences in the message, rather than glossing over with stack-trace burnout. If you have any suggestions on how to improve it, please share them.
+
+(Why does VALUE use `inspect` and not `to_s`? Because `inspect` on standard objects like String and Array are sure to show all relevant details, such as white space, in a console-safe way, and we hope other libraries follow suit. Also, `to_s` often inserts line breaks and that messes up formatting and legibility.)
+
 ## Formatters ##
 
 Enhancements for error messages sit under wrong/message.
@@ -190,7 +210,7 @@ Apparently, no test framework is successful unless and until it supports console
 
     Wrong.config[:color] = true
 
-in your test helper or rakefile or wherever and get ready to be **bedazzled**.
+in your test helper or rakefile or wherever and get ready to be **bedazzled**. If you need custom colors, let us know.
 
 ## Aliases ##
 
@@ -232,5 +252,5 @@ If you're in Ruby 1.8, you **really** shouldn't do it! But if you do, you can us
 
 * Github projects: <http://github.com/alexch/wrong>, <http://github.com/sconover/wrong>
 * Tracker project: <http://www.pivotaltracker.com/projects/109993>
-* [Wrong way translation table (from RSpec and Test::Unit)](https://spreadsheets.google.com/pub?key=0AouPn6oLrimWdE0tZDVOWnFGMzVPZy0tWHZwdnhFYkE&hl=en&output=html). (Ask <alexch@gmail.com> if you want editing privileges.)
-* [the Wrong slides I presented at Carbon Five](http://www.slideshare.net/alexchaffee/wrong-5069976)
+* the [Wrong way translation table (from RSpec and Test::Unit)](https://spreadsheets.google.com/pub?key=0AouPn6oLrimWdE0tZDVOWnFGMzVPZy0tWHZwdnhFYkE&hl=en&output=html). (Ask <alexch@gmail.com> if you want editing privileges.)
+* the [Wrong slides](http://www.slideshare.net/alexchaffee/wrong-5069976) that Alex presented at Carbon Five and GoGaRuCo

@@ -158,6 +158,14 @@ z
 10
       PARTS
     end
+
+    it "omits the method-call-sans-block part of a method call with a block" do
+      chunk = Chunk.new(__FILE__, __LINE__ + 1); <<-CODE
+        assert { rescuing { 1 + 2 } }
+      CODE
+      code_parts = chunk.parts
+      assert !code_parts.include?("rescuing")
+    end
   end
 
   describe "#details" do
