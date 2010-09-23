@@ -1,18 +1,24 @@
 require 'ruby_parser'
 require 'ruby2ruby'
+require "sourcify"
+
 require "wrong/config"
 require "wrong/sexp_ext"
 
 module Wrong
   class Chunk
     def self.from_block(block, depth = 0)
-      file, line = if block.to_proc.respond_to? :source_location
-                     # in Ruby 1.9, it reads the source location from the block
-                     block.to_proc.source_location
-                   else
-                     # in Ruby 1.8, it reads the source location from the call stack
-                     caller[depth].split(":")
-                   end
+
+      as_proc = block.to_proc
+      file, line =
+              if as_proc.respond_to? :source_location
+                # in Ruby 1.9, or with Sourcify, it reads the source location from the block
+                as_proc.source_location
+              else
+                # in Ruby 1.8, it reads the source location from the call stack
+                caller[depth].split(":")
+              end
+
       new(file, line, block)
     end
 
@@ -33,38 +39,55 @@ module Wrong
       "#{@file}:#{@line_number}"
     end
 
+    def sexp
+      @sexp ||= build_sexp
+    end
+
+    def build_sexp
+      sexp = begin
+        unless @block.nil? || @block.is_a?(String)
+          # first try sourcify
+          @block.to_sexp[3] # the [3] is to strip out the "proc {" sourcify adds to everything
+        end
+      rescue Sourcify::MultipleMatchingProcsPerLineError, Racc::ParseError => e
+        # fall through
+      end
+
+      # next try glomming
+      sexp ||= glom(if @file == "(irb)"
+                      IRB.CurrentContext.all_lines
+                    else
+                      File.read(@file)
+                    end)
+    end
+
     # Algorithm:
-    # try to parse the starting line
-    # if it parses OK, then we're done!
-    # if not, then glom the next line and try again
-    # repeat until it parses or we're out of lines
-    def parse
-      source = if @file == "(irb)"
-               IRB.CurrentContext.all_lines
-             else
-               File.read(@file)
-             end
+    # * try to parse the starting line
+    # * if it parses OK, then we're done!
+    # * if not, then glom the next line and try again
+    # * repeat until it parses or we're out of lines
+    def glom(source)
       lines = source.split("\n")
       @parser ||= RubyParser.new
       @chunk = nil
       c = 0
-      @sexp = nil
-      while @sexp.nil? && line_index + c < lines.size
+      sexp = nil
+      while sexp.nil? && line_index + c < lines.size
         begin
           @chunk = lines[line_index..line_index+c].join("\n")
-          @sexp = @parser.parse(@chunk)
+          sexp = @parser.parse(@chunk)
         rescue Racc::ParseError => e
           # loop and try again
           c += 1
         end
       end
-      @sexp
+      sexp
     end
-    
+
     # The claim is the part of the assertion inside the curly braces.
     # E.g. for "assert { x == 5 }" the claim is "x == 5"
     def claim
-      parse()
+      sexp()
 
       if @sexp.nil?
         raise "Could not parse #{location}"
@@ -120,7 +143,7 @@ module Wrong
         parts.each do |part|
           begin
             value = eval(part, block.binding)
-            unless part == value.inspect  # this skips literals or tautologies
+            unless part == value.inspect # this skips literals or tautologies
               if part =~ /\n/m
                 part.gsub!(/\n/, newline(2))
                 part += newline(3)
@@ -149,11 +172,11 @@ module Wrong
       else
         "\n" + details.join("\n") + "\n"
       end
-      
+
     end
 
     private
-    
+
     def indent(indent, *s)
       "#{"  " * indent}#{s.join('')}"
     end

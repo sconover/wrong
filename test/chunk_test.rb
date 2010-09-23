@@ -32,7 +32,7 @@ describe Chunk do
       chunk = Chunk.new(__FILE__, __LINE__ + 1); <<-CODE
         "hi"
       CODE
-      code = chunk.parse.to_ruby
+      code = chunk.sexp.to_ruby
       assert(code == '"hi"')
     end
 
@@ -42,7 +42,7 @@ describe Chunk do
           "hi"
         end
       CODE
-      code = chunk.parse.to_ruby
+      code = chunk.sexp.to_ruby
       assert(code == "proc { \"hi\" }")
     end
 
@@ -50,26 +50,26 @@ describe Chunk do
       chunk = Chunk.new(__FILE__, __LINE__ + 1); <<-CODE
         "hi" )
       CODE
-      assert(chunk.parse.nil?)
+      assert(chunk.sexp.nil?)
     end
 
     it "fails if there's a stray close-block symbol on the last line (sorry)" do
       chunk = Chunk.new(__FILE__, __LINE__ + 1); <<-CODE
         "hi" }
       CODE
-      assert(chunk.parse.nil?)
+      assert(chunk.sexp.nil?)
     end
 
     it "fails if it can't parse the code" do
       chunk = Chunk.new(__FILE__, __LINE__ + 1); <<-CODE
         }
       CODE
-      assert(chunk.parse.nil?)
+      assert(chunk.sexp.nil?)
     end
 
     it "fails if it can't find the file" do
       chunk = Chunk.new("nonexistent_file.rb", 0)
-      error = get_error { chunk.parse }
+      error = get_error { chunk.sexp }
       assert error.is_a? Errno::ENOENT
     end
 
@@ -80,7 +80,7 @@ describe Chunk do
       chunk = Chunk.new(__FILE__, __LINE__ + 1); <<-CODE
         assert { x == 5 }
       CODE
-      full_code = chunk.parse.to_ruby
+      full_code = chunk.sexp.to_ruby
       assert(full_code == "assert { (x == 5) }")
       claim_code = chunk.claim.to_ruby
       assert claim_code == "(x == 5)"

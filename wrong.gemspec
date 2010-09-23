@@ -27,6 +27,7 @@ in Ruby, Wrong can make a sensible failure message out of it.
   s.add_dependency "ParseTree", ">= 3.0.5"
   s.add_dependency "ruby_parser", ">= 2.0.4"
   s.add_dependency "ruby2ruby", ">= 1.2.4"
+  s.add_dependency "sourcify", ">= 0.3.0"
 
   s.add_dependency "diff", ">= 0.3.6"
   s.add_dependency "diff-lcs", ">= 1.1.2"

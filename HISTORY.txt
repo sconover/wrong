@@ -1,3 +1,7 @@
+== 0.3.4
+
+* use Sourcify (if available) to increase robustness
+
 == 0.3.3
 
 * add JRuby support by removing ParseTree dependency
