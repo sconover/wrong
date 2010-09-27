@@ -9,7 +9,7 @@ Bundler.setup
 
 require "./lib/wrong"
 
-include Wrong::Assert
+include Wrong
 
 Wrong.config[:color] = true
 

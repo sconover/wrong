@@ -1,7 +1,7 @@
-require "wrong/assert"
+require "wrong"
 
 class Test::Unit::TestCase
-  include Wrong::Assert
+  include Wrong
 
   def failure_class
     Test::Unit::AssertionFailedError

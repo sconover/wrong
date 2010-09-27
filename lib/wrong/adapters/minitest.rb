@@ -1,7 +1,8 @@
-require "wrong/assert"
+require "wrong"
 
 class MiniTest::Unit::TestCase
-  include Wrong::Assert
+  include Wrong
+
   def failure_class
     MiniTest::Assertion
   end

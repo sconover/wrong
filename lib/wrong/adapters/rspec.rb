@@ -1,8 +1,8 @@
 require "spec"
-require "wrong/assert"
+require "wrong"
 
 Spec::Runner.configure do |config|
-  include Wrong::Assert
+  include Wrong
   
   def failure_class
     Spec::Expectations::ExpectationNotMetError

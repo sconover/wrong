@@ -18,7 +18,7 @@ Wrong provides a simple assert method that takes a block:
 
 	require "wrong"
 	
-	include Wrong::Assert
+	include Wrong
 	
 	assert { 1 == 1 }
 	 ==> nil
@@ -63,14 +63,17 @@ And one for capturing output streams:
 
     assert { capturing { puts "hi" } == "hi\n" }
     assert { capturing(:stderr) { $stderr.puts "hi" } == "hi\n" }
+
     out, err = capturing(:stdout, :stderr) { ... }
+    assert { out == "something standard\n" }
+    assert { err =~ /something erroneous/ }
 
 If you want to compare floats, try this:
 
-    require "wrong/close_to"
-
     assert { 5.0.close_to?(5.0001) }   # default tolerance = 0.001
     assert { 5.0.close_to?(5.1, 0.5) } # optional tolerance parameter
+
+(If you don't want `close_to?` cluttering up `Float` in your test runs then use `include Wrong::Assert` instead of `include Wrong`.)
 
 More examples are in the file `examples.rb` <http://github.com/alexch/wrong/blob/master/examples.rb>
 

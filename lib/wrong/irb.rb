@@ -12,5 +12,5 @@ if defined? IRB
   end
 
   # include it in the top level too, since if you're using Wrong inside IRB that's probably what you want
-  include Wrong::Assert
+  include Wrong
 end
