@@ -1,9 +1,9 @@
 require "./test/test_helper"
 require "wrong/close_to"
-require "wrong/assert"
+require "wrong"
 
 describe "#close_to? (monkey patch for float comparison)" do
-  include Wrong::Assert
+  include Wrong
 
   it "says two equal floats are equal" do
     assert { 5.0.close_to? 5.0 }

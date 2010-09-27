@@ -1,9 +1,10 @@
 require "./test/test_helper"
 
-require "wrong/assert"
 require "wrong/adapters/minitest"
 
 describe "a tool for capturing output" do
+
+  include Wrong
 
   it "captures stdout" do
     assert {
