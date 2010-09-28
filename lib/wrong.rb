@@ -14,6 +14,7 @@ module Wrong
   include Wrong::Assert
   extend Wrong::Assert
   include Wrong::Helpers
+  extend Wrong::Helpers
 
   def self.included(into_class)
     require "wrong/close_to"

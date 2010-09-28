@@ -1,13 +1,14 @@
 require "./test/test_helper"
+
+require "wrong"
 require "wrong/config"
-require "wrong/assert"
 require "wrong/message/string_diff"
 
 
 describe Wrong::Config do
 
   # hope this doesn't blow up, but I'll try to use Wrong to test the Config object
-  include Wrong::Assert
+  include Wrong
 
   before do
     Wrong.config.clear
@@ -20,7 +21,7 @@ describe Wrong::Config do
     assert { c.object_id == c2.object_id }
   end
 
-#  it "reading from a .wrong file"
+#  it "reads from a .wrong file"
 
   it "getting an undeclared setting" do
     assert { Wrong.config[:foo].nil? }

@@ -91,7 +91,7 @@ describe "advanced assert features" do
 
   it "is possible (but not advisable) to define procs in different places from the assert call" do
     x = 10
-    e = rescuing do
+    e = get_error do
       assert_many(lambda { x == 10 })
       assert_many(lambda { x > 10 })
     end

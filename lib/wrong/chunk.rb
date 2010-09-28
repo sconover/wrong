@@ -1,6 +1,9 @@
 require 'ruby_parser'
 require 'ruby2ruby'
+begin
 require "sourcify"
+rescue LoadError
+end
 
 require "wrong/config"
 require "wrong/sexp_ext"
