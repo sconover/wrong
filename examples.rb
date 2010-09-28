@@ -86,3 +86,6 @@ failing do
   money = 27
   assert { time == money }
 end
+
+x = 7
+d { x * 2 }

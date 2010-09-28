@@ -75,6 +75,16 @@ If you want to compare floats, try this:
 
 (If you don't want `close_to?` cluttering up `Float` in your test runs then use `include Wrong::Assert` instead of `include Wrong`.)
 
+We also implement the most amazing debugging method ever, `d`, which gives you a sort of mini-wrong wherever you want it
+, even in production code at runtime:
+
+    require 'wrong'
+    x = 7
+    d { x } # => prints "x is 7" to the console
+    d { x * 2 } # => prints "(x * 2) is 14" to the console
+
+(`d` was originally implemented by _ in LogBuddy; as with Assert2 this is a rewrite and homage.)
+
 More examples are in the file `examples.rb` <http://github.com/alexch/wrong/blob/master/examples.rb>
 
 There's also a spreadsheet showing a translation from Test::Unit and RSpec to Wrong, with notes, at [this Google Doc](https://spreadsheets.google.com/pub?key=0AouPn6oLrimWdE0tZDVOWnFGMzVPZy0tWHZwdnhFYkE&hl=en&output=html). (Ask <alexch@gmail.com> if you want editing privileges.)

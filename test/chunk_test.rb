@@ -226,6 +226,12 @@ z
       assert d == "\n    raise(\"hello\\nsailor\") raises RuntimeError: hello\n      sailor\n"
     end
 
+    it "abridges exceptions with no message" do
+      d = details { assert { (raise Exception.new) == 1} }
+      assert d == "\n    raise(Exception.new) raises Exception\n" +
+              "    Exception.new is #<Exception: Exception>\n"
+    end
+
     it "inspects values" do
       x = "flavor:\tvanilla"
       d = details { assert { x == "flavor:\tchocolate" } }

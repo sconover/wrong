@@ -25,6 +25,7 @@ describe "the Wrong module" do
       value = Wrong.rescuing { raise "uh-oh" }
       assert value.message == "uh-oh"
     end
+
   end
 
   describe "when included" do
@@ -48,6 +49,12 @@ describe "the Wrong module" do
 
     it "adds #close_to? to Float" do
       assert 1.0.respond_to?(:close_to?)
+    end
+
+    it "adds #d to a global namespace" do
+      x = 5
+      output = Wrong.capturing { d { x } }
+      Wrong.assert { output == "x is 5\n" }
     end
   end
 end

@@ -31,7 +31,7 @@ namespace :rvm do
     %w{BUNDLE_PATH BUNDLE_BIN_PATH BUNDLE_GEMFILE}.each {|var| ENV.delete(var) }
     @rubies.split(',').each do |version|
       puts "\n== Using #{version}"
-      system "#{rvm} use #{version}; #{cmd}"
+      system "#{rvm} use #{version} && #{cmd}"
     end
   end
 

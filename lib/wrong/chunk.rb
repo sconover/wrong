@@ -170,7 +170,12 @@ module Wrong
               part = part.color(:blue)
               raises = raises.bold.color(:red)
             end
-            details << indent(2, part, " ", raises, ": ", indent_all(3, e.message))
+            formatted_exeption = if e.message and e.message != e.class.to_s
+              indent(2, part, " ", raises, ": ", indent_all(3, e.message))
+            else
+              indent(2, part, " ", raises)
+            end
+            details << formatted_exeption
           end
         end
       end
