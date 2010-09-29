@@ -14,6 +14,25 @@ task :default => :test
 desc 'run all tests (in current ruby)'
 task :test do
   puts "#{ENV['RUBY_VERSION']} - #{`which ruby`}"
+
+  separate = ["./test/message/array_diff_test.rb", "./test/adapters/rspec_test.rb"]
+  all_passed = separate.collect do |test_file|
+    puts "Running #{test_file} separately..."
+    system("bundle exec ruby #{test_file}")
+  end.uniq == [true]
+  if !all_passed
+    at_exit { exit false }
+  end
+
+  Dir["./test/**/*_test.rb"].each do |test_file|
+    require test_file unless separate.include?(test_file)
+  end
+  MiniTest::Unit.new.run
+end
+
+desc 'run all tests (in current ruby) one at a time'
+task :suite do
+  puts "#{ENV['RUBY_VERSION']} - #{`which ruby`}"
   sh "ruby test/suite.rb"
 end
 

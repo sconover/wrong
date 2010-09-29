@@ -68,7 +68,8 @@ describe "basic assert features" do
           sky = "blue"
           @m.deny("the sky should not be blue") { sky == "blue" }
         }
-        assert e.message =~ /^the sky should not be blue: /
+        assert e.message =~ /^the sky should not be blue: /,
+               e.message + "\n\t" + e.backtrace.join("\n\t")
       end
     end
   end

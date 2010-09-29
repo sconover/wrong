@@ -31,8 +31,11 @@ module Wrong
       
       def self.problems_to_carrot_string(problems, length, sign)
         carrot_string = " " * length
-        problems.diffs.first.each do |add_subtract, position, character_code|
-          carrot_string[position] = "^" if sign == add_subtract
+        x = problems.diffs.first
+        unless x.nil?
+          x.each do |add_subtract, position, character_code|
+            carrot_string[position] = "^" if sign == add_subtract
+          end
         end
         carrot_string
       end
