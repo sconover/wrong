@@ -13,6 +13,7 @@ task :default => :test
 
 desc 'run all tests (in current ruby)'
 task :test do
+  puts "#{ENV['RUBY_VERSION']} - #{`which ruby`}"
   sh "ruby test/suite.rb"
 end
 
@@ -31,7 +32,21 @@ namespace :rvm do
     %w{BUNDLE_PATH BUNDLE_BIN_PATH BUNDLE_GEMFILE}.each {|var| ENV.delete(var) }
     @rubies.split(',').each do |version|
       puts "\n== Using #{version}"
-      system "#{rvm} use #{version} && #{cmd}"
+      using = `#{rvm} use #{version}`
+      if using =~ /not installed/
+        puts "== #{using}"
+      else
+        system "#{rvm} #{version} exec bundle check"
+        if $?.exitstatus != 0
+          puts "try rake rvm:install_bundler or rake rvm:install_gems"
+        end
+        system "#{rvm} #{version} exec #{cmd}"
+        if $?.exitstatus == 7
+          puts "try rake rvm:install_gems"
+        elsif $?.exitstatus == 1
+
+        end
+      end
     end
   end
 

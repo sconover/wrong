@@ -1,6 +1,12 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    ParseTree (3.0.6)
+      RubyInline (>= 3.7.0)
+      sexp_processor (>= 3.0.0)
+    RubyInline (3.8.6)
+      ZenTest (~> 4.3)
+    ZenTest (4.4.0)
     diff (0.3.6)
     diff-lcs (1.1.2)
     file-tail (1.0.5)
@@ -24,6 +30,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  ParseTree
   diff
   diff-lcs
   file-tail
@@ -32,5 +39,6 @@ DEPENDENCIES
   rspec (~> 1)
   ruby2ruby
   ruby_parser
+  sexp_processor
   sourcify (~> 0.3.0)
   test-unit

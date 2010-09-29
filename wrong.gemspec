@@ -13,7 +13,8 @@ Wrong provides a general assert method that takes a predicate block. Assertion f
 messages are rich in detail. The Wrong idea is to replace all those countless assert_this,
 assert_that library methods which only exist to give a more useful failure message than
 "assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it
-in Ruby, Wrong can make a sensible failure message out of it.
+in Ruby, Wrong can make a sensible failure message out of it. Also provided are several
+helper methods, like rescuing, capturing, and d.
   EOS
   s.rubyforge_project = "wrong"
 
@@ -26,6 +27,7 @@ in Ruby, Wrong can make a sensible failure message out of it.
   s.add_dependency "predicated", ">= 0.2.1"
   s.add_dependency "ruby_parser", ">= 2.0.4"
   s.add_dependency "ruby2ruby", ">= 1.2.4"
+  s.add_dependency "sexp_processor", ">= 3.0"
   s.add_dependency "sourcify", ">= 0.3.0"
 
   s.add_dependency "diff", ">= 0.3.6"

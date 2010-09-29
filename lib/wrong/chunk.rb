@@ -1,8 +1,9 @@
 require 'ruby_parser'
 require 'ruby2ruby'
 begin
-require "sourcify"
-rescue LoadError
+  require "sourcify"
+rescue LoadError => e
+  raise e unless e.message == "no such file to load -- sourcify"
 end
 
 require "wrong/config"
@@ -48,11 +49,11 @@ module Wrong
 
     def build_sexp
       sexp = begin
-        unless @block.nil? || @block.is_a?(String)
+        unless @block.nil? or @block.is_a?(String) or !Object.const_defined?(:Sourcify)
           # first try sourcify
           @block.to_sexp[3] # the [3] is to strip out the "proc {" sourcify adds to everything
         end
-      rescue Sourcify::MultipleMatchingProcsPerLineError, Racc::ParseError => e
+      rescue ::Sourcify::MultipleMatchingProcsPerLineError, Racc::ParseError => e
         # fall through
       end
 
