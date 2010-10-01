@@ -83,7 +83,7 @@ We also implement the most amazing debugging method ever, `d`, which gives you a
     d { x } # => prints "x is 7" to the console
     d { x * 2 } # => prints "(x * 2) is 14" to the console
 
-(`d` was originally implemented by _ in LogBuddy; as with Assert2 this is a rewrite and homage.)
+(`d` was originally implemented by Rob Sanheim in LogBuddy; as with Assert2 this is a rewrite and homage.)
 
 More examples are in the file `examples.rb` <http://github.com/alexch/wrong/blob/master/examples.rb>
 
