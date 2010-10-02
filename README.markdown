@@ -91,6 +91,27 @@ There's also a spreadsheet showing a translation from Test::Unit and RSpec to Wr
 
 And don't miss the [slideshare presentation](http://www.slideshare.net/alexchaffee/wrong-5069976).
 
+## Piecemeal Usage ##
+
+We know that sometimes you don't want all the little doodads from a library cluttering up your namespace. If you **don't** do
+
+    require 'wrong'
+    include Wrong
+
+then you can instead `require` and `include` just the bits you really want. For example:
+
+    require 'wrong/assert'
+    include Wrong::Assert
+
+will give you the `assert` and `deny` methods but not the formatters or `rescuing` or `d` or `close_to?`. And if all you want is `d` then do:
+
+    require 'wrong/d'
+    include Wrong::D
+
+To summarize: if you do `require 'wrong'` and `include Wrong` then you will get the whole ball of wax. Most people will probably want this since it's easier, but there is an alternative, whici is to `require` and `include` only what you want.
+
+And beware: if you don't `require 'wrong'`, then `include Wrong` will not do anything at all.
+
 ## Apology ##
 
 So does the world need another assertion framework? In fact, it does not! We actually believe the world needs **fewer** assert methods.
@@ -250,7 +271,7 @@ Just don't use "`aver`" since we took that one for an internal method in `Wrong:
 
 ## Helper Assert Methods ##
 
-If you really want to, you can define your procs in one method, pass it in to another method, and have that method assert it. This is very bizarre and you probably shouldn't do it. Wrong will do its best to figure out where the actual assertion code is but it might not succeed.
+If you really want to, you can define your proc in one method, pass it in to another method, and have that method assert it. This is a challenge for Wrong and you probably shouldn't do it. Wrong will do its best to figure out where the actual assertion code is but it might not succeed.
 
 If you're in Ruby 1.8, you **really** shouldn't do it! But if you do, you can use the "depth" parameter to give Wrong a better hint about how far up the stack it should crawl to find the code. See `assert_test.rb` for more details, if you dare.
 
