@@ -2,8 +2,7 @@ require "./test/test_helper"
 
 require "wrong"
 require "wrong/config"
-require "wrong/message/string_diff"
-
+require "wrong/message/string_comparison"
 
 describe Wrong::Config do
 

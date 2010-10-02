@@ -1,5 +1,12 @@
 require 'ruby_parser'
 require 'ruby2ruby'
+
+begin
+  require "ParseTree"
+rescue LoadError => e
+  raise e unless e.message == "no such file to load -- ParseTree"
+end
+
 begin
   require "sourcify"
 rescue LoadError => e

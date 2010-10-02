@@ -1,10 +1,12 @@
 module Wrong
   module Assert
     # todo: integrate with / use Chunk somehow?
+    #
     def failure_message(method_sym, block, predicate)
       upper_portion = super
       
       first_test_line = caller.find{|line|line =~ /(_test.rb|_spec.rb)/}
+      raise "Can't find test or spec in call chain: #{caller.join('|')}" if first_test_line.nil?
       file, failure_line_number = first_test_line.split(":",2)
     
       lines = File.readlines(file)

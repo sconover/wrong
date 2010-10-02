@@ -2,16 +2,15 @@ require "diff/lcs"
 
 module Wrong
   module Assert
-    
+
+    overridable do
     def failure_message(method_sym, block, predicate)
       message = super
-      
+
       if predicate.is_a?(Predicated::Equal) && 
          predicate.left.is_a?(Enumerable) &&
          predicate.right.is_a?(Enumerable)
-        
-        
-        
+
         diffs = Diff::LCS.sdiff(predicate.left, predicate.right)
         # left_offset = 0
         left_arr = []
@@ -39,7 +38,8 @@ module Wrong
       
       message
     end
-    
+    end
+
     module ArrayDiff
       def self.compute_and_format(left, right)
         diffs = Diff::LCS.sdiff(left, right)
@@ -80,8 +80,5 @@ module Wrong
       end
       
     end
-      
-    
-    
   end
 end

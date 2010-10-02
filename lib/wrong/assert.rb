@@ -1,8 +1,10 @@
 require "predicated/predicate"
 require "predicated/from/ruby_code_string"
 require "predicated/to/sentence"
+
 require "wrong/chunk"
 require "wrong/config"
+require "wrong/ruby2ruby_patch" # need to patch it after some other stuff loads
 
 #see http://yehudakatz.com/2009/01/18/other-ways-to-wrap-a-method/
 class Module
@@ -55,6 +57,11 @@ module Wrong
 
     protected
 
+    # for debugging -- if we couldn't make a predicate out of the code block, then this was why
+    def self.last_predicated_error
+      @@last_predicated_error ||= nil
+    end
+
     def aver(valence, explanation = nil, depth = 0, &block)
       require "wrong/rainbow" if Wrong.config[:color]
       
@@ -66,9 +73,9 @@ module Wrong
 
         predicate = begin
           Predicated::Predicate.from_ruby_code_string(code, block.binding)
-        rescue Predicated::Predicate::DontKnowWhatToDoWithThisSexpError
-          nil
-        rescue Exception
+        rescue Predicated::Predicate::DontKnowWhatToDoWithThisSexpError, Exception => e
+          # save it off for debugging
+          @@last_predicated_error = e
           nil
         end
 

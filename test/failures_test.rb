@@ -74,7 +74,7 @@ describe "failures" do
       assert_match("1 is not equal to 2", get_error {
         @m.assert {
           1==
-            2
+                  2
         }
       }.message)
     end
@@ -97,7 +97,7 @@ describe "failures" do
     it "omit a primary failure message since 'This is not true etc.' is more obscuring than clarifying" do
       m = get_error {
         x = 5
-        @m.assert { x == 5 && x != 5}
+        @m.assert { x == 5 && x != 5 }
       }.message
       assert m == "Expected ((x == 5) and (not (x == 5))), but \n    (x == 5) is true\n    x is 5\n    (not (x == 5)) is false\n"
     end
@@ -137,10 +137,12 @@ describe "failures" do
 
   describe "hash comparisons" do
     it "basic" do
+      e = get_error {
+        @m.assert { {1=>2}=={"a"=>"b"} }
+      }
+      p Wrong::Assert.last_predicated_error
       assert_match '{1=>2} is not equal to {"a"=>"b"}',
-                   get_error {
-                     @m.assert { {1=>2}=={"a"=>"b"} }
-                   }.message
+                   e.message
     end
   end
 

@@ -2,7 +2,7 @@ require "./test/test_helper"
 require "wrong/assert"
 require "wrong/message/test_context"
 
-describe "showing the lines just above where the failure occurs, so you have some context" do
+xdescribe "showing the lines just above where the failure occurs, so you have some context" do
 
   include Wrong::Assert
   
@@ -14,6 +14,7 @@ describe "showing the lines just above where the failure occurs, so you have som
     begin
       assert{ a == b }
     rescue Wrong::Assert::AssertionFailedError => e
+      puts e
       assert do
         e.message.include?(
 %{  it "you can see test method all the way back to the start of the test, plus an indication of where the failure was" do

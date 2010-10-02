@@ -90,15 +90,17 @@ describe "advanced assert features" do
     assert { failures.empty? }
   end
 
+  def assert_later(&proc)
+    assert &proc
+  end
+
   it "is possible (but not advisable) to define procs in different places from the assert call" do
     x = 10
     e = get_error do
-      assert_many(lambda { x == 10 })
-      assert_many(lambda { x > 10 })
+      assert_later { x > 10 }
     end
 
-    assert { e.message =~ /^Expected failures.empty\?/ }
-    assert { e.message =~ /x is 10/ }
+    assert(e.message =~ /Expected \(x > 10\), but.*x is 10/m, e.message )
   end
 
   xit "can parse a here doc defined inside the block" do

@@ -16,7 +16,7 @@ platforms :ruby_18 do
   gem "ParseTree"
 end
 
-group :development do
+group :development, :test do
   gem "minitest"
   gem "test-unit"
   gem "rspec", '~> 1'

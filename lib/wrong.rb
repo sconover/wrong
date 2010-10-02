@@ -10,6 +10,8 @@ require "wrong/version"
 require "wrong/config"
 require "wrong/irb"
 require "wrong/d"
+require "wrong/message/array_diff"
+require "wrong/message/string_comparison"
 
 module Wrong
   include Wrong::Assert

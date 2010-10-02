@@ -15,17 +15,23 @@ desc 'run all tests (in current ruby)'
 task :test do
   puts "#{ENV['RUBY_VERSION']} - #{`which ruby`}"
 
-  separate = ["./test/message/array_diff_test.rb", "./test/adapters/rspec_test.rb"]
+  separate = ["./test/adapters/rspec_test.rb", "./test/message/test_context_test.rb"]
   all_passed = separate.collect do |test_file|
-    puts "Running #{test_file} separately..."
+    puts "\nRunning #{test_file} separately..."
     system("bundle exec ruby #{test_file}")
   end.uniq == [true]
   if !all_passed
     at_exit { exit false }
   end
 
+  puts "\nRunning tests..."
   Dir["./test/**/*_test.rb"].each do |test_file|
-    require test_file unless separate.include?(test_file)
+    begin
+      require test_file unless separate.include?(test_file)
+    rescue Exception => e
+      puts "Exception while requiring #{test_file}: #{e.inspect}"
+      raise e
+    end
   end
   MiniTest::Unit.new.run
 end

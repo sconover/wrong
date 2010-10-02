@@ -38,6 +38,6 @@ inside rspec land
     assert !failures.empty?
     exception = failures.first.exception
     assert(exception.is_a?(Spec::Expectations::ExpectationNotMetError))
-    assert(exception.message == "Expected (sky == \"green\"), but \"blue\" is not equal to \"green\"\n    sky is \"blue\"\n")
+    assert(exception.message =~ /^Expected \(sky == \"green\"\), but/, "message is #{exception.message.inspect}")
   end
 end
