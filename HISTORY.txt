@@ -1,6 +1,10 @@
-== 0.3.4
+== 0.4.0
 
+* "require 'wrong'" and "include Wrong' now get everything; see README for details on how to get less than the whole enchilada
+* array_diff replaced with string_comparison
+* d
 * use Sourcify (if available) to increase robustness
+* new gem for jruby (gem install wrong-jruby) to fix gem dependency issues
 
 == 0.3.3
 

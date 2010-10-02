@@ -2,11 +2,13 @@ require "rubygems"
 require "bundler"
 Bundler.setup
 
-def gemspec
-  @gemspec ||= begin
-    gemspec_file = File.expand_path('../wrong.gemspec', __FILE__)
-    gemspec = eval(File.read(gemspec_file), binding, gemspec_file)
-  end
+def load_gemspec(gemspec_name)
+  gemspec_file = File.expand_path("../#{gemspec_name}.gemspec", __FILE__)
+  gemspec = eval(File.read(gemspec_file), binding, gemspec_file)
+end
+
+def gemspecs
+  @gemspecs ||= [load_gemspec("wrong"), load_gemspec("wrong-jruby")]
 end
 
 task :default => :test
@@ -54,7 +56,7 @@ namespace :rvm do
 
   def rvm_run(cmd)
     # Bundler inherits its environment by default, so clear it here
-    %w{BUNDLE_PATH BUNDLE_BIN_PATH BUNDLE_GEMFILE}.each {|var| ENV.delete(var) }
+    %w{BUNDLE_PATH BUNDLE_BIN_PATH BUNDLE_GEMFILE}.each { |var| ENV.delete(var) }
     @rubies.split(',').each do |version|
       puts "\n== Using #{version}"
       using = `#{rvm} use #{version}`
@@ -91,27 +93,32 @@ namespace :rvm do
   end
 end
 
-desc "Build pkg/#{gemspec.full_name}.gem"
+desc "Build pkg/#{gemspecs.first.full_name}.gem"
 task :build => "gemspec:validate" do
-  sh %{gem build wrong.gemspec}
   FileUtils.mkdir_p "pkg"
-  FileUtils.mv gemspec.file_name, "pkg"
+  gemspecs.each do |gemspec|
+    sh %{gem build #{gemspec.name}.gemspec}
+    FileUtils.mv gemspec.file_name, "pkg"
+  end
 end
 
-desc "Install the latest built gem"
+desc "Install the latest built #{gemspecs.first.name} gem"
 task :install => :build do
-  sh "gem install --local pkg/#{gemspec.file_name}"
+  sh "gem install --local pkg/#{gemspecs.first.file_name}"
 end
 
 namespace :release do
   task :tag do
+    gemspec = gemspecs.first
     release_tag = "v#{gemspec.version}"
     sh "git tag -a #{release_tag} -m 'Tagging #{release_tag}'"
     sh "git push origin #{release_tag}"
   end
 
   task :gem => :build do
-    sh "gem push pkg/#{gemspec.file_name}"
+    gemspecs.each do |gemspec|
+      sh "gem push pkg/#{gemspec.file_name}"
+    end
   end
 end
 
@@ -119,8 +126,8 @@ desc "Release the current branch to GitHub and Gemcutter"
 task :release => %w(release:tag release:gem)
 
 namespace :gemspec do
-  desc 'Validate the gemspec'
+  desc 'Validate the gemspecs'
   task :validate do
-    gemspec.validate
+    gemspecs.map(&:validate)
   end
 end

@@ -2,10 +2,10 @@
 require File.expand_path('../lib/wrong/version.rb', __FILE__)
 
 Gem::Specification.new do |s|
-  s.name      = "wrong"
+#  s.name      = "wrong"
   s.version   = Wrong::VERSION
   s.authors   = ["Steve Conover", "Alex Chaffee"]
-  s.email     = "sconover@gmail.com"
+  s.email     = "sconover@gmail.com, alexch@gmail.com"
   s.homepage  = "http://github.com/sconover/wrong"
   s.summary   = "Wrong provides a general assert method that takes a predicate block.  Assertion failure messages are rich in detail."
   s.description  = <<-EOS.strip
@@ -28,11 +28,5 @@ helper methods, like rescuing, capturing, and d.
   s.add_dependency "ruby_parser", "~> 2.0.4"
   s.add_dependency "ruby2ruby", "~> 1.2"
   s.add_dependency "sexp_processor", "~> 3.0"
-  s.add_dependency "diff-lcs", "~> 1.1.2"
-
-  # we'd like these to be optional, but RubyGems doesn't allow that
-  s.add_dependency "ParseTree", "~> 3.0"
-  s.add_dependency "sourcify", ">= 0.3.0"
-  s.add_dependency "file-tail", '~> 1.0' # Sourcify requires this but doesn't declare it
-
+  s.add_dependency "diff-lcs", ">= 1.1.2"
 end

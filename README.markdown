@@ -12,6 +12,16 @@ It relies on [Predicated](http://github.com/sconover/predicated) for its main fa
 
 Inspired by [assert { 2.0 }](http://assert2.rubyforge.org/) but rewritten from scratch. Compatible with Ruby (MRI) 1.8, 1.9, and JRuby 1.5.
 
+## Installation
+
+    gem install wrong
+
+Under JRuby, the above may cause errors; if so, then try
+
+    gem install wrong-jruby
+
+which untangles some dependencies.
+
 ## Usage ##
 
 Wrong provides a simple assert method that takes a block:

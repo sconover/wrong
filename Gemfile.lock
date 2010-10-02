@@ -33,7 +33,7 @@ DEPENDENCIES
   ParseTree
   diff
   diff-lcs
-  file-tail
+  file-tail (~> 1.0)
   minitest
   predicated (~> 0.2.1)
   rspec (~> 1)
