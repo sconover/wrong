@@ -23,5 +23,4 @@ describe "arithmetic" do
   end
 end
 
-#Spec::Runner.options.parse_format("nested")
-#Spec::Runner.options.run_examples
+# now, thanks to the require 'rspec/autorun', this spec will run and fail
