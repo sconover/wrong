@@ -120,4 +120,8 @@ describe "advanced assert features" do
     TEXT
   end
 
+  xit "finds the file to parse even when deep inside a chdir" do
+    
+  end
+
 end

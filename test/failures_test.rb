@@ -14,7 +14,6 @@ describe "failures" do
 
     it "raw boolean assert failure" do
       error = get_error { @m.assert { false } }
-#      puts error.message
       assert_match "false", error.message
     end
 
@@ -22,7 +21,6 @@ describe "failures" do
       error = get_error {
         @m.deny { true }
       }
-#      puts error.message
       assert_match "true", error.message
     end
 
@@ -140,7 +138,6 @@ describe "failures" do
       e = get_error {
         @m.assert { {1=>2}=={"a"=>"b"} }
       }
-      p Wrong::Assert.last_predicated_error
       assert_match '{1=>2} is not equal to {"a"=>"b"}',
                    e.message
     end

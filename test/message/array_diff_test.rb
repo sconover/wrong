@@ -1,8 +1,9 @@
 require "./test/test_helper"
 require "wrong/assert"
 require "wrong/helpers"
-require "wrong/message/array_diff"
 require "wrong/adapters/minitest"
+
+require "wrong/message/array_diff"
 
 describe "when you're comparing strings and they don't match, show me the diff message" do
 
@@ -11,7 +12,7 @@ describe "when you're comparing strings and they don't match, show me the diff m
       Wrong.assert { first_array == second_array }
     }
     assert {
-      e.message.include?(expected_error_message)
+      e.backtrace and e.message.include?(expected_error_message)
     }
   end
 

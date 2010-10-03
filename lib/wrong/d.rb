@@ -1,3 +1,5 @@
+require "wrong/chunk"
+
 module Wrong
   module D
     def d(*args, &block)

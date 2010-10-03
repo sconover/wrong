@@ -1,10 +1,10 @@
+
 source :gemcutter
 
 gem "ruby_parser"
 gem "ruby2ruby"
 gem "sexp_processor"
 gem "predicated", '~> 0.2.1'
-gem "diff"
 gem "diff-lcs"
 
 platforms :ruby do
@@ -17,7 +17,7 @@ platforms :ruby_18 do
 end
 
 group :development, :test do
+  gem "rake"
   gem "minitest"
   gem "test-unit"
-  gem "rspec", '~> 1'
 end

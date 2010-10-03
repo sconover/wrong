@@ -7,13 +7,12 @@ GEM
     RubyInline (3.8.6)
       ZenTest (~> 4.3)
     ZenTest (4.4.0)
-    diff (0.3.6)
     diff-lcs (1.1.2)
     file-tail (1.0.5)
       spruz (>= 0.1.0)
     minitest (1.7.1)
     predicated (0.2.1)
-    rspec (1.3.0)
+    rake (0.8.7)
     ruby2ruby (1.2.5)
       ruby_parser (~> 2.0)
       sexp_processor (~> 3.0)
@@ -31,12 +30,11 @@ PLATFORMS
 
 DEPENDENCIES
   ParseTree
-  diff
   diff-lcs
   file-tail (~> 1.0)
   minitest
   predicated (~> 0.2.1)
-  rspec (~> 1)
+  rake
   ruby2ruby
   ruby_parser
   sexp_processor

@@ -78,7 +78,7 @@ module Wrong
                 predicate.left.is_a?(String) &&
                 predicate.right.is_a?(String)
 
-          comparison = StringComparison.new(predicate.left, predicate.right)
+          comparison = Wrong::StringComparison.new(predicate.left, predicate.right)
           message << "\n"
           message << comparison.message
         end

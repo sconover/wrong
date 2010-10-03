@@ -69,7 +69,13 @@ module Wrong
       value = !value if valence == :deny
       unless value
         chunk = Wrong::Chunk.from_block(block, depth + 2)
-        code = chunk.code
+        begin
+          code = chunk.code
+        rescue => e
+          # note: this is untested; it's to recover from when we can't locate the code
+          message = "Failed assertion [couldn't retrieve source code from #{caller[depth + 2]}]"
+          raise failure_class.new(message)
+        end
 
         predicate = begin
           Predicated::Predicate.from_ruby_code_string(code, block.binding)

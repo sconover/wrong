@@ -60,7 +60,7 @@ module Wrong
           # first try sourcify
           @block.to_sexp[3] # the [3] is to strip out the "proc {" sourcify adds to everything
         end
-      rescue ::Sourcify::MultipleMatchingProcsPerLineError, Racc::ParseError => e
+      rescue ::Sourcify::MultipleMatchingProcsPerLineError, Racc::ParseError, Errno::ENOENT => e
         # fall through
       end
 
