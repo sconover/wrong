@@ -2,3 +2,4 @@ pkg
 .idea
 .bundle
 scratch.rb
+Gemfile.lock
