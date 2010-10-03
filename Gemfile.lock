@@ -7,10 +7,13 @@ GEM
     RubyInline (3.8.6)
       ZenTest (~> 4.3)
     ZenTest (4.4.0)
+    bouncy-castle-java (1.5.0145.2)
     diff-lcs (1.1.2)
     file-tail (1.0.5)
       spruz (>= 0.1.0)
-    minitest (1.7.1)
+    jruby-openssl (0.7.1)
+      bouncy-castle-java
+    minitest (1.7.2)
     predicated (0.2.1)
     rake (0.8.7)
     ruby2ruby (1.2.5)
@@ -30,13 +33,15 @@ PLATFORMS
 
 DEPENDENCIES
   ParseTree
+  bundler
   diff-lcs
   file-tail (~> 1.0)
-  minitest
+  jruby-openssl
+  minitest (~> 1.7.2)
   predicated (~> 0.2.1)
   rake
   ruby2ruby
   ruby_parser
   sexp_processor
   sourcify (~> 0.3.0)
-  test-unit
+  test-unit (~> 2.1.1)

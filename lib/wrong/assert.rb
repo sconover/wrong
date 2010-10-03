@@ -17,18 +17,22 @@ end
 module Wrong
   module Assert
 
-    class AssertionFailedError < RuntimeError;
+    class AssertionFailedError < RuntimeError
     end
 
     def failure_class
       AssertionFailedError
     end
 
-    # Actual signature: assert(explanation = nil, depth = 0, block)
+    # Actual signature: assert(explanation = nil, depth = 0, &block)
     def assert(*args, &block)
+      # to notice (and fail fast from) odd recursion problem
+      raise "Reentry bug while trying to assert(#{args.join(', ')})" if @_inside_wrong_assert
+      @_inside_wrong_assert = true
+
       if block.nil?
         begin
-          super
+          super(*args) # if there's a framework assert method (sans block), then call it
         rescue NoMethodError => e
           # note: we're not raising an AssertionFailedError because this is a programmer error, not a failed assertion
           raise "You must pass a block to Wrong's assert and deny methods"
@@ -36,9 +40,11 @@ module Wrong
       else
         aver(:assert, *args, &block)
       end
+    ensure
+      @_inside_wrong_assert = false
     end
 
-    # Actual signature: deny(explanation = nil, depth = 0, block)    
+    # Actual signature: deny(explanation = nil, depth = 0, &block)
     def deny(*args, &block)
       if block.nil?
         test = args.first
@@ -73,7 +79,7 @@ module Wrong
           code = chunk.code
         rescue => e
           # note: this is untested; it's to recover from when we can't locate the code
-          message = "Failed assertion [couldn't retrieve source code from #{caller[depth + 2]}]"
+          message = "Failed assertion at #{caller[depth + 2]} [couldn't retrieve source code due to #{e.inspect}]"
           raise failure_class.new(message)
         end
 

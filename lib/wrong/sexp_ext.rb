@@ -3,14 +3,22 @@ require 'ruby2ruby'
 require 'wrong/config'
 
 class Sexp < Array
-  def doop
-    Marshal.load(Marshal.dump(self))
-  end
 
   def to_ruby
-    d = self.doop
+    d = self.deep_clone
     ruby = Ruby2Ruby.new.process(d)
     ruby
+  end
+
+  # visit every node in the tree, including the root, that is an Sexp
+  # todo: test
+  def each_subexp(&block)
+    yield self
+    each do |child|
+      if child.is_a?(Sexp)
+        child.each_subexp(&block)
+      end
+    end
   end
 
   def assertion?

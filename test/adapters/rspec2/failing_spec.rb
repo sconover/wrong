@@ -1,8 +1,10 @@
+# This is a failing spec for testing RSpec 2 integration
+
+require "rubygems"
 require "bundler"
 Bundler.setup
 
 require "rspec"
-
 
 here = File.expand_path(File.dirname(__FILE__))
 $:.unshift "#{here}/../../../lib"

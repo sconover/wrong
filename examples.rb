@@ -87,5 +87,9 @@ failing do
   assert { time == money }
 end
 
+failing do
+  assert { "123".reverse == "323" }
+end
+
 x = 7
 d { x * 2 }

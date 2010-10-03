@@ -81,52 +81,52 @@ describe StringComparison do
   end
 
   describe '#message' do
+    def compare(first, second, expected_message)
+      expected_message.strip!
+      assert { StringComparison.new(first, second).message == expected_message }
+    end
+
     it 'shows the whole of both strings when the difference is near the start' do
-      assert { StringComparison.new("abc", "xyz").message == <<-MESSAGE
+compare "abc", "xyz", <<-MESSAGE
 Strings differ at position 0:
  first: "abc"
 second: "xyz"
       MESSAGE
-      }
     end
 
     it 'shows ellipses when the difference is in the middle of a long string' do
-      assert { StringComparison.new("abcdefghijklmnopqrstuvwxyz", "abcdefghijkl*nopqrstuvwxyz").message ==<<-MESSAGE
+      compare "abcdefghijklmnopqrstuvwxyz", "abcdefghijkl*nopqrstuvwxyz", <<-MESSAGE
 Strings differ at position 12:
  first: ..."efghijklmnopqrst"...
 second: ..."efghijkl*nopqrst"...
       MESSAGE
-      }
     end
 
     it 'shows ellipses when the difference is near the beginning of a long string' do
-      assert { StringComparison.new("abcdefghijklmnopqrstuvwxyz", "a*cdefghijklmnopqrstuvwxyz").message ==<<-MESSAGE
+      compare "abcdefghijklmnopqrstuvwxyz", "a*cdefghijklmnopqrstuvwxyz", <<-MESSAGE
 Strings differ at position 1:
  first: "abcdefghijklmnop"...
 second: "a*cdefghijklmnop"...
       MESSAGE
-      }
     end
 
     it 'shows ellipses when the difference is near the end of a long string' do
-      assert { StringComparison.new("abcdefghijklmnopqrstuvwxyz", "abcdefghijklmnopqrstuvw*yz").message ==<<-MESSAGE
+      compare "abcdefghijklmnopqrstuvwxyz", "abcdefghijklmnopqrstuvw*yz", <<-MESSAGE
 Strings differ at position 23:
  first: ..."pqrstuvwxyz"
 second: ..."pqrstuvw*yz"
       MESSAGE
-      }
     end
 
     it 'allows user to override the default window size' do
       original = StringComparison.window
       begin
         StringComparison.window = 10
-        assert { StringComparison.new("abcdefghijklmnopqrstuvwxyz", "a*cdefghijklmnopqrstuvwxyz").message ==<<-MESSAGE
+        compare "abcdefghijklmnopqrstuvwxyz", "a*cdefghijklmnopqrstuvwxyz", <<-MESSAGE
 Strings differ at position 1:
  first: "abcdefghij"...
 second: "a*cdefghij"...
         MESSAGE
-        }
       ensure
         StringComparison.window = original
       end
@@ -136,12 +136,11 @@ second: "a*cdefghij"...
       original = StringComparison.prelude
       begin
         StringComparison.prelude = 2
-        assert { StringComparison.new("abcdefghijklmnopqrstuvwxyz", "abcdefghijkl*nopqrstuvwxyz").message ==<<-MESSAGE
+        compare "abcdefghijklmnopqrstuvwxyz", "abcdefghijkl*nopqrstuvwxyz", <<-MESSAGE
 Strings differ at position 12:
  first: ..."klmnopqrstuvwxyz"
 second: ..."kl*nopqrstuvwxyz"
         MESSAGE
-        }
       ensure
         StringComparison.prelude = original
       end

@@ -6,11 +6,12 @@ task :default => :test
 
 desc 'run all tests (in current ruby)'
 task :test do
-  puts "#{ENV['RUBY_VERSION']} - #{`which ruby`}"
-
-  separate = ["./test/adapters/rspec_test.rb", "./test/message/test_context_test.rb"]
+  separate = Dir["./test/adapters/*_test.rb"] + [
+          "./test/message/test_context_test.rb",
+          "./test/assert_advanced_test.rb",
+  ]
   all_passed = separate.collect do |test_file|
-    puts "\nRunning #{test_file} separately..."
+    puts "\n>> Separately running #{test_file} under #{ENV['RUBY_VERSION']}..."
     clear_bundler_env
     system("ruby #{test_file}")
   end.uniq == [true]
@@ -18,7 +19,7 @@ task :test do
     at_exit { exit false }
   end
 
-  puts "\nRunning tests..."
+  puts "\n>> Running remaining tests under #{ENV['RUBY_VERSION']}..."
   Dir["./test/**/*_test.rb"].each do |test_file|
     begin
       require test_file unless separate.include?(test_file)
@@ -27,7 +28,8 @@ task :test do
       raise e
     end
   end
-  MiniTest::Unit.new.run
+
+#  MiniTest::Unit.new.run  # not needed due to MiniTest::Unit.autorun in test_helper.rb
 end
 
 desc 'run all tests (in current ruby) one at a time'
@@ -63,11 +65,12 @@ namespace :rvm do
         if $?.exitstatus != 0
           puts "try rake rvm:install_bundler or rake rvm:install_gems"
         end
+
         system "#{rvm} #{version} exec #{cmd}"
         if $?.exitstatus == 7
           puts "try rake rvm:install_gems"
         elsif $?.exitstatus == 1
-
+          # uh...
         end
       end
     end
@@ -77,6 +80,8 @@ namespace :rvm do
   task :test do
     rvm_run "rake test"
     rvm_run "ruby ./test/suite.rb"
+    # todo: fail if any test failed
+    # todo: figure out a way to run suite with jruby --1.9 (it's harder than you'd think)
   end
 
   desc "run 'bundle install' with rvm in each of #{@rubies}"
@@ -89,7 +94,6 @@ namespace :rvm do
     rvm_run("gem install bundler")
   end
 end
-
 
 def load_gemspec(gemspec_name)
   gemspec_file = File.expand_path("../#{gemspec_name}.gemspec", __FILE__)

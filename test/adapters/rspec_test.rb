@@ -12,15 +12,20 @@ include Wrong
 describe "testing rspec" do
 
   def sys(cmd, expected_status = 0)
+    start_time = Time.now
+    $stderr.print cmd
     Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thread|
-      # in Ruby 1.8.6, wait_thread is nil :-( so just pretend the process was successful (status 0)
+      # in Ruby 1.8, wait_thread is nil :-( so just pretend the process was successful (status 0)
       exit_status = (wait_thread.value.exitstatus if wait_thread) || 0
       output = stdout.read + stderr.read
       unless expected_status.nil?
         assert { output and exit_status == expected_status }
       end
+      yield output if block_given?
       output
     end
+  ensure
+    $stderr.puts " (#{"%.2f" % (Time.now - start_time)} sec)"
   end
 
   def clear_bundler_env
@@ -31,21 +36,30 @@ describe "testing rspec" do
   [1, 2].each do |rspec_version|
     it "version #{rspec_version}" do
       dir = "#{here}/rspec#{rspec_version}"
-      output = nil
+      spec_output = nil
       Dir.chdir(dir) do
-        clear_bundler_env        
+        clear_bundler_env
         FileUtils.rm "#{dir}/Gemfile.lock", :force => true
-        output = sys "bundle install --gemfile=#{dir}/Gemfile --local"
-        lines = output.split("\n")
-        lines.grep(/rspec/) do |line|
-          assert { line =~ /Using rspec[-\w]* \(#{rspec_version}\.[\w.]*\)/ }
+
+        sys "bundle check" do |output|
+          unless output == "The Gemfile's dependencies are satisfied\n"
+            sys "bundle install --gemfile=#{dir}/Gemfile --local"
+          end
         end
 
-        output = sys "ruby #{dir}/failing_spec.rb",
-                     (rspec_version == 1 || RUBY_VERSION == '1.8.6' || RUBY_VERSION == '1.9.1' ? nil : 1) # RSpec v1 exits with 0 on failure :-(
+        sys "bundle list" do |output|
+          lines = output.split("\n")
+          lines.grep(/rspec/) do |line|
+            assert { line =~ /rspec[-\w]* \(#{rspec_version}\.[\w.]*\)/ }
+          end
+        end
+
+        spec_output = sys "ruby #{dir}/failing_spec.rb",
+                          (rspec_version == 1 || RUBY_VERSION =~ /^1\.8\./ || RUBY_VERSION == '1.9.1' ? nil : 1) # RSpec v1 exits with 0 on failure :-(
       end
-      assert { output.include? "1 example, 1 failure" }
-      assert { output.include? "Expected ((2 + 2) == 5), but" }
+
+      assert { spec_output.include? "1 example, 1 failure" }
+      assert { spec_output.include? "Expected ((2 + 2) == 5), but" }
     end
   end
 end

@@ -46,7 +46,7 @@ module Wrong
     def message
       "Strings differ at position #{different_at}:\n" +
               " first: #{chunk(@first)}\n" +
-              "second: #{chunk(@second)}\n"
+              "second: #{chunk(@second)}"
     end
 
     def chunk(s)

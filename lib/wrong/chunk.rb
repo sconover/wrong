@@ -68,8 +68,21 @@ module Wrong
       sexp ||= glom(if @file == "(irb)"
                       IRB.CurrentContext.all_lines
                     else
-                      File.read(@file)
+                      read_source_file(@file)
                     end)
+    end
+
+    def read_source_file(file, dir = ".")
+      File.read "#{dir}/#{file}"
+
+    rescue Errno::ENOENT, Errno::EACCES => e
+      # we may be in a chdir underneath where the file is, so move up one level and try again 
+      parent = "#{dir}/..".gsub(/^(\.\/)*/, '')
+      if File.expand_path(dir) == File.expand_path(parent)
+        raise Errno::ENOENT, "couldn't find #{file}"
+      end
+      read_source_file(file, parent)
+
     end
 
     # Algorithm:

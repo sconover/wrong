@@ -1,4 +1,4 @@
-puts "RUBY_VERSION=#{RUBY_VERSION}"
+puts "RUBY_VERSION=#{RUBY_VERSION}#{" (JRuby)" if Object.const_defined?(:JRuby)}"
 
 dir = File.dirname(__FILE__)
 $LOAD_PATH.unshift "#{dir}/../lib"

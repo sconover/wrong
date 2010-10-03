@@ -1,19 +1,32 @@
+require "sexp"
 require "wrong/chunk"
+
+class ::Sexp < ::Array
+  def d?
+    is_a?(Sexp) &&
+            (self[0] == :iter) &&
+            (self[1][0] == :call) &&
+            (self[1][2] == :d)
+  end
+
+end
 
 module Wrong
   module D
     def d(*args, &block)
+      called_from = caller.first.split(':')
       chunk = Chunk.from_block(block, 1)
       sexp = chunk.sexp
+
       # look for a "d" inside the block
-      sexp.each_of_type(:iter) do |subexp|
-        if subexp[1][0] == :call and
-          subexp[1][2] == :d
+      sexp.each_subexp do |subexp|
+        if subexp.d?
           sexp = subexp[3] # swap in the block part of the nested d call
         end
       end
+
       code = sexp.to_ruby
-      value = eval(code, block.binding).inspect
+      value = eval(code, block.binding, called_from[0], called_from[1].to_i).inspect
 
       if Wrong.config[:color]
         require "wrong/rainbow"

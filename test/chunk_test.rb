@@ -27,7 +27,7 @@ describe Chunk do
     end
   end
 
-  describe "#parse" do
+  describe "parsing" do
     it "reads a statement on a line by itself" do
       chunk = Chunk.new(__FILE__, __LINE__ + 1); <<-CODE
         "hi"
@@ -73,6 +73,15 @@ describe Chunk do
       assert error.is_a? Errno::ENOENT
     end
 
+    it "finds the file to parse even when inside a chdir to a child directory" do
+      Dir.chdir("test") do
+        chunk = Chunk.new __FILE__, __LINE__ + 1; <<-CODE
+        "hi"
+        CODE
+        code = chunk.sexp.to_ruby
+        assert(code == '"hi"')
+      end
+    end
   end
 
   describe "#claim" do
@@ -217,17 +226,17 @@ z
     end
 
     it "shows exceptions" do
-      d = details { assert { (raise "hi") == 1} }
+      d = details { assert { (raise "hi") == 1 } }
       assert d == "\n    raise(\"hi\") raises RuntimeError: hi\n"
     end
 
     it "indents newlines inside the exception message" do
-      d = details { assert { (raise "hello\nsailor") == 1} }
+      d = details { assert { (raise "hello\nsailor") == 1 } }
       assert d == "\n    raise(\"hello\\nsailor\") raises RuntimeError: hello\n      sailor\n"
     end
 
     it "abridges exceptions with no message" do
-      d = details { assert { (raise Exception.new) == 1} }
+      d = details { assert { (raise Exception.new) == 1 } }
       assert d == "\n    raise(Exception.new) raises Exception\n" +
               "    Exception.new is #<Exception: Exception>\n"
     end
@@ -241,11 +250,13 @@ z
 
     it "indents unescaped newlines inside the inspected value" do
       weirdo = Object.new
+
       def weirdo.inspect
         "first\nsecond\nthird"
       end
+
       x = weirdo
-      d = details { assert { x == "foo" }}
+      d = details { assert { x == "foo" } }
       assert d == "\n    x is first\n      second\n      third\n"
     end
 

@@ -1,10 +1,12 @@
 require "./test/test_helper"
 
-require "wrong/adapters/minitest"
+require "wrong/assert"
+require "wrong/helpers"
 
 describe "a tool for capturing output" do
 
-  include Wrong
+  include Wrong::Assert
+  include Wrong::Helpers
 
   it "captures stdout" do
     assert {
@@ -30,7 +32,6 @@ describe "a tool for capturing output" do
   end
 
   it "supports nesting" do
-    outside = nil
     inside = nil
     outside = capturing do
       puts "bread"

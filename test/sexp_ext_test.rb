@@ -2,10 +2,10 @@ require "./test/test_helper"
 require "wrong/sexp_ext"
 
 describe Sexp do
-  describe "#doop" do
+  describe "#deep_clone" do
     it "deeply duplicates the sexp" do
       original = RubyParser.new.parse("x == 5")
-      duplicate = original.doop
+      duplicate = original.deep_clone
       assert(original.object_id != duplicate.object_id)
       assert(original[1].object_id != duplicate[1].object_id)
       assert(original[1][3].object_id != duplicate[1][3].object_id)

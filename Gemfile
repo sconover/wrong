@@ -1,4 +1,3 @@
-
 source :gemcutter
 
 gem "ruby_parser"
@@ -17,7 +16,12 @@ platforms :ruby_18 do
 end
 
 group :development, :test do
+  gem "bundler"
   gem "rake"
-  gem "minitest"
-  gem "test-unit"
+  gem "minitest", "~> 1.7.2"
+  gem "test-unit", "~> 2.1.1"
+end
+
+platforms :jruby do
+  gem "jruby-openssl" # to silence annoying warning
 end

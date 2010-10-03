@@ -1,3 +1,6 @@
+# This is a failing spec for testing RSpec 1.3 integration
+
+require "rubygems"
 require "bundler"
 Bundler.setup
 

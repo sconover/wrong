@@ -7,21 +7,8 @@ class MiniTest::Unit::TestCase
     MiniTest::Assertion
   end
 
-  def assert(*args)
-    if block_given? 
-      self._assertions += 1
-      super(explanation=args.first, depth=1)
-    else
-      super
-    end
-  end
-
-  def deny(*args)
-    if block_given? 
-      self._assertions += 1
-      super(explanation=args.first, depth=1)
-    else
-      super
-    end
+  def aver(valence, explanation = nil, depth = 0)
+    self._assertions += 1 # increment minitest's assert count
+    super(valence, explanation, depth + 1) # apparently this passes along the default block
   end
 end
