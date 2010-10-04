@@ -27,12 +27,12 @@ which untangles some dependencies.
 Wrong provides a simple assert method that takes a block:
 
 	require "wrong"
-	
+
 	include Wrong
-	
+
 	assert { 1 == 1 }
 	 ==> nil
-	
+
 	assert { 2 == 1 }
 	 ==> Expected (2 == 1), but 2 is not equal to 1
 
@@ -93,7 +93,7 @@ We also implement the most amazing debugging method ever, `d`, which gives you a
     d { x } # => prints "x is 7" to the console
     d { x * 2 } # => prints "(x * 2) is 14" to the console
 
-(`d` was originally implemented by Rob Sanheim in LogBuddy; as with Assert2 this is a rewrite and homage.)
+(`d` was originally implemented by Rob Sanheim in LogBuddy; as with Assert2 this is a rewrite and homage.) Remember, if you want `d` to work at runtime (e.g. in a webapp) then you must `include 'wrong/d'` inside your app, e.g. for in your `environment.rb` file.
 
 More examples are in the file `examples.rb` <http://github.com/alexch/wrong/blob/master/examples.rb>
 
@@ -194,16 +194,16 @@ And if your assertion code isn't self-explanatory, then that's a hint that you m
 
 When a failure occurs, the exception message contains all the details you might need to make sense of it. Here's the breakdown:
 
-    Expected [CLAIM], but [PREDICATE]
+    Expected [CLAIM], but [SUMMARY]
       [FORMATTER]
       [SUBEXP] is [VALUE]
       ...
 
-* CLAIM is the code inside your assert block
-* PREDICATE is a to-English translation of the claim, via the Predicated library. This tries to be very intelligible; e.g. translating "include?" into "does not include" and so on.
+* CLAIM is the code inside your assert block, normalized
+* SUMMARY is a to-English translation of the claim, via the Predicated library. This tries to be very intelligible; e.g. translating "include?" into "does not include" and so on.
 * If there is a formatter registered for this type of predicate, its output will come next. (See below.)
 * SUBEXP is each of the subtrees of the claim, minus duplicates and truisms (e.g. literals).
-* The word "is" is a very nice separator since it doesn't look like code.
+* The word "is" is a very nice separator since it doesn't look like code, but is short enough to be easily visually parsed.
 * VALUE is `eval(SUBEXP).inspect`
 
 We hope this structure lets your eyes focus on the meaningful values and differences in the message, rather than glossing over with stack-trace burnout. If you have any suggestions on how to improve it, please share them.

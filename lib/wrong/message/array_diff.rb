@@ -1,36 +1,33 @@
 require "diff/lcs"
+require "wrong/failure_message"
 
 module Wrong
-  module Assert
+  class ArrayDiff < FailureMessage::Formatter
+    register # tell FailureMessage::Formatter about us
 
-    def is_arrayish?(object)
-       # in some Rubies, String is Enumerable
+    def match?
+      predicate.is_a?(Predicated::Equal) &&
+              arrayish?(predicate.left) &&
+              arrayish?(predicate.right)
+    end
+
+    def arrayish?(object)
+      # in some Rubies, String is Enumerable
       object.is_a?(Enumerable) && !object.is_a?(String)
     end
 
-    overridable do
-      def failure_message(method_sym, block, predicate)
-        message = super
+    def describe
+      left_str, right_str, diff_str = compute_and_format(predicate.left, predicate.right)
 
-        if predicate.is_a?(Predicated::Equal) &&
-                is_arrayish?(predicate.left) &&
-                is_arrayish?(predicate.right)
+      message = "\n"
+      message << left_str + "\n"
+      message << right_str + "\n"
+      message << diff_str + "\n"
+      message
 
-          left_str, right_str, diff_str = Wrong::ArrayDiff.compute_and_format(predicate.left, predicate.right)
-
-          message << "\n\narray diff:\n"
-          message << left_str + "\n"
-          message << right_str + "\n"
-          message << diff_str + "\n"
-        end
-
-        message
-      end
     end
-  end
 
-  module ArrayDiff
-    def self.compute_and_format(left, right)
+    def compute_and_format(left, right)
       diffs = Diff::LCS.sdiff(left, right)
 
       left_arr = []
@@ -48,12 +45,12 @@ module Wrong
       end
 
 
-      [format(left_arr),
-       format(right_arr),
-       " " + diff_arr.join("  ") + " "]
+      diff_str = " " + diff_arr.join("  ") + " "
+
+      [format(left_arr), format(right_arr), diff_str]
     end
 
-    def self.format(thing)
+    def format(thing)
       str = ""
       if thing.is_a?(Array)
         str << "["

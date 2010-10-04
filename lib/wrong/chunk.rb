@@ -76,7 +76,7 @@ module Wrong
       File.read "#{dir}/#{file}"
 
     rescue Errno::ENOENT, Errno::EACCES => e
-      # we may be in a chdir underneath where the file is, so move up one level and try again 
+      # we may be in a chdir underneath where the file is, so move up one level and try again
       parent = "#{dir}/..".gsub(/^(\.\/)*/, '')
       if File.expand_path(dir) == File.expand_path(parent)
         raise Errno::ENOENT, "couldn't find #{file}"
@@ -129,6 +129,10 @@ module Wrong
 
     def code
       self.claim.to_ruby
+    rescue => e
+      # note: this is untested; it's to recover from when we can't locate the code
+      message = "Failed assertion at #{caller[depth + 2]} [couldn't retrieve source code due to #{e.inspect}]"
+      raise failure_class.new(message)
     end
 
     def parts(sexp = nil)
@@ -150,7 +154,7 @@ module Wrong
         if sexp.first == :iter
           sexp.delete_at(1) # remove the method-call-sans-block subnode
         end
-        
+
         sexp.each do |sub|
           if sub.is_a?(Sexp)
             parts_list += parts(sub)

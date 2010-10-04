@@ -47,14 +47,14 @@ describe "basic assert features" do
           sky = "green"
           @m.assert("the sky should be blue") { sky == "blue" }
         }
-        assert e.message =~ /^the sky should be blue: /
+        assert e.message =~ /^the sky should be blue: /, e.message
       end
 
       it "gives a meaningful error when passed no block" do
         e = get_error {
           @m.assert(2+2 == 5)
         }
-        assert e.message =~ /a block/
+        assert e.message =~ /a block/, e.message
       end
     end
 

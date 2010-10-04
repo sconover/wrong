@@ -145,7 +145,7 @@ second: ..."kl*nopqrstuvwxyz"
         StringComparison.prelude = original
       end
     end
-
+  end
   end
 
   describe "Wrong integration" do
@@ -156,5 +156,4 @@ second: ..."kl*nopqrstuvwxyz"
       assert { error.message =~ /Strings differ/ }
     end
   end
-end
 end

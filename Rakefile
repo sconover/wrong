@@ -10,6 +10,7 @@ task :test do
           "./test/message/test_context_test.rb",
           "./test/assert_advanced_test.rb",
   ]
+
   all_passed = separate.collect do |test_file|
     puts "\n>> Separately running #{test_file} under #{ENV['RUBY_VERSION']}..."
     clear_bundler_env
@@ -19,7 +20,7 @@ task :test do
     at_exit { exit false }
   end
 
-  puts "\n>> Running remaining tests under #{ENV['RUBY_VERSION']}..."
+  puts "\n>> Running most tests under #{ENV['RUBY_VERSION']}..."
   Dir["./test/**/*_test.rb"].each do |test_file|
     begin
       require test_file unless separate.include?(test_file)

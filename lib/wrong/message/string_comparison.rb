@@ -1,3 +1,5 @@
+require "wrong/failure_message"
+
 module Wrong
   class StringComparison
     @@window = 64
@@ -68,24 +70,19 @@ module Wrong
     end
   end
 
-  module Assert
-    overridable do
+  class StringComparisonFormatter < FailureMessage::Formatter
+    register # tell FailureMessage::Formatter about us
 
-      def failure_message(method_sym, block, predicate)
-        message = super
-
-        if predicate.is_a?(Predicated::Equal) &&
-                predicate.left.is_a?(String) &&
-                predicate.right.is_a?(String)
-
-          comparison = Wrong::StringComparison.new(predicate.left, predicate.right)
-          message << "\n"
-          message << comparison.message
-        end
-
-        message
-      end
+    def match?
+      predicate.is_a?(Predicated::Equal) &&
+              predicate.left.is_a?(String) &&
+              predicate.right.is_a?(String)
     end
 
+    def describe
+      comparison = Wrong::StringComparison.new(predicate.left, predicate.right)
+      "\n" + comparison.message
+    end
   end
+
 end

@@ -12,7 +12,7 @@ describe "when you're comparing strings and they don't match, show me the diff m
       Wrong.assert { first_array == second_array }
     }
     assert {
-      e.backtrace and e.message.include?(expected_error_message)
+      e.message.include?(expected_error_message.strip)
     }
   end
 
@@ -20,12 +20,12 @@ describe "when you're comparing strings and they don't match, show me the diff m
     deny {
       rescuing {
         assert { [1]==2 }
-      }.message.include?("diff")
+      }.message.include?("^")
     }
     deny {
       rescuing {
         assert { nil==[1] }
-      }.message.include?("diff")
+      }.message.include?("^")
     }
   end
 
@@ -34,13 +34,13 @@ describe "when you're comparing strings and they don't match, show me the diff m
       assert { ["a"]==["b"] }
     }
     assert {
-      e.message.include?("diff")
+      e.message.include?("^")
     }
 
     assert_string_diff_message(["a", "b"], ["a", "c", "c"], %{
 ["a", "b"]
 ["a", "c", "c"]
-      ^    ^   
+      ^    ^
 })
   end
 
@@ -48,13 +48,13 @@ describe "when you're comparing strings and they don't match, show me the diff m
     assert_string_diff_message(["a", "b", "c"], ["a", "cccc", "c"], %{
 ["a", "b"   , "c"]
 ["a", "cccc", "c"]
-      ^           
+      ^
 })
 
     assert_string_diff_message(["a", "b", "c", "d"], ["a", "cccc", "xxx", "d"], %{
 ["a", "b"   , "c"  , "d"]
 ["a", "cccc", "xxx", "d"]
-      ^       ^          
+      ^       ^
 })
   end
 
@@ -62,7 +62,7 @@ describe "when you're comparing strings and they don't match, show me the diff m
     assert_string_diff_message([1, true], [2, true, nil], %{
 [1, true]
 [2, true, nil]
- ^        ^   
+ ^        ^
 })
   end
 
@@ -71,7 +71,7 @@ describe "when you're comparing strings and they don't match, show me the diff m
     assert_string_diff_message([1, [2]], [1, [2, 3]], %{
 [1, [2]   ]
 [1, [2, 3]]
-    ^      
+    ^
 })
 
   end
