@@ -1,0 +1,2 @@
+test_setting = "xyzzy"
+color = false # sadly, we must disable this when testing wrong

@@ -72,17 +72,19 @@ module Wrong
                     end)
     end
 
-    def read_source_file(file, dir = ".")
-      File.read "#{dir}/#{file}"
+    def read_source_file(file)
+      Chunk.read_here_or_higher(file)
+    end
 
+    def self.read_here_or_higher(file, dir = ".")
+      File.read "#{dir}/#{file}"
     rescue Errno::ENOENT, Errno::EACCES => e
       # we may be in a chdir underneath where the file is, so move up one level and try again
       parent = "#{dir}/..".gsub(/^(\.\/)*/, '')
       if File.expand_path(dir) == File.expand_path(parent)
         raise Errno::ENOENT, "couldn't find #{file}"
       end
-      read_source_file(file, parent)
-
+      read_here_or_higher(file, parent)
     end
 
     # Algorithm:
@@ -196,10 +198,10 @@ module Wrong
               raises = raises.bold.color(:red)
             end
             formatted_exeption = if e.message and e.message != e.class.to_s
-              indent(2, part, " ", raises, ": ", indent_all(3, e.message))
-            else
-              indent(2, part, " ", raises)
-            end
+                                   indent(2, part, " ", raises, ": ", indent_all(3, e.message))
+                                 else
+                                   indent(2, part, " ", raises)
+                                 end
             details << formatted_exeption
           end
         end

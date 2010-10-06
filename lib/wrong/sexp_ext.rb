@@ -12,8 +12,8 @@ class Sexp < Array
 
   # visit every node in the tree, including the root, that is an Sexp
   # todo: test
-  def each_subexp(&block)
-    yield self
+  def each_subexp(include_root = true, &block)
+    yield self if include_root
     each do |child|
       if child.is_a?(Sexp)
         child.each_subexp(&block)
@@ -42,7 +42,7 @@ class Sexp < Array
   private
   def nested_assertions
     assertions = []
-    self.each_of_type(:iter) { |sexp| assertions << sexp if sexp.assertion? }
+    self.each_subexp(false) { |sexp| assertions << sexp if sexp.assertion? }
     assertions
   end
 

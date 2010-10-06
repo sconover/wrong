@@ -1,4 +1,8 @@
-puts "RUBY_VERSION=#{RUBY_VERSION}#{" (JRuby)" if Object.const_defined?(:JRuby)}"
+puts(if Object.const_defined? :RUBY_DESCRIPTION
+  RUBY_DESCRIPTION
+else
+  "ruby #{RUBY_VERSION} (#{RUBY_RELEASE_DATE} patchlevel #{RUBY_PATCHLEVEL}) [#{RUBY_PLATFORM}]"
+end)
 
 dir = File.dirname(__FILE__)
 $LOAD_PATH.unshift "#{dir}/../lib"
@@ -37,7 +41,7 @@ end
 
 class MiniTest::Spec
   include MiniTest::Assertions
-  
+
   class << self
     def xit(str)
       puts "x'd out test \"#{str}\""

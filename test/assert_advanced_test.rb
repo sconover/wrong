@@ -20,18 +20,18 @@ describe "advanced assert features" do
     end
   end
 
-  xit "can parse a here doc defined inside the block" do
+  it "can parse a here doc defined inside the block" do
     # todo: test in Chunk too
-    assert { "123\n456" == <<-TEXT
+    assert { "123\n456\n" == <<-TEXT
 123
 456
     TEXT
     }
   end
 
-  xit "can parse a here doc defined outside the block" do
+  it "can parse a here doc defined outside the block" do
     # todo: test in Chunk too
-    assert { "123\n456" == <<-TEXT }
+    assert { "123\n456\n" == <<-TEXT }
 123
 456
     TEXT

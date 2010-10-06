@@ -4,7 +4,7 @@
 
 ## Abstract ##
 
-Wrong provides a general assert method that takes a predicate block. Assertion failure messages are rich in detail. The Wrong idea is to replace all those countless assert\_this, assert\_that, should\_something library methods which only exist to give a more useful failure message than "assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it in Ruby, Wrong can make a sensible failure message out of it.
+Wrong provides a general assert method that takes a predicate block. Assertion failure messages are rich in detail. The Wrong idea is to replace all those countless `assert\_this`, `assert\_that`, `should\_something` library methods which only exist to give a failure message that's not simply "assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it in Ruby, Wrong can make a sensible failure message out of it.
 
 We'd very much appreciate feedback and bug reports. There are plenty of things left to be done to make the results look uniformly clean and beautiful. We want your feedback, and especially to give us cases where either it blows up or the output is ugly or uninformative.
 
@@ -16,11 +16,7 @@ Inspired by [assert { 2.0 }](http://assert2.rubyforge.org/) but rewritten from s
 
     gem install wrong
 
-Under JRuby, the above may cause errors; if so, then try
-
-    gem install wrong-jruby
-
-which untangles some dependencies.
+We have deployed gems for both Ruby and JRuby; if you get dependency issues on your platform, please let us know what Ruby interpreter and version you're using and what errors you get, and we'll try to track it down.
 
 ## Usage ##
 
@@ -139,13 +135,14 @@ or this
 ? The Wrong way has the advantage of being plain, transparent Ruby code, not an awkward DSL that moves "equal" out of its natural place between the comparands. Plus, WYSIWYG! You know just from looking at it that "equal" means `==`, not `eql?` or `===` or `=~`.
 
 Moreover, much like TDD itself, Wrong encourages you to write cleaner code. If your assertion messages are not clear and "Englishy", then maybe it's time for you to refactor a bit -- extract an informatively named variable or method, maybe push some function onto its natural object *a la* the [Law of Demeter](http://en.wikipedia.org/wiki/Law_of_Demeter)...
+Also, try not to call any methods with side effects inside an assert. In addition to being bad form, this can cause messed-up failure messages, since the side effects may occur several times in the process of building the message.
 
 Wrong also lets you put the expected and actual values in any order you want! Consider the failure messages for
 
     assert { current_user == "joe" } # => Expected (current_user == "joe") but current_user is "fred"
     assert { "joe" == current_user } # => Expected ("joe" == current_user) but current_user is "fred"
 
-You get just the information you want, and none you don't want. At least, that's the plan! :-)
+You get all the information you want, and none you don't want. At least, that's the plan! :-)
 
 ## Algorithm ##
 
@@ -153,16 +150,18 @@ So wait a second. How do we do it? Doesn't Ruby have [poor support for AST intro
 
 Before you get your knickers in a twist about how this is totally unacceptable because it doesn't support this or that use case, here are our caveats and excuses:
 
-* It works! Tested in 1.8.6, 1.8.7, 1.9.1, and 1.9.2-rc2. (Thank you, [rvm](http://rvm.beginrescueend.com/)!)
+* It works! Tested in MRI 1.8.6, 1.8.7, 1.9.1, 1.9.2, and JRuby 1.5.3. (Thank you, [rvm](http://rvm.beginrescueend.com/)!)
 * Your code needs to be in a file.
   * If you're developing Ruby code without saving it to a mounted disk, then sorry, Wrong is not right for you.
-  * We monkey-patch IRB so if you do `irb -rwrong` it'll save off your session in a place Wrong can read it.
+  * We monkey-patch IRB so if you do `irb -rwrong` it'll save off your session in memory where Wrong can read it.
+  * It'd be nice if it could work inside a `-e` block but as far as we can tell, there's no way to grab that `-e` code from inside Ruby.
 * It's a development-time testing library, not a production runtime library, so there are no security or filesystem issues.
 * `eval` isn't evil, it's just misunderstood.
 * It makes a few assumptions about the structure of your code, leading to some restrictions:
-  * You can't have more than one call to `assert` per line. (This should not be a problem since even if you're nesting asserts for some bizarre reason, we assume you know where your Return key is. And actually, technically you can put two asserts on a line, but it always describes the first one it sees, which means that if the second one executes, its failure message will be incorrect or broken.)
+  * You can't have more than one call to `assert` per line. (This should not be a problem since even if you're nesting asserts for some bizarre reason, we assume you know where your Return key is.)
   * You can't use metaprogramming to write your assert blocks.
-  * All variables and methods must be available in the binding of the assertion block.
+  * All variables and methods must be available in the binding of the assert block.
+  * Passing a proc around and eventually calling assert on it might not work in some Ruby implementations.
 
 ## Adapters ##
 
@@ -172,9 +171,9 @@ Currently we support
 
   * Test::Unit - `require 'wrong/adapters/test_unit'`
   * Minitest - `require 'wrong/adapters/minitest'`
-  * RSpec - `require 'wrong/adapters/rspec'`
+  * RSpec - `require 'wrong/adapters/rspec'` (now supports both 1.3 and 2.0)
 
-To use these, put the appropriate `require` in your helper; it should extend the framework enough that you can use `assert { }` in your test cases without extra fussing around.
+To use these, put the appropriate `require` in your helper, **after** requiring your test framework; it should extend the framework enough that you can use `assert { }` in your test cases without extra fussing around.
 
 ## Explanations ##
 
@@ -248,34 +247,52 @@ To use these formatters, you have to explicitly `require` them! You may also nee
 
 [Bug: turns out 'diff' and 'diff-lcs' are incompatible with each other. We're working on a fix.]
 
-## Color ##
+## Config ##
 
-Apparently, no test framework is successful unless and until it supports console colors. So now we do. Put
+These settings can either be set at runtime on the `Wrong.config` singleton, or inside a `.wrong` file in the current directory or a parent. In the `.wrong` file just pretend every line is preceded with `Wrong.config.` -- e.g. if there's a setting called `ice_cream`, you can do any of these in your `.wrong` file
 
-    Wrong.config[:color] = true
+    ice_cream                           # => Wrong.config[:ice_cream] => true
+    ice_cream = true                    # => Wrong.config[:ice_cream] => true
+    ice_cream = "vanilla"               # => Wrong.config[:ice_cream] => "vanilla"
 
-in your test helper or rakefile or wherever and get ready to be **bedazzled**. If you need custom colors, let us know.
+or any of these at runtime:
 
-## Aliases ##
+    Wrong.config.ice_cream              # => Wrong.config[:ice_cream] => true
+    Wrong.config.ice_cream = true       # => Wrong.config[:ice_cream] => true
+    Wrong.config.ice_cream = "vanilla"  # => Wrong.config[:ice_cream] => "vanilla"
 
-An end to the language wars! Name your "assert" and "deny" methods anything you want. Here are some suggestions:
+### Color ###
 
-      Wrong.config.alias_assert(:expect)
-      Wrong.config.alias_assert(:should) # This looks nice with RSpec
-      Wrong.config.alias_assert(:confirm)
-      Wrong.config.alias_assert(:be)
+Apparently, no test framework is successful unless and until it supports console colors. So now we do. Call
 
-      Wrong.config.alias_assert(:is)
-      Wrong.config.alias_deny(:aint)
+    Wrong.config.color
 
-      Wrong.config.alias_assert(:assure)
-      Wrong.config.alias_deny(:refute)
+in your test helper or rakefile or wherever, or put
 
-      Wrong.config.alias_assert(:yep)
-      Wrong.config.alias_deny(:nope)
+    color
 
-      Wrong.config.alias_assert(:yay!)
-      Wrong.config.alias_deny(:boo!)
+in your `.wrong` file and get ready to be **bedazzled**. If you need custom colors, let us know.
+
+### Aliases ###
+
+An end to the language wars! Name your "assert" and "deny" methods anything you want. In your code, use `Wrong.config.alias_assert` and `Wrong.config.alias_deny`, and in your `.wrong` file, use Here are some suggestions:
+
+    alias_assert :expect
+    alias_assert :should # This looks nice in RSpec
+    alias_assert :confirm
+    alias_assert :be
+
+    alias_assert :is
+    alias_deny :aint
+
+    alias_assert :assure
+    alias_deny :refute
+
+    alias_assert :yep
+    alias_deny :nope
+
+    alias_assert :yay!
+    alias_deny :boo!
 
 Just don't use "`aver`" since we took that one for an internal method in `Wrong::Assert`.
 
@@ -294,7 +311,8 @@ If you're in Ruby 1.8, you **really** shouldn't do it! But if you do, you can us
 
 ## Etc ##
 
-* Github projects: <http://github.com/alexch/wrong>, <http://github.com/sconover/wrong>
+* Mailing list: <http://groups.google.com/group/wrong-rb>
+* Github project: <http://github.com/sconover/wrong>
 * Tracker project: <http://www.pivotaltracker.com/projects/109993>
 * the [Wrong way translation table (from RSpec and Test::Unit)](https://spreadsheets.google.com/pub?key=0AouPn6oLrimWdE0tZDVOWnFGMzVPZy0tWHZwdnhFYkE&hl=en&output=html). (Ask <alexch@gmail.com> if you want editing privileges.)
 * the [Wrong slides](http://www.slideshare.net/alexchaffee/wrong-5069976) that Alex presented at Carbon Five and GoGaRuCo

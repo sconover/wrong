@@ -1,3 +1,7 @@
+== 0.4.1
+
+* reads settings from a .wrong file
+
 == 0.4.0
 
 * "require 'wrong'" and "include Wrong' now get everything; see README for details on how to get less than the whole enchilada

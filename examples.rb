@@ -11,7 +11,7 @@ require "./lib/wrong"
 
 include Wrong
 
-Wrong.config[:color] = true
+Wrong.config.color # or just put the line "color" in a file called ".wrong" in the current dir
 
 def failing
   e = rescuing do
