@@ -133,7 +133,7 @@ module Wrong
       self.claim.to_ruby
     rescue => e
       # note: this is untested; it's to recover from when we can't locate the code
-      message = "Failed assertion at #{caller[depth + 2]} [couldn't retrieve source code due to #{e.inspect}]"
+      message = "Failed assertion at #{file}:#{line_number} [couldn't retrieve source code due to #{e.inspect}]"
       raise failure_class.new(message)
     end
 
