@@ -1,3 +1,7 @@
+== 0.4.2
+
+* bugfix: absence of .wrong file caused breakage under Ruby 1.8
+
 == 0.4.1
 
 * reads settings from a .wrong file
