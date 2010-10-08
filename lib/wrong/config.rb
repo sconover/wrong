@@ -6,6 +6,7 @@ module Wrong
       Chunk.read_here_or_higher(".wrong")
     rescue Errno::ENOENT => e
       # couldn't find it
+      nil # In Ruby 1.8, "e" would be returned here otherwise
     end
     Config.new settings
   end
@@ -19,7 +20,7 @@ module Wrong
   end
 
   class Config < Hash
-    def initialize(string = nil)
+     def initialize(string = nil)
       self[:aliases] = {:assert => [:assert], :deny => [:deny]}
       if string
         instance_eval string.gsub(/^(.*=)/, "self.\\1")

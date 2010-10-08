@@ -54,6 +54,13 @@ alias_assert :yum
       end
     end
 
+    it "uses defaults if there is no .wrong file" do
+      Dir.chdir("/tmp") do # hopefull there's no .wrong file here or in /
+        config = Wrong.load_config
+        assert { config[:test_setting] == nil }
+      end
+    end
+
   end
 
   it "getting an undeclared setting" do
