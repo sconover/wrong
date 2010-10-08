@@ -20,6 +20,7 @@ module Wrong
 
   class Config < Hash
     def initialize(string = nil)
+      self[:aliases] = {:assert => [:assert], :deny => [:deny]}
       if string
         instance_eval string.gsub(/^(.*=)/, "self.\\1")
       end
@@ -33,22 +34,26 @@ module Wrong
       self[name.to_sym] = value
     end
 
+    def alias_assert_or_deny(valence, extra_name)
+      Wrong::Assert.send(:alias_method, extra_name, valence)
+      new_method_name = extra_name.to_sym
+      self[:aliases][valence] << new_method_name unless self[:aliases][valence].include?(new_method_name)
+    end
+
     def alias_assert(method_name)
-      Wrong::Assert.send(:alias_method, method_name, :assert)
-      self.assert_method_names << method_name.to_sym unless self.assert_method_names.include?(method_name)
+      alias_assert_or_deny(:assert, method_name)
     end
 
     def alias_deny(method_name)
-      Wrong::Assert.send(:alias_method, method_name, :deny)
-      self.deny_method_names << method_name.to_sym unless self.deny_method_names.include?(method_name)
+      alias_assert_or_deny(:deny, method_name)
     end
 
     def assert_method_names
-      (self[:assert_method] ||= [:assert])
+      self[:aliases][:assert]
     end
 
     def deny_method_names
-      (self[:deny_method] ||= [:deny])
+      self[:aliases][:deny]
     end
 
     def assert_methods

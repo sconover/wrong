@@ -27,18 +27,23 @@ module Sickill
       :hide => 8,
     }
 
+    private
+    def set_color(color, ground = :foreground)
+      color = color.first if color.size == 1
+      wrap_with_code(get_color_code(color, ground))
+    end
+
+    public
     # Sets foreground color of this text.
     def foreground(*color)
-      color = color.first if color.size == 1
-      wrap_with_code(get_color_code(color, :foreground))
+      set_color(color, :foreground)
     end
     alias_method :color, :foreground
     alias_method :colour, :foreground
 
     # Sets background color of this text.
     def background(*color)
-      color = color.first if color.size == 1
-      wrap_with_code(get_color_code(color, :background))
+      set_color(color, :background)
     end
 
     # Resets terminal to default colors/backgrounds.

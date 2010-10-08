@@ -27,12 +27,7 @@ module Wrong
       streams.each do |stream|
         original[stream] = (stream == :stdout ? $stdout : $stderr)
         captured[stream] = StringIO.new
-        case stream
-          when :stdout
-            $stdout = captured[stream]
-          when :stderr
-            $stderr = captured[stream]
-        end
+        reassign_stream(stream, captured)
       end
 
       yield
@@ -53,14 +48,20 @@ module Wrong
         end
         # support nested calls to capturing
         original[stream] << captured[stream].string if original[stream].is_a? StringIO
-        case stream
-          when :stdout
-            $stdout = original[stream]
-          when :stderr
-            $stderr = original[stream]
-        end
+        reassign_stream(stream, original)
       end
     end
+
+    private
+    def reassign_stream(which, streams)
+      case which
+        when :stdout
+          $stdout = streams[which]
+        when :stderr
+          $stderr = streams[which]
+      end
+    end
+
   end
 
 end

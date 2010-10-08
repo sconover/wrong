@@ -1,17 +1,16 @@
 require 'ruby_parser'
 require 'ruby2ruby'
 
-begin
-  require "ParseTree"
-rescue LoadError => e
-  raise e unless e.message == "no such file to load -- ParseTree"
+def require_optionally(library)
+  begin
+    require library
+  rescue LoadError => e
+    raise e unless e.message == "no such file to load -- #{library}"
+  end
 end
 
-begin
-  require "sourcify"
-rescue LoadError => e
-  raise e unless e.message == "no such file to load -- sourcify"
-end
+require_optionally "ParseTree"
+require_optionally "sourcify"
 
 require "wrong/config"
 require "wrong/sexp_ext"
