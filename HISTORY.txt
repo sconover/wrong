@@ -1,3 +1,7 @@
+== 0.4.3
+
+* bugfix: rspec 2 plus rails 3 plus wrong was finding the wrong assert method
+
 == 0.4.2
 
 * bugfix: absence of .wrong file caused breakage under Ruby 1.8

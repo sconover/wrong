@@ -3,3 +3,4 @@ pkg
 .bundle
 scratch.rb
 Gemfile.lock
+test/adapters/railsapp
