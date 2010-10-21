@@ -1,7 +1,7 @@
 here = File.expand_path(File.dirname(__FILE__))
 
-gem "rspec", "= 2.0.0.beta.22" # todo: once rspec is released, make this "~> 2"
-gem "rspec-core", "= 2.0.0.beta.22" # todo: once rspec is released, make this "~> 2"
-gem "rspec-expectations", "= 2.0.0.beta.22" # todo: once rspec is released, make this "~> 2"
+gem "rspec", "~> 2.0"
+gem "rspec-core", "~> 2.0"
+gem "rspec-expectations", "~> 2.0"
 
 eval File.read("#{here}/../../../Gemfile")

@@ -11,6 +11,8 @@ include Wrong
 # If a new version of Rails comes along, alter and then run the script in this directory
 # called rspec-rails-generate.sh -- if you dare
 
+
+if RUBY_VERSION == "1.9.2" # too many issues with other versions
 describe "testing rspec-rails" do
 
   [2].each do |rspec_version|
@@ -32,7 +34,7 @@ describe "testing rspec-rails" do
         # todo: extract into common function
         sys "bundle check" do |output|
           unless output == "The Gemfile's dependencies are satisfied\n"
-            sys "bundle install --gemfile=#{railsapp_dir}/Gemfile --local"
+            sys "bundle install --gemfile=#{railsapp_dir}/Gemfile"
           end
         end
 
@@ -52,4 +54,5 @@ describe "testing rspec-rails" do
       assert { spec_output.include? "Expected ((1 + 1) == 3), but" }
     end
   end
+end
 end

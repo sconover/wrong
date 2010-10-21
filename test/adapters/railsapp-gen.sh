@@ -2,7 +2,7 @@ rails new railsapp --skip-test-unit --skip-prototype
 cd railsapp
 
 echo "group :development, :test do
- gem 'rspec-rails', '2.0.0'
+ gem 'rspec-rails', '~> 2.0'
  gem 'wrong', :path => '../../..'
 end
 " >> Gemfile

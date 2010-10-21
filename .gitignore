@@ -4,3 +4,4 @@ pkg
 scratch.rb
 Gemfile.lock
 test/adapters/railsapp
+.redcar
