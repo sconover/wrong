@@ -4,6 +4,5 @@ module Wrong
       (self.to_f - other.to_f).abs < tolerance
     end
   end
-  Float.send :include, CloseTo
-  Fixnum.send :include, CloseTo
+  Numeric.send :include, CloseTo
 end

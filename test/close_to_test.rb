@@ -1,6 +1,7 @@
 require "./test/test_helper"
 require "wrong/close_to"
 require "wrong"
+require "bigdecimal"
 
 describe "#close_to? (monkey patch for float comparison)" do
   include Wrong
@@ -34,6 +35,12 @@ describe "#close_to? (monkey patch for float comparison)" do
     assert { 5.close_to? 5.0001 }
     deny   { 5.close_to? 5.1 }
     assert { 5.close_to? 5.1, 0.5 }
+  end
+  
+  it "also works for bigdecimals" do    
+    assert { BigDecimal.new("5.0").close_to? 5 }
+    assert { BigDecimal.new("5.0").close_to? 5.0001 }
+    deny   { BigDecimal.new("5.0").close_to? 5.1 }
   end
 
 end
