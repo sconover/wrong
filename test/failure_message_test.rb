@@ -35,6 +35,10 @@ module Wrong
       assert { FailureMessage.formatter_for(BogusPredicate.new).is_a? BogusFormatter }
       assert { FailureMessage.formatters.include?(BogusFormatter)}
     end
+    
+    it "#summary"
+    
+    it "#full"
 
   end
 end

@@ -48,43 +48,11 @@ module Wrong
       end
     end
 
-    def summary(method_sym, predicate)
-      method_sym == :deny ? predicate.to_sentence : predicate.to_negative_sentence
-    end
-
     protected
 
     # for debugging -- if we couldn't make a predicate out of the code block, then this was why
     def self.last_predicated_error
       @@last_predicated_error ||= nil
-    end
-
-    # todo: move some/all of this into FailureMessage
-    def full_message(chunk, block, valence, explanation)
-      code = chunk.code
-
-      predicate = begin
-        Predicated::Predicate.from_ruby_code_string(code, block.binding)
-      rescue Predicated::Predicate::DontKnowWhatToDoWithThisSexpError, Exception => e
-        # save it off for debugging
-        @@last_predicated_error = e
-        nil
-      end
-
-      code = code.color(:blue) if Wrong.config[:color]
-      message = ""
-      message << "#{explanation}: " if explanation
-      message << "#{valence == :deny ? "Didn't expect" : "Expected"} #{code}, but "
-      if predicate && !(predicate.is_a? Predicated::Conjunction)
-        message << summary(valence, predicate)
-        if formatter = FailureMessage.formatter_for(predicate)
-          failure = formatter.describe
-          failure = failure.bold if Wrong.config[:color]
-          message << failure
-        end
-      end
-      message << chunk.details
-      message
     end
 
     def aver(valence, explanation = nil, depth = 0, &block)
@@ -96,7 +64,7 @@ module Wrong
 
         chunk = Wrong::Chunk.from_block(block, depth + 2)
 
-        message = full_message(chunk, block, valence, explanation)
+        message = FailureMessage.new(chunk, block, valence, explanation).full
         raise failure_class.new(message)
       end
     end

@@ -275,7 +275,12 @@ in your `.wrong` file and get ready to be **bedazzled**. If you need custom colo
 
 ### Aliases ###
 
-An end to the language wars! Name your "assert" and "deny" methods anything you want. In your code, use `Wrong.config.alias_assert` and `Wrong.config.alias_deny`, and in your `.wrong` file, use Here are some suggestions:
+An end to the language wars! Name your "assert" and "deny" methods anything you want. 
+
+* In your code, use `Wrong.config.alias_assert` and `Wrong.config.alias_deny`
+* In your `.wrong` file, put `alias_assert :expect` on a line by itself
+
+Here are some suggestions:
 
     alias_assert :expect
     alias_assert :should # This looks nice in RSpec
