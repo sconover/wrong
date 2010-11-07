@@ -4,12 +4,15 @@ Bundler.setup
 
 task :default => :test
 
+def separate
+  Dir["./test/adapters/*_test.rb"] + [
+    "./test/message/test_context_test.rb",
+    "./test/assert_advanced_test.rb",
+  ]
+end
+
 desc 'run all tests (in current ruby)'
 task :test do
-  separate = Dir["./test/adapters/*_test.rb"] + [
-          "./test/message/test_context_test.rb",
-          "./test/assert_advanced_test.rb",
-  ]
 
   all_passed = separate.collect do |test_file|
     puts "\n>> Separately running #{test_file} under #{ENV['RUBY_VERSION']}..."
@@ -20,6 +23,10 @@ task :test do
     at_exit { exit false }
   end
 
+  Rake::Task[:test_most].invoke
+end
+
+task :test_most do
   puts "\n>> Running most tests under #{ENV['RUBY_VERSION']}..."
   Dir["./test/**/*_test.rb"].each do |test_file|
     begin
@@ -29,8 +36,7 @@ task :test do
       raise e
     end
   end
-
-#  MiniTest::Unit.new.run  # not needed due to MiniTest::Unit.autorun in test_helper.rb
+  #  MiniTest::Unit.new.run  # not needed due to MiniTest::Unit.autorun in test_helper.rb
 end
 
 desc 'run all tests (in current ruby) one at a time'

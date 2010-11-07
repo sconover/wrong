@@ -45,7 +45,6 @@ failing do
   deny { 'abc'.include?('bc') }
 end
 
-#require "wrong/message/string_diff"  TODO: make string_diff use "diff-lcs" not "diff" gem
 failing do
   assert { "the quick brown fox jumped over the lazy dog" ==
            "the quick brown hamster jumped over the lazy gerbil" }

@@ -216,22 +216,19 @@ Enhancements for error messages sit under wrong/message.
 Currently we support special messages for
 
   * String ==
-  * Enumerable ==
+  * Array ==
     * including nested string elements
 
 To use these formatters, you have to explicitly `require` them! You may also need to `gem install diff-lcs` (since it's an optional dependency).
 
-    require "wrong/message/string_diff"
+    require "wrong/message/string_comparison"
     assert { "the quick brown fox jumped over the lazy dog" ==
              "the quick brown hamster jumped over the lazy gerbil" }
      ==>
-    Expected ("the quick brown fox jumped over the lazy dog" == "the quick brown hamster jumped over the lazy gerbil"), but "the quick brown fox jumped over the lazy dog" is not equal to "the quick brown hamster jumped over the lazy gerbil"
-
-    string diff:
-    the quick brown fox jumped over the lazy dog
-                    ^^^
-    the quick brown hamster jumped over the lazy gerbil
-                    ^^^^^^^
+	Expected ("the quick brown fox jumped over the lazy dog" == "the quick brown hamster jumped over the lazy gerbil"), but
+	Strings differ at position 16:
+	 first: ..."quick brown fox jumped over the lazy dog"
+	second: ..."quick brown hamster jumped over the lazy gerbil"
 --
 
     require "wrong/message/array_diff"
@@ -244,8 +241,6 @@ To use these formatters, you have to explicitly `require` them! You may also nee
     ["venus", "mars" , "pluto", "saturn" ]
     ["venus", "earth", "pluto", "neptune"]
               ^                 ^
-
-[Bug: turns out 'diff' and 'diff-lcs' are incompatible with each other. We're working on a fix.]
 
 ## Config ##
 

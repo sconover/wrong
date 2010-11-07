@@ -42,41 +42,56 @@ module Wrong
     
     
     attr_accessor :chunk, :block, :valence, :explanation
-    
+
     def initialize(chunk, block, valence, explanation)
       @chunk, @block, @valence, @explanation = chunk, block, valence, explanation
     end
+
+    def basic
+      "#{valence == :deny ? "Didn't expect" : "Expected"} #{chunk.code}"
+    end
     
-    def summary(method_sym, predicate)
-      method_sym == :deny ? predicate.to_sentence : predicate.to_negative_sentence
+    def full
+      message = ""
+      message << "#{explanation}: " if explanation
+      message << basic
+      
+      formatted_message = if predicate && !(predicate.is_a? Predicated::Conjunction)
+        if formatter = FailureMessage.formatter_for(predicate)
+          failure = formatter.describe
+          failure = failure.bold if Wrong.config[:color]
+          failure
+        end
+      end
+      
+      unless chunk.details.empty? and formatted_message.nil?
+        message << ", but"
+      end
+      
+      message << formatted_message if formatted_message
+      message << chunk.details unless chunk.details.empty?
+      message
     end
 
-    def full
-      code = chunk.code
-
-      predicate = begin
+    protected    
+    def code
+      @code ||= begin
+        code = chunk.code
+        code = code.color(:blue) if Wrong.config[:color]
+        code
+      end
+    end
+    
+    def predicate
+      @predicate ||= begin
         Predicated::Predicate.from_ruby_code_string(code, block.binding)
       rescue Predicated::Predicate::DontKnowWhatToDoWithThisSexpError, Exception => e
         # save it off for debugging
         @@last_predicated_error = e
         nil
       end
-
-      code = code.color(:blue) if Wrong.config[:color]
-      message = ""
-      message << "#{explanation}: " if explanation
-      message << "#{valence == :deny ? "Didn't expect" : "Expected"} #{code}, but "
-      if predicate && !(predicate.is_a? Predicated::Conjunction)
-        message << summary(valence, predicate)
-        if formatter = FailureMessage.formatter_for(predicate)
-          failure = formatter.describe
-          failure = failure.bold if Wrong.config[:color]
-          message << failure
-        end
-      end
-      message << chunk.details
-      message
     end
     
+
   end
 end

@@ -27,6 +27,11 @@ describe "when you're comparing strings and they don't match, show me the diff m
         assert { nil==[1] }
       }.message.include?("^")
     }
+    deny {
+      rescuing {
+        assert { {:a=>1}==[1] }
+      }.message.include?("^")
+    }
   end
 
   it "simple" do
