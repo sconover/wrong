@@ -144,6 +144,32 @@ Wrong also lets you put the expected and actual values in any order you want! Co
 
 You get all the information you want, and none you don't want. At least, that's the plan! :-)
 
+## BDD with Wrong ##
+
+Wrong is compatible with RSpec and MiniTest::Spec, and probably Cucumber too, so you can use it inside your BDD framework of choice. To make your test code even BDD-er, try aliasing `assert` to either `should` or (Alex's favorite) `expect`. 
+
+Here's an RSpec example: 
+
+    require "wrong"
+	require "wrong/adapters/rspec"
+	Wrong.config.alias_assert :expect
+	
+	describe BleuCheese do
+	  it "stinks" do
+		expect { BleuCheese.new.smell > 9000 }
+  	  end
+	end
+
+This makes your code read like a BDD-style DSL, without RSpec's arcane "should" syntax (which is, let's face it, pretty weird the first few hundred times you have to use it). Compare
+
+    expect { BleuCheese.new.smell > 9000 }
+
+ to
+ 
+    BleuCheese.new.smell.should > 9000
+
+and seriously, tell me which one more clearly describes the desired behavior. The object under test doesn't really have a `should` method, so why should it during a test? And in what human language is "should greater than" a valid phrase?
+
 ## Algorithm ##
 
 So wait a second. How do we do it? Doesn't Ruby have [poor support for AST introspection](http://blog.zenspider.com/2009/04/parsetree-eol.html)? Well, yes, it does, so we cheat: we figure out what file and line the assert block is defined in, then open the file, read the code, and parse it directly using Ryan Davis' amazing [RubyParser](http://parsetree.rubyforge.org/ruby_parser/) and [Ruby2Ruby](http://seattlerb.rubyforge.org/ruby2ruby/). You can bask in the kludge by examining `chunk.rb` and `assert.rb`. If you find some code it can't parse, please send it our way.
