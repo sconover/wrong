@@ -57,13 +57,16 @@ If your assertion is more than a simple predicate, then Wrong will split it into
 And a companion, 'deny':
 
 	deny{'abc'.include?('bc')}
-	 ==> Didn't expect "abc".include?("bc"), but 'abc' includes 'bc'
+	 ==> Didn't expect "abc".include?("bc")
 
 There's also a convenience method for catching errors:
 
     assert{ rescuing{raise "vanilla"}.message == "chocolate" }
 	 ==>
-    Expected (rescuing { raise("vanilla") }.message == "chocolate"), but 'vanilla' is not equal to 'chocolate'
+    Expected (rescuing { raise("vanilla") }.message == "chocolate"), but
+        rescuing { raise("vanilla") }.message is "vanilla"
+        rescuing { raise("vanilla") } is #<RuntimeError: vanilla>
+        raise("vanilla") raises RuntimeError: vanilla
 
 And one for capturing output streams:
 
@@ -89,7 +92,7 @@ We also implement the most amazing debugging method ever, `d`, which gives you a
     d { x } # => prints "x is 7" to the console
     d { x * 2 } # => prints "(x * 2) is 14" to the console
 
-(`d` was originally implemented by Rob Sanheim in LogBuddy; as with Assert2 this is a rewrite and homage.) Remember, if you want `d` to work at runtime (e.g. in a webapp) then you must `include 'wrong/d'` inside your app, e.g. for in your `environment.rb` file.
+(`d` was originally implemented by Rob Sanheim in LogBuddy; as with Assert2 this version is a rewrite and homage.) Remember, if you want `d` to work at runtime (e.g. in a webapp) then you must `include Wrong::D` inside your app, e.g. in your `environment.rb` file.
 
 More examples are in the file `examples.rb` <http://github.com/alexch/wrong/blob/master/examples.rb>
 
@@ -114,7 +117,7 @@ will give you the `assert` and `deny` methods but not the formatters or `rescuin
     require 'wrong/d'
     include Wrong::D
 
-To summarize: if you do `require 'wrong'` and `include Wrong` then you will get the whole ball of wax. Most people will probably want this since it's easier, but there is an alternative, whici is to `require` and `include` only what you want.
+To summarize: if you do `require 'wrong'` and `include Wrong` then you will get the whole ball of wax. Most people will probably want this since it's easier, but there is an alternative, which is to `require` and `include` only what you want.
 
 And beware: if you don't `require 'wrong'`, then `include Wrong` will not do anything at all.
 
@@ -219,13 +222,12 @@ And if your assertion code isn't self-explanatory, then that's a hint that you m
 
 When a failure occurs, the exception message contains all the details you might need to make sense of it. Here's the breakdown:
 
-    Expected [CLAIM], but [SUMMARY]
+    Expected [CLAIM], but
       [FORMATTER]
       [SUBEXP] is [VALUE]
       ...
 
 * CLAIM is the code inside your assert block, normalized
-* SUMMARY is a to-English translation of the claim, via the Predicated library. This tries to be very intelligible; e.g. translating "include?" into "does not include" and so on.
 * If there is a formatter registered for this type of predicate, its output will come next. (See below.)
 * SUBEXP is each of the subtrees of the claim, minus duplicates and truisms (e.g. literals).
 * The word "is" is a very nice separator since it doesn't look like code, but is short enough to be easily visually parsed.
@@ -235,6 +237,8 @@ We hope this structure lets your eyes focus on the meaningful values and differe
 
 (Why does VALUE use `inspect` and not `to_s`? Because `inspect` on standard objects like String and Array are sure to show all relevant details, such as white space, in a console-safe way, and we hope other libraries follow suit. Also, `to_s` often inserts line breaks and that messes up formatting and legibility.)
 
+Wrong tries to maintain indentation to improve readability. If the inspected VALUE contains newlines, the succeeding lines will be indented to the correct level.
+
 ## Formatters ##
 
 Enhancements for error messages sit under wrong/message.
@@ -242,10 +246,10 @@ Enhancements for error messages sit under wrong/message.
 Currently we support special messages for
 
   * String ==
-  * Array ==
+  * Array(ish) ==
     * including nested string elements
 
-To use these formatters, you have to explicitly `require` them! You may also need to `gem install diff-lcs` (since it's an optional dependency).
+To use the Array formatter, you may also need to `gem install diff-lcs` (it's an optional dependency).
 
     require "wrong/message/string_comparison"
     assert { "the quick brown fox jumped over the lazy dog" ==

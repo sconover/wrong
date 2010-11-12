@@ -8,7 +8,6 @@ require "bundler"
 Bundler.setup
 
 require "./lib/wrong"
-
 include Wrong
 
 Wrong.config.color # or just put the line "color" in a file called ".wrong" in the current dir
@@ -57,6 +56,13 @@ failing do
   assert { fun_planets == smart_planets }
 end
 
+ex = rescuing{raise "vanilla"}
+failing { assert{ ex.message == "chocolate" } }
+
+failing do
+  assert { rescuing { raise "vanilla" }.message == "chocolate" }
+end
+
 failing do
   assert{ rescuing{raise "vanilla"}.message == "chocolate" }
 end
@@ -90,5 +96,12 @@ failing do
   assert { "123".reverse == "323" }
 end
 
+failing do
+  hash = {:flavor => "vanilla"}
+  exception_with_newlines = Exception.new(hash.to_yaml)
+  assert("showing indentation of details") { rescuing { raise exception_with_newlines }.message.include?(":flavor: chocolate") }
+end
+
 x = 7
 d { x * 2 }
+

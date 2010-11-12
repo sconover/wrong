@@ -1,7 +1,9 @@
-require "wrong"
+require "wrong/assert"
+require "wrong/helpers"
 
 class MiniTest::Unit::TestCase
-  include Wrong
+  include Wrong::Assert
+  include Wrong::Helpers
 
   def failure_class
     MiniTest::Assertion
@@ -11,4 +13,5 @@ class MiniTest::Unit::TestCase
     self._assertions += 1 # increment minitest's assert count
     super(valence, explanation, depth + 1) # apparently this passes along the default block
   end
+  
 end

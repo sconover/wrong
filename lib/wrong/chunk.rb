@@ -143,7 +143,7 @@ module Wrong
         # todo: extract some of this into Sexp
         parts_list = []
         begin
-          unless sexp.first == :arglist
+          unless sexp.first == :arglist # or sexp.first == :iter
             code = sexp.to_ruby.strip
             parts_list << code unless code == "" || parts_list.include?(code)
           end
@@ -167,6 +167,12 @@ module Wrong
     end
 
     def details
+      @details ||= build_details
+    end
+
+    private
+
+    def build_details
       require "wrong/rainbow" if Wrong.config[:color]
       s = ""
       parts = self.parts
@@ -214,8 +220,6 @@ module Wrong
       end
 
     end
-
-    private
 
     def indent(indent, *s)
       "#{"  " * indent}#{s.join('')}"
