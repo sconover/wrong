@@ -83,7 +83,6 @@ describe "failures" do
      #        }
      #      }.message)
      #    end
-  # end
 
   describe "array comparisons" do
     it "basic" do

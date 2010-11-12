@@ -52,6 +52,10 @@ end
 
 namespace :rvm do
 
+  # todo: use https://gist.github.com/674648 technique instead
+  $: << ENV["HOME"] + "/.rvm/lib"
+  require 'rvm'
+  
   @rubies='1.8.6,1.8.7,1.9.1,1.9.2,jruby'
 
   def rvm

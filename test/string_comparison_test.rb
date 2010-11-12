@@ -5,6 +5,8 @@ require "wrong/message/string_comparison"
 module Wrong
 describe StringComparison do
 
+  StringComparison = Wrong::StringComparison # so Ruby 1.9.1 can find it
+  
   before do
     # crank the window and prelude down for these tests
     @old_window = StringComparison.window
@@ -153,7 +155,7 @@ second: ..."kl*nopqrstuvwxyz"
       error = rescuing do
         assert { "xyz" == "abc" }
       end
-      assert { error.message =~ /Strings differ/ }
+      assert { error.message =~ /Strings differ at position 0:/ }
     end
   end
 end

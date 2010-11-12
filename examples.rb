@@ -45,8 +45,7 @@ failing do
 end
 
 failing do
-  assert { "the quick brown fox jumped over the lazy dog" ==
-           "the quick brown hamster jumped over the lazy gerbil" }
+  assert { "the quick brown fox jumped over the lazy dog" == "the quick brown hamster jumped over the lazy gerbil" }
 end
 
 require "wrong/message/array_diff"

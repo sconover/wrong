@@ -64,7 +64,7 @@ module Wrong
 
         chunk = Wrong::Chunk.from_block(block, depth + 2)
 
-        message = FailureMessage.new(chunk, block, valence, explanation).full
+        message = FailureMessage.new(chunk, valence, explanation).full
         raise failure_class.new(message)
       end
     end

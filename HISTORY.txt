@@ -1,3 +1,7 @@
+== 0.4.5
+
+* Ruby 1.9.1 and JRuby hotfixes
+
 == 0.4.4
 
 * remove predicated sentence from failure message

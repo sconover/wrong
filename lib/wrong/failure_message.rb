@@ -41,14 +41,14 @@ module Wrong
     end
     
     
-    attr_accessor :chunk, :block, :valence, :explanation
+    attr_accessor :chunk, :valence, :explanation
 
-    def initialize(chunk, block, valence, explanation)
-      @chunk, @block, @valence, @explanation = chunk, block, valence, explanation
+    def initialize(chunk, valence, explanation)
+      @chunk, @valence, @explanation = chunk, valence, explanation
     end
 
     def basic
-      "#{valence == :deny ? "Didn't expect" : "Expected"} #{chunk.code}"
+      "#{valence == :deny ? "Didn't expect" : "Expected"} #{colored(:blue, chunk.code)}"
     end
     
     def full
@@ -58,9 +58,7 @@ module Wrong
       
       formatted_message = if predicate && !(predicate.is_a? Predicated::Conjunction)
         if formatter = FailureMessage.formatter_for(predicate)
-          failure = formatter.describe
-          failure = failure.bold if Wrong.config[:color]
-          failure
+          colored(:bold, formatter.describe)
         end
       end
       
@@ -75,16 +73,12 @@ module Wrong
 
     protected    
     def code
-      @code ||= begin
-        code = chunk.code
-        code = code.color(:blue) if Wrong.config[:color]
-        code
-      end
+      @code ||= chunk.code
     end
     
     def predicate
       @predicate ||= begin
-        Predicated::Predicate.from_ruby_code_string(code, block.binding)
+        Predicated::Predicate.from_ruby_code_string(code, chunk.block.binding)
       rescue Predicated::Predicate::DontKnowWhatToDoWithThisSexpError, Exception => e
         # save it off for debugging
         @@last_predicated_error = e
@@ -92,6 +86,17 @@ module Wrong
       end
     end
     
+    def colored(color, text)
+      if Wrong.config[:color]
+        if color == :bold
+          text.bold
+        else
+          text.color(color)
+        end
+      else
+        text
+      end
+    end
 
   end
 end

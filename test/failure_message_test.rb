@@ -2,22 +2,22 @@ require "./test/test_helper"
 require "wrong/assert"
 require "wrong/failure_message"
 
+class BogusFormatter < Wrong::FailureMessage::Formatter
+  def match?
+    predicate.is_a? BogusPredicate
+  end
+
+  def describe
+    "bogus #{predicate.object_id}"
+  end
+end
+
+class BogusPredicate < Predicated::Predicate
+end
+
 module Wrong
 
-  class BogusFormatter < FailureMessage::Formatter
-    def match?
-      predicate.is_a? BogusPredicate
-    end
-
-    def describe
-      "bogus #{predicate.object_id}"
-    end
-  end
-
-  class BogusPredicate < Predicated::Predicate
-  end
-
-  describe FailureMessage::Formatter do
+  describe Wrong::FailureMessage::Formatter do
     include Wrong::Assert
 
     it "describes a predicate" do
@@ -27,22 +27,27 @@ module Wrong
     end
   end
 
-  describe FailureMessage do
+  describe Wrong::FailureMessage do    
     include Wrong::Assert
 
     it "can register a formatter class for a predicate pattern" do
-      FailureMessage.register_formatter(BogusFormatter)
-      assert { FailureMessage.formatter_for(BogusPredicate.new).is_a? BogusFormatter }
-      assert { FailureMessage.formatters.include?(BogusFormatter)}
+      Wrong::FailureMessage.register_formatter(::BogusFormatter)
+      assert { Wrong::FailureMessage.formatter_for(::BogusPredicate.new).is_a? ::BogusFormatter }
+      assert { Wrong::FailureMessage.formatters.include?(::BogusFormatter)}
     end
 
-    def message(options = {})
-      block = options[:block] || proc { 2 + 2 == 5 }
-      chunk = Chunk.from_block(block)
+    before do
+      @chunk = Wrong::Chunk.new(__FILE__, __LINE__ + 1) do
+        2 + 2 == 5
+      end
+    end
+
+    def message(options = {}, &block)
       valence = options[:valence] || :assert 
       explanation = options[:explanation]
-      FailureMessage.new(chunk, block, valence, explanation)
+      Wrong::FailureMessage.new(@chunk, valence, explanation)
     end
+
 
     describe "#basic" do      
       it "shows the code" do
@@ -65,18 +70,18 @@ module Wrong
       end
       
       it "doesn't say 'but' if there are no details" do
-        block = proc { 7 }
-        chunk = Chunk.from_block(block)
-        assert { chunk.details.empty? }
-        msg = message(:block => block)
-        deny { msg.full.include? ", but"}
+        @chunk = Wrong::Chunk.new(__FILE__, __LINE__ + 1) do
+          2
+        end
+        assert { @chunk.details.empty? }
+        deny { message.full.include? ", but"}
       end
       
-      it "say 'but' with if there are details" do
-        block = proc { 2 + 2 == 5 }
-        chunk = Chunk.from_block(block)
-        msg = message(:block => block)
-        assert { msg.full.include? ", but\n    (2 + 2) is 4"}
+      it "says 'but' if there are details" do
+        @chunk = Wrong::Chunk.new(__FILE__, __LINE__ + 1) do
+          2 + 2 == 5
+        end
+        assert { message.full.include? ", but\n    (2 + 2) is 4"}
       end
       
     end

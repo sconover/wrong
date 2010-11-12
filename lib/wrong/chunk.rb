@@ -26,16 +26,20 @@ module Wrong
                 as_proc.source_location
               else
                 # in Ruby 1.8, it reads the source location from the call stack
-                caller[depth].split(":")
+                # # $stderr.puts "---"
+                # $stderr.puts caller.join("\n")
+                relevant_caller = caller[depth]
+                # $stderr.puts "*** #{relevant_caller}"
+                relevant_caller.split(":")
               end
 
-      new(file, line, block)
+      new(file, line, &block)
     end
 
     attr_reader :file, :line_number, :block
 
     # line parameter is 1-based
-    def initialize(file, line_number, block = nil)
+    def initialize(file, line_number, &block)
       @file = file
       @line_number = line_number.to_i
       @block = block
@@ -143,7 +147,7 @@ module Wrong
         # todo: extract some of this into Sexp
         parts_list = []
         begin
-          unless sexp.first == :arglist # or sexp.first == :iter
+          unless [:arglist, :lasgn, :iter].include? sexp.first
             code = sexp.to_ruby.strip
             parts_list << code unless code == "" || parts_list.include?(code)
           end
@@ -221,6 +225,7 @@ module Wrong
 
     end
 
+public # don't know exactly why this needs to be public but eval'ed code can't find it otherwise
     def indent(indent, *s)
       "#{"  " * indent}#{s.join('')}"
     end
