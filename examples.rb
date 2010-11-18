@@ -12,7 +12,7 @@ include Wrong
 
 Wrong.config.color # or just put the line "color" in a file called ".wrong" in the current dir
 
-def failing
+def example
   e = rescuing do
     yield
   end
@@ -20,49 +20,48 @@ def failing
   puts
 end
 
-# ignore all the "failing" statements in this file; they're so the failed assertions don't exit the process
+# ignore all the "example" statements in this file; they're so the failed assertions don't exit the process
 
-failing do
+example do
   assert {2==1}
 end
 
-failing do
+example do
   x = 7; y = 10; assert { x == 7 && y == 11 }
 end
 
-failing do
+example do
   age = 24
   name = "Gaga"
   assert { age >= 18 && ["Britney", "Snooki"].include?(name) }
 end
 
-failing do
+example do
   assert { 'hand'.include?('bird') }
 end
 
-failing do
+example do
   deny { 'abc'.include?('bc') }
 end
 
-failing do
+example do
   assert { "the quick brown fox jumped over the lazy dog" == "the quick brown hamster jumped over the lazy gerbil" }
 end
 
-require "wrong/message/array_diff"
-failing do
+example do
   fun_planets = ["venus", "mars", "pluto", "saturn"]
   smart_planets = ["venus", "earth", "pluto", "neptune"]
   assert { fun_planets == smart_planets }
 end
 
 ex = rescuing{raise "vanilla"}
-failing { assert{ ex.message == "chocolate" } }
+example { assert{ ex.message == "chocolate" } }
 
-failing do
+example do
   assert { rescuing { raise "vanilla" }.message == "chocolate" }
 end
 
-failing do
+example do
   assert{ rescuing{raise "vanilla"}.message == "chocolate" }
 end
 
@@ -72,7 +71,7 @@ class Foo
   end
 end
 
-failing do
+example do
   assert { Foo.new(1, Foo.new(3,4) ,3) == 4  }
 end
 
@@ -85,17 +84,17 @@ out, err = capturing(:stdout, :stderr) do
 end
 assert { out == "hi" and err == "bye"}
 
-failing do
+example do
   time = 6
   money = 27
   assert { time == money }
 end
 
-failing do
+example do
   assert { "123".reverse == "323" }
 end
 
-failing do
+example do
   hash = {:flavor => "vanilla"}
   exception_with_newlines = Exception.new(hash.to_yaml)
   assert("showing indentation of details") { rescuing { raise exception_with_newlines }.message.include?(":flavor: chocolate") }

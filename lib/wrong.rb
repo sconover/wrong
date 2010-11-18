@@ -26,7 +26,7 @@ end
 require "wrong/close_to"
 
 # ...don't `require 'wrong'`, and `include Wrong::D` only in the modules you want to call `d` from
-class Object
+class Object  # should we add this to Kernel instead?
   include Wrong::D
 end
 
