@@ -191,6 +191,7 @@ Before you get your knickers in a twist about how this is totally unacceptable b
   * You can't use metaprogramming to write your assert blocks.
   * All variables and methods must be available in the binding of the assert block.
   * Passing a proc around and eventually calling assert on it might not work in some Ruby implementations.
+* "Doesn't all this parsing slow down my test run"?  No - this applies to failure cases only - if the assert block returns true then Wrong simply moves on.
 
 ## Adapters ##
 
