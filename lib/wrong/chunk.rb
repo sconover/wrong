@@ -63,8 +63,8 @@ module Wrong
           # first try sourcify
           @block.to_sexp[3] # the [3] is to strip out the "proc {" sourcify adds to everything
         end
-      rescue ::Sourcify::MultipleMatchingProcsPerLineError, Racc::ParseError, Errno::ENOENT => e
-        # fall through
+      rescue Exception => e
+        # sourcify failed, so fall through
       end
 
       # next try glomming
@@ -136,8 +136,8 @@ module Wrong
       self.claim.to_ruby
     rescue => e
       # note: this is untested; it's to recover from when we can't locate the code
-      message = "Failed assertion at #{file}:#{line_number} [couldn't retrieve source code due to #{e.inspect}]"
-      raise failure_class.new(message)
+      message = "Failed at #{file}:#{line_number} [couldn't retrieve source code due to #{e.inspect}]"
+      raise message
     end
 
     def parts(sexp = nil)

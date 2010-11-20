@@ -7,7 +7,7 @@ gem "predicated", '~> 0.2.1'
 gem "diff-lcs"
 
 platforms :ruby do
-  gem "sourcify", '~> 0.3.0'
+  gem "sourcify", '~> 0.4'
   gem "file-tail", '~> 1.0' # Sourcify requires this but doesn't declare it
 end
 

@@ -36,7 +36,7 @@ task :test_most do
       raise e
     end
   end
-  #  MiniTest::Unit.new.run  # not needed due to MiniTest::Unit.autorun in test_helper.rb
+  # MiniTest::Unit.new.run(%w{-v})  # not needed due to MiniTest::Unit.autorun in test_helper.rb
 end
 
 desc 'run all tests (in current ruby) one at a time'
