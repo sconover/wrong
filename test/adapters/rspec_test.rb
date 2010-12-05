@@ -36,7 +36,7 @@ describe "testing rspec" do
                           (rspec_version == 1 || RUBY_VERSION =~ /^1\.8\./ || RUBY_VERSION == '1.9.1' ? nil : 1) # RSpec v1 exits with 0 on failure :-(
       end
 
-      assert { spec_output.include? "1 example, 1 failure" }
+      assert { spec_output.include? "2 examples, 1 failure" }
       assert { spec_output.include? "Expected ((2 + 2) == 5), but" }
     end
   end

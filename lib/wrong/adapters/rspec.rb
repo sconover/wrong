@@ -15,11 +15,20 @@ if Object.const_defined? :RSpec
    end
  end
 
+ # This would work if we didn't need to define failure_class
+ # todo: figure out how to get RSpec's config object to class_eval or whatever
+ # Rspec.configure do |config|
+ #   config.include Wrong
+ #   def failure_class
+ #     RSpec::Expectations::ExpectationNotMetError
+ #   end
+ # end
+
  module RSpec
    module Core
      class ExampleGroup
        include Wrong
-
+ 
        def failure_class
          RSpec::Expectations::ExpectationNotMetError
        end
