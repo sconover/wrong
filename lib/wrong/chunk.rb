@@ -283,7 +283,6 @@ public # don't know exactly why this needs to be public but eval'ed code can't f
     end
     
     def self.terminal_width
-      p terminal_size
       terminal_size && terminal_size.first
     end
     
