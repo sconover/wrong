@@ -173,6 +173,31 @@ module Wrong
     def details
       @details ||= build_details
     end
+    
+    def pretty_value(value, starting_col = 0, indent_wrapped_lines = 6, width = Chunk.terminal_width)
+      inspected = value.inspect
+      indented = indent_all(6, inspected)
+      if width
+        indented.split("\n").map do |line|
+          s = ""
+          first_line = true
+          width -= starting_col
+          while line.length > width
+            s << line[0...width]
+            s << newline(indent_wrapped_lines)
+            line = line[width..-1]
+            if first_line
+              width += starting_col - indent_wrapped_lines
+              first_line = false
+            end
+          end
+          s << line
+          s
+        end.join("\n")
+      else
+        indented
+      end
+    end    
 
     private
 
@@ -193,12 +218,12 @@ module Wrong
                 part.gsub!(/\n/, newline(2))
                 part += newline(3)
               end
-              value = indent_all(3, value.inspect)
+              value = pretty_value(value, (4 + part.length + 4))
               if Wrong.config[:color]
                 part = part.color(:blue)
                 value = value.color(:magenta)
               end
-              details << indent(2, part, " is ", value)
+              details << indent(4, part, " is ", value)
             end
           rescue Exception => e
             raises = "raises #{e.class}"
@@ -207,9 +232,9 @@ module Wrong
               raises = raises.bold.color(:red)
             end
             formatted_exeption = if e.message and e.message != e.class.to_s
-                                   indent(2, part, " ", raises, ": ", indent_all(3, e.message))
+                                   indent(4, part, " ", raises, ": ", indent_all(6, e.message))
                                  else
-                                   indent(2, part, " ", raises)
+                                   indent(4, part, " ", raises)
                                  end
             details << formatted_exeption
           end
@@ -227,7 +252,7 @@ module Wrong
 
 public # don't know exactly why this needs to be public but eval'ed code can't find it otherwise
     def indent(indent, *s)
-      "#{"  " * indent}#{s.join('')}"
+      "#{" " * indent}#{s.join('')}"
     end
 
     def newline(indent)
@@ -237,6 +262,36 @@ public # don't know exactly why this needs to be public but eval'ed code can't f
     def indent_all(amount, s)
       s.gsub("\n", "\n#{indent(amount)}")
     end
+    
+    # Returns [width, height] of terminal when detected, nil if not detected.
+    # Think of this as a simpler version of Highline's Highline::SystemExtensions.terminal_size()
+    # Lifted from https://github.com/cldwalker/hirb/blob/master/lib/hirb/util.rb#L59
+    def self.terminal_size
+      @@terminal_size ||= begin
+        if (ENV['COLUMNS'] =~ /^\d+$/) && (ENV['LINES'] =~ /^\d+$/)
+          [ENV['COLUMNS'].to_i, ENV['LINES'].to_i]
+        elsif (RUBY_PLATFORM =~ /java/ || (!STDIN.tty? && ENV['TERM'])) && command_exists?('tput')
+          [`tput cols`.to_i, `tput lines`.to_i]
+        elsif STDIN.tty? && command_exists?('stty')
+          `stty size`.scan(/\d+/).map { |s| s.to_i }.reverse
+        else
+          nil
+        end
+      rescue
+        nil
+      end  
+    end
+    
+    def self.terminal_width
+      p terminal_size
+      terminal_size && terminal_size.first
+    end
+    
+    # Determines if a shell command exists by searching for it in ENV['PATH'].
+    def self.command_exists?(command)
+      ENV['PATH'].split(File::PATH_SEPARATOR).any? {|d| File.exists? File.join(d, command) }
+    end
+    
 
   end
 

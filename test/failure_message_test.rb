@@ -83,7 +83,7 @@ module Wrong
         end
         assert { message.full.include? ", but\n    (2 + 2) is 4"}
       end
-      
+            
     end
 
   end

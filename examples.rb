@@ -12,7 +12,8 @@ include Wrong
 
 Wrong.config.color # or just put the line "color" in a file called ".wrong" in the current dir
 
-def example
+def example(name = nil)
+  puts "\n=== Example#{":" if name} #{name}"
   e = rescuing do
     yield
   end
@@ -100,6 +101,20 @@ example do
   assert("showing indentation of details") { rescuing { raise exception_with_newlines }.message.include?(":flavor: chocolate") }
 end
 
-x = 7
-d { x * 2 }
+example "indentation of long values" do
+  alphabet = "abcdefghijklmnopqrstuvwxyz"
+  assert { (alphabet * 10).include? "123"  }
+end
 
+example "indentation of long values" do
+  hash = {}
+  100.times do
+    hash[(rand * 1000).to_i] = (rand * 1000).to_i
+  end
+  assert { hash["abc"] }
+end
+
+example "the d method" do
+  x = 7
+  d { x * 2 }
+end

@@ -1,4 +1,5 @@
-require "./test/test_helper"
+here = File.expand_path(File.dirname(__FILE__))
+require "#{here}/test_helper"
 require "wrong/chunk"
 
 unless Object.const_defined?(:Chunk)
@@ -74,7 +75,7 @@ describe Chunk do
     end
 
     it "finds the file to parse even when inside a chdir to a child directory" do
-      Dir.chdir("test") do
+      Dir.chdir("#{here}") do
         chunk = Chunk.new __FILE__, __LINE__ + 1; <<-CODE
         "hi"
         CODE
@@ -261,17 +262,79 @@ z
       assert d !~ /x = 7/
       assert d =~ /y is 14/
     end
+    
+
+    class Weirdo
+      def initialize(inspected_value)
+        @inspected_value = inspected_value
+      end
+      
+      def inspect
+        @inspected_value
+      end
+    end
+      
 
     it "indents unescaped newlines inside the inspected value" do
-      weirdo = Object.new
-
-      def weirdo.inspect
-        "first\nsecond\nthird"
-      end
-
-      x = weirdo
+      x = Weirdo.new("first\nsecond\nthird")
       d = details { assert { x == "foo" } }
       assert d == "\n    x is first\n      second\n      third\n"
+    end
+    
+    describe '#pretty_value' do
+      before do
+        @chunk = chunk = Chunk.new(__FILE__, __LINE__ + 1); <<-CODE
+          true
+        CODE
+      end
+
+      it 'inspects its value' do
+        assert @chunk.pretty_value(12) == "12"
+        assert @chunk.pretty_value("foo") == "\"foo\""
+      end
+      
+      it 'escapes newlines in strings' do
+        assert @chunk.pretty_value("foo\nbar\nbaz") == "\"foo\\nbar\\nbaz\""
+      end
+      
+      it 'indents newlines in raw inspect values (e.g. exceptions or YAML or whatever)' do
+        w = Weirdo.new("foo\nbar\nbaz")
+        assert @chunk.pretty_value(w) == "foo\n      bar\n      baz"
+      end
+      
+      # def pretty_value(value, starting_col = 0, indent_wrapped_lines = 3, size = Chunk.terminal_size)
+      
+      it 'inserts newlines in really long values, wrapped at the terminal width' do
+        abc = Weirdo.new("abcdefghijklmnopqrstuvwxyz")
+        pretty = @chunk.pretty_value(abc, 0, 0, 10)
+        assert pretty == <<-DONE.chomp
+abcdefghij
+klmnopqrst
+uvwxyz
+DONE
+      end
+      
+      it 'subtracts the starting column from the wrapped width of the first line' do
+        abc = Weirdo.new("abcdefghijklmnopqrstuvwxyz")
+        pretty = @chunk.pretty_value(abc, 2, 0, 10)
+        assert pretty == <<-DONE.chomp
+abcdefgh
+ijklmnopqr
+stuvwxyz
+        DONE
+      end
+      
+      it "indents wrapped lines" do
+        abc = Weirdo.new("abcdefghijklmnopqrstuvwxyz")
+        pretty = @chunk.pretty_value(abc, 2, 3, 10)
+        assert pretty == <<-DONE.chomp
+abcdefgh
+   ijklmno
+   pqrstuv
+   wxyz
+        DONE
+      end
+      
     end
 
   end
