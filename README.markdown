@@ -8,8 +8,6 @@ Wrong provides a general assert method that takes a predicate block. Assertion f
 
 We'd very much appreciate feedback and bug reports. There are plenty of things left to be done to make the results look uniformly clean and beautiful. We want your feedback, and especially to give us cases where either it blows up or the output is ugly or uninformative.
 
-It relies on [Predicated](http://github.com/sconover/predicated) for its main failure message.
-
 Inspired by [assert { 2.0 }](http://assert2.rubyforge.org/) but rewritten from scratch. Compatible with Ruby (MRI) 1.8, 1.9, and JRuby 1.5.
 
 ## Installation
@@ -215,6 +213,7 @@ Before you get your knickers in a twist about how this is totally unacceptable b
   * You can't use metaprogramming to write your assert blocks.
   * All variables and methods must be available in the binding of the assert block.
   * Passing a proc around and eventually calling assert on it might not work in some Ruby implementations.
+* Beware of Side Effects! (See discussion elsewhere in this document.)
 * "Doesn't all this parsing slow down my test run"?  No - this applies to failure cases only. If the assert block returns true then Wrong simply moves on.
 
 ## Adapters ##
