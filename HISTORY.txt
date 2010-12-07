@@ -1,3 +1,7 @@
+==
+
+* Wrap and indent long values
+
 == 0.4.5
 
 * Ruby 1.9.1 and JRuby hotfixes

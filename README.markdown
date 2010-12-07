@@ -183,7 +183,7 @@ Here's an RSpec example:
 	
 	describe BleuCheese do
 	  it "stinks" do
-		expect { BleuCheese.new.smell > 9000 }
+	    expect { BleuCheese.new.smell > 9000 }
   	  end
 	end
 
@@ -195,11 +195,11 @@ This makes your code read like a BDD-style DSL, without RSpec's arcane "should" 
  
     BleuCheese.new.smell.should > 9000
 
-and seriously, tell me which one more clearly describes the desired behavior. The object under test doesn't really have a `should` method, so why should it during a test? And in what human language is "should greater than" a valid phrase?
+and seriously, tell me which one more clearly describes the desired behavior. The object under test doesn't really have a `should` method, so why should it magically get one during a test? And in what human language is "should greater than" a valid phrase?
 
 ## Algorithm ##
 
-So wait a second. How do we do it? Doesn't Ruby have [poor support for AST introspection](http://blog.zenspider.com/2009/04/parsetree-eol.html)? Well, yes, it does, so we cheat: we figure out what file and line the assert block is defined in, then open the file, read the code, and parse it directly using Ryan Davis' amazing [RubyParser](http://parsetree.rubyforge.org/ruby_parser/) and [Ruby2Ruby](http://seattlerb.rubyforge.org/ruby2ruby/). You can bask in the kludge by examining `chunk.rb` and `assert.rb`. If you find some code it can't parse, please send it our way. As a failsafe we also use Sourcify, which has yet another homebaked RACC parser, so we have many chances to parse your code.
+So wait a second. How do we do it? Doesn't Ruby have [poor support for AST introspection](http://blog.zenspider.com/2009/04/parsetree-eol.html)? Well, yes, it does, so we cheat: we figure out what file and line the assert block is defined in, then open the file, read the code, and parse it directly using Ryan Davis' amazing [RubyParser](http://parsetree.rubyforge.org/ruby_parser/) and [Ruby2Ruby](http://seattlerb.rubyforge.org/ruby2ruby/). You can bask in the kludge by examining `chunk.rb` and `assert.rb`. If you find some code it can't parse, please send it our way. As a failsafe we also use Sourcify, which has yet another home baked RACC parser, so we have many chances to parse your code.
 
 Before you get your knickers in a twist about how this is totally unacceptable because it doesn't support this or that use case, here are our caveats and excuses:
 
@@ -207,7 +207,7 @@ Before you get your knickers in a twist about how this is totally unacceptable b
 * Your code needs to be in a file.
   * If you're developing Ruby code without saving it to a mounted disk, then sorry, Wrong is not right for you.
   * We monkey-patch IRB so if you do `irb -rwrong` it'll save off your session in memory where Wrong can read it.
-  * It'd be nice if it could work inside a `-e` block but as far as we can tell, there's no way to grab that `-e` code from inside Ruby.
+  * It'd be nice if it could work inside a `-e` block but as far as we can tell, there's no way to grab that `-e` source code from inside Ruby.
 * It's a development-time testing library, not a production runtime library, so there are no security or filesystem issues.
 * `eval` isn't evil, it's just misunderstood.
 * It makes a few assumptions about the structure of your code, leading to some restrictions:
@@ -215,7 +215,7 @@ Before you get your knickers in a twist about how this is totally unacceptable b
   * You can't use metaprogramming to write your assert blocks.
   * All variables and methods must be available in the binding of the assert block.
   * Passing a proc around and eventually calling assert on it might not work in some Ruby implementations.
-* "Doesn't all this parsing slow down my test run"?  No - this applies to failure cases only - if the assert block returns true then Wrong simply moves on.
+* "Doesn't all this parsing slow down my test run"?  No - this applies to failure cases only. If the assert block returns true then Wrong simply moves on.
 
 ## Adapters ##
 
@@ -235,7 +235,7 @@ To use these, put the appropriate `require` in your helper, **after** requiring 
 
       assert("since we're on Earth") { sky.blue? }
 
-Since the point of Wrong is to make asserts self-explanatory, you should feel free to use explanations only when they would add something that you couldn't get from reading the (failed) assertion code itself. Don't bother doing things like this:
+Since the point of Wrong is to make asserts self-explanatory, you should use explanations only when they would add something that you couldn't get from reading the (failed) assertion code itself. Don't bother doing things like this:
 
       assert("the sky should be blue") { sky.blue? } # redundant
 
@@ -256,13 +256,13 @@ When a failure occurs, the exception message contains all the details you might 
 * If there is a formatter registered for this type of predicate, its output will come next. (See below.)
 * SUBEXP is each of the subtrees of the claim, minus duplicates and truisms (e.g. literals).
 * The word "is" is a very nice separator since it doesn't look like code, but is short enough to be easily visually parsed.
-* VALUE is `eval(SUBEXP).inspect`
+* VALUE is `eval(SUBEXP).inspect`, wrapped and indented if necessary to fit your console
 
 We hope this structure lets your eyes focus on the meaningful values and differences in the message, rather than glossing over with stack-trace burnout. If you have any suggestions on how to improve it, please share them.
 
 (Why does VALUE use `inspect` and not `to_s`? Because `inspect` on standard objects like String and Array are sure to show all relevant details, such as white space, in a console-safe way, and we hope other libraries follow suit. Also, `to_s` often inserts line breaks and that messes up formatting and legibility.)
 
-Wrong tries to maintain indentation to improve readability. If the inspected VALUE contains newlines, the succeeding lines will be indented to the correct level.
+Wrong tries to maintain indentation to improve readability. If the inspected VALUE contains newlines, or is longer than will fit on your console, the succeeding lines will be indented to a pleasant level.
 
 ## Formatters ##
 
@@ -313,7 +313,7 @@ or any of these at runtime:
 
 ### Color ###
 
-Apparently, no test framework is successful unless and until it supports console colors. So now we do. Call
+Apparently, no test framework is successful unless and until it supports console colors. Call
 
     Wrong.config.color
 
