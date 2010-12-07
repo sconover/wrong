@@ -99,7 +99,7 @@ And don't miss the [slideshare presentation](http://www.slideshare.net/alexchaff
 
 ## Piecemeal Usage ##
 
-We know that sometimes you don't want all the little doodads from a library cluttering up your namespace. If you **don't** do
+We know that sometimes you don't want all the little doodads from a library cluttering up your namespace. If you **don't** want to do
 
     require 'wrong'
     include Wrong
@@ -117,6 +117,30 @@ will give you the `assert` and `deny` methods but not the formatters or `rescuin
 To summarize: if you do `require 'wrong'` and `include Wrong` then you will get the whole ball of wax. Most people will probably want this since it's easier, but there is an alternative, whici is to `require` and `include` only what you want.
 
 And beware: if you don't `require 'wrong'`, then `include Wrong` will not do anything at all.
+
+## Gotcha: Side Effects Within the Assert Block ##
+
+Be careful about making calls within the assert block that cause state changes.
+
+    @x = 1
+    def increment
+      @x += 1
+    end
+
+    assert { increment == 2 }
+    assert { increment == 2 }
+     ==> Expected (increment == 2), but
+         increment is 5
+
+The first time increment fires the result is 2.  The second time the result is 3, and then Wrong introspects the block to create a good failure message, causing increment to fire a couple more times.
+
+Confusing, we know!  A few patient Wrong users have hit this when the assert involves ActiveRecord write methods like #create! and #save.
+
+Fix: introduce a variable:
+
+    value = increment
+    assert { value == 2 }
+    assert { value == 2 }
 
 ## Apology ##
 
