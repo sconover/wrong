@@ -2,14 +2,13 @@ require "./test/test_helper"
 require "wrong/assert"
 require "wrong/helpers"
 require "wrong/adapters/minitest"
-
 require "wrong/message/array_diff"
 
 describe "when you're comparing strings and they don't match, show me the diff message" do
 
   def assert_string_diff_message(first_array, second_array, expected_error_message)
     e = rescuing {
-      Wrong.assert { first_array == second_array }
+      assert { first_array == second_array }
     }
     assert {
       e.message.include?(expected_error_message.strip)
@@ -25,6 +24,11 @@ describe "when you're comparing strings and they don't match, show me the diff m
     deny {
       rescuing {
         assert { nil==[1] }
+      }.message.include?("^")
+    }
+    deny {
+      rescuing {
+        assert { {:a=>1}==[1] }
       }.message.include?("^")
     }
   end

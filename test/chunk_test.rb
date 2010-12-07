@@ -175,6 +175,13 @@ z
       code_parts = chunk.parts
       assert !code_parts.include?("rescuing")
     end
+    
+    it "skips assignments" do
+      chunk = Chunk.new(__FILE__, __LINE__ + 1); <<-CODE
+        x = 7; x
+      CODE
+      assert !chunk.parts.include?("(x = 7)")
+    end    
   end
 
   describe "#details" do
@@ -246,6 +253,13 @@ z
       d = details { assert { x == "flavor:\tchocolate" } }
       # this means it's a literal slash plus t inside double quotes -- i.e. it shows the escaped (inspected) string
       assert d == "\n" + '    x is "flavor:\tvanilla"' + "\n"
+    end
+    
+    it "skips assignments" do
+      y = 14
+      d = details { x = 7; y }
+      assert d !~ /x = 7/
+      assert d =~ /y is 14/
     end
 
     it "indents unescaped newlines inside the inspected value" do

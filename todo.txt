@@ -1,0 +1,3 @@
+Use RSpec 2's new framework extension API for rspec adapter
+
+Switch matchers from predicated to sexp

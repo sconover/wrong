@@ -57,7 +57,9 @@ describe "d" do
 
   it "works when called on the D module" do
     x = 9
-    output = capturing { Wrong::D.d { x }}
+    output = capturing { 
+      Wrong::D.d { x }
+    }
     assert { output == "x is 9\n" }
   end
 

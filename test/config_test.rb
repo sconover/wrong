@@ -91,7 +91,7 @@ alias_assert :yum
           is("math is hard") { 2 + 2 == 5 }
         }
         expected = <<-FAIL
-math is hard: Expected ((2 + 2) == 5), but 4 is not equal to 5
+math is hard: Expected ((2 + 2) == 5), but
     (2 + 2) is 4
         FAIL
         assert { e.message == expected }
@@ -118,7 +118,7 @@ math is hard: Expected ((2 + 2) == 5), but 4 is not equal to 5
           aint("math is hard") { 2 + 2 == 4 }
         }
         expected = <<-FAIL
-math is hard: Didn't expect ((2 + 2) == 4), but 4 is equal to 4
+math is hard: Didn't expect ((2 + 2) == 4), but
     (2 + 2) is 4
         FAIL
         assert { e.message == expected }

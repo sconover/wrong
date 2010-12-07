@@ -5,8 +5,8 @@ require 'wrong/config'
 class Sexp < Array
 
   def to_ruby
-    d = self.deep_clone
-    ruby = Ruby2Ruby.new.process(d)
+    sexp = self.deep_clone
+    ruby = Ruby2Ruby.new.process(sexp)
     ruby
   end
 
@@ -26,7 +26,7 @@ class Sexp < Array
       self[0] == :iter and
       self[1].is_a? Sexp and
       self[1][0] == :call and
-      Wrong.config.assert_methods.include? self[1][2] # todo: allow aliases for assert (e.g. "is")
+      Wrong.config.assert_methods.include? self[1][2]
   end
 
   def assertion

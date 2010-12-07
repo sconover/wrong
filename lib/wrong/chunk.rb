@@ -26,16 +26,20 @@ module Wrong
                 as_proc.source_location
               else
                 # in Ruby 1.8, it reads the source location from the call stack
-                caller[depth].split(":")
+                # # $stderr.puts "---"
+                # $stderr.puts caller.join("\n")
+                relevant_caller = caller[depth]
+                # $stderr.puts "*** #{relevant_caller}"
+                relevant_caller.split(":")
               end
 
-      new(file, line, block)
+      new(file, line, &block)
     end
 
     attr_reader :file, :line_number, :block
 
     # line parameter is 1-based
-    def initialize(file, line_number, block = nil)
+    def initialize(file, line_number, &block)
       @file = file
       @line_number = line_number.to_i
       @block = block
@@ -59,8 +63,8 @@ module Wrong
           # first try sourcify
           @block.to_sexp[3] # the [3] is to strip out the "proc {" sourcify adds to everything
         end
-      rescue ::Sourcify::MultipleMatchingProcsPerLineError, Racc::ParseError, Errno::ENOENT => e
-        # fall through
+      rescue Exception => e
+        # sourcify failed, so fall through
       end
 
       # next try glomming
@@ -132,8 +136,8 @@ module Wrong
       self.claim.to_ruby
     rescue => e
       # note: this is untested; it's to recover from when we can't locate the code
-      message = "Failed assertion at #{file}:#{line_number} [couldn't retrieve source code due to #{e.inspect}]"
-      raise failure_class.new(message)
+      message = "Failed at #{file}:#{line_number} [couldn't retrieve source code due to #{e.inspect}]"
+      raise message
     end
 
     def parts(sexp = nil)
@@ -143,7 +147,7 @@ module Wrong
         # todo: extract some of this into Sexp
         parts_list = []
         begin
-          unless sexp.first == :arglist
+          unless [:arglist, :lasgn, :iter].include? sexp.first
             code = sexp.to_ruby.strip
             parts_list << code unless code == "" || parts_list.include?(code)
           end
@@ -167,6 +171,12 @@ module Wrong
     end
 
     def details
+      @details ||= build_details
+    end
+
+    private
+
+    def build_details
       require "wrong/rainbow" if Wrong.config[:color]
       s = ""
       parts = self.parts
@@ -215,8 +225,7 @@ module Wrong
 
     end
 
-    private
-
+public # don't know exactly why this needs to be public but eval'ed code can't find it otherwise
     def indent(indent, *s)
       "#{"  " * indent}#{s.join('')}"
     end

@@ -20,8 +20,19 @@ module Wrong
   extend Wrong::Helpers
 end
 
-# this does some magic; if you don't like it, `require 'wrong/assert'` et al. individually and don't `require 'wrong/close_to'` or `require 'wrong'`
+# this does some magic; if you don't like it...
+
+# ...`require 'wrong/assert'` et al. individually and don't `require 'wrong/close_to'` or `require 'wrong'`
 require "wrong/close_to"
 
-# this does some magic; if you don't like it, `require 'wrong/assert'` et al. individually, don't `require 'wrong'`, and `include Wrong::D` only in the modules you want to call `d` from
-Object.send :include, Wrong::D
+# ...don't `require 'wrong'`, and `include Wrong::D` only in the modules you want to call `d` from
+class Object  # should we add this to Kernel instead?
+  include Wrong::D
+end
+
+# ...don't `require 'wrong'`
+# this part isn't working yet -- it's supposed to make 'assert' available at the top level but it breaks the minitest adapter
+# include Wrong
+# class Object
+#   include Wrong
+# end

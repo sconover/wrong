@@ -13,7 +13,7 @@ module Wrong
 
     def arrayish?(object)
       # in some Rubies, String is Enumerable
-      object.is_a?(Enumerable) && !object.is_a?(String)
+      object.is_a?(Enumerable) && !(object.is_a?(String) || object.is_a?(Hash))
     end
 
     def describe

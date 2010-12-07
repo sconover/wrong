@@ -32,13 +32,13 @@ class MyFailingAssertTest <  Test::Unit::TestCase
     #I can do without all the TU Listener business, thank you
     failures = result.instance_variable_get("@failures".to_sym)
     assert{ failures.length==1 }
-    assert{ failures.first.long_display.include?("1 is not equal to 2") }
+    assert{ failures.first.long_display.include?("Expected (1 == 2)") }
     
     result = Test::Unit::TestResult.new
     failures = result.instance_variable_get("@failures".to_sym)
     my_failing_deny_test.new("test_fail").run(result) {|started, name| }
     assert{ failures.length==1 }
-    assert{ failures.first.long_display.include?("1 is equal to 1") }
+    assert{ failures.first.long_display.include?("Didn't expect (1 == 1)") }
   end
 
   def test_passes_asserts_with_no_block_up_to_the_frameworks_assert_method
