@@ -139,7 +139,7 @@ The first time increment fires the result is 2.  The second time the result is 3
 
 Confusing, we know!  A few patient Wrong users have hit this when the assert involves ActiveRecord write methods like #create! and #save.
 
-Fix: introduce a variable:
+The fix: introduce a variable:
 
     value = increment
     assert { value == 2 }
