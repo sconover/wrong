@@ -6,3 +6,4 @@ Gemfile.lock
 test/adapters/railsapp
 .redcar
 .DS_Store
+vendor
