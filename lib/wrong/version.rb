@@ -1,3 +1,3 @@
 module Wrong
-  VERSION = "0.4.5" unless defined?(Wrong::VERSION)
+  VERSION = "0.5.0" unless defined?(Wrong::VERSION)
 end
