@@ -97,7 +97,7 @@ end
 
 example do
   hash = {:flavor => "vanilla"}
-  exception_with_newlines = Exception.new(hash.to_yaml)
+  exception_with_newlines = Exception.new(hash.to_yaml.chomp)
   assert("showing indentation of details") { rescuing { raise exception_with_newlines }.message.include?(":flavor: chocolate") }
 end
 
