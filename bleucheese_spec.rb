@@ -8,18 +8,20 @@ require 'rspec'
 require "wrong"
 require "wrong/adapters/rspec"
 
-Wrong.config.alias_assert :should
+# David's solution
+# require "rspec/expectations"
+# require "wrong"
+# require "wrong/adapters/rspec"
+# RSpec.configuration.expect_with :stdlib
 
-describe BleuCheese do
-  it "stinks" do
-    should { BleuCheese.new.smell > 9000 }
-  end
+# Alex's solution
+module RSpec::Matchers
+  remove_method(:expect)
 end
 
-
-# This test should fail, yet it passes, since RSpec aliases expect to lambda
 Wrong.config.alias_assert :expect
 
+# This test should fail, yet it passes, since RSpec aliases expect to lambda
 describe BleuCheese do
   it "stinks with expect" do
     expect { BleuCheese.new.smell > 9000 }
