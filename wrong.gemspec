@@ -21,7 +21,6 @@ helper methods, like rescuing, capturing, and d.
   s.files      = Dir['lib/**/*']
   s.test_files = Dir['test/**/*.rb']
 
-  s.has_rdoc = true
   s.extra_rdoc_files = %w[README.markdown]
 
   s.add_dependency "predicated", ">= 0.2.2"
