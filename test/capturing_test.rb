@@ -28,7 +28,14 @@ describe "a tool for capturing output" do
 
     assert { out == "hi\n"}
     assert { err == "bye\n"}
+  end
+  
+  it "returns an empty string if nothing was emitted" do
+    out, err = capturing(:stdout, :stderr) do
+    end
 
+    assert { out == ""}
+    assert { err == ""}
   end
 
   it "supports nesting" do
