@@ -173,27 +173,29 @@ You get all the information you want, and none you don't want. At least, that's 
 
 Wrong is compatible with RSpec and MiniTest::Spec, and probably Cucumber too, so you can use it inside your BDD framework of choice. To make your test code even BDD-er, try aliasing `assert` to either `should` or (Alex's favorite) `expect`. 
 
+[Warning: currently the use of `expect` is **not** compatible with RSpec, since RSpec also defines `expect` as a synonym for `lambda`. We're [working on a fix](https://github.com/sconover/wrong/issues/6).]
+
 Here's an RSpec example: 
 
-    require "wrong"
+	require "wrong"
 	require "wrong/adapters/rspec"
-	Wrong.config.alias_assert :expect
+	Wrong.config.alias_assert :expect_that
 	
 	describe BleuCheese do
 	  it "stinks" do
-	    expect { BleuCheese.new.smell > 9000 }
-  	  end
+	    expect_that { BleuCheese.new.smell > 9000 }
+	  end
 	end
 
-This makes your code read like a BDD-style DSL, without RSpec's arcane "should" syntax (which is, let's face it, pretty weird the first few hundred times you have to use it). Compare
+This makes your code read like a BDD-style DSL, without RSpec's "should" syntax (which is, let's face it, pretty weird the first few hundred times you have to use it). Compare
 
-    expect { BleuCheese.new.smell > 9000 }
+    expect_that { BleuCheese.new.smell > 9000 }
 
  to
  
     BleuCheese.new.smell.should > 9000
 
-and seriously, tell me which one more clearly describes the desired behavior. The object under test doesn't really have a `should` method, so why should it magically get one during a test? And in what human language is "should greater than" a valid phrase?
+and consider which one more clearly describes the desired behavior. The object under test doesn't really have a `should` method, so why should it magically get one during a test? And in what human language is "should greater than" a valid phrase?
 
 ## Algorithm ##
 
