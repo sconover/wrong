@@ -265,7 +265,6 @@ z
     it "splits lower-down details correctly (bug)" do
       hash = {:flavor => "vanilla"}
       exception_with_newlines = Exception.new(hash.to_yaml.chomp)
-      p exception_with_newlines
       d = details {
         rescuing { raise exception_with_newlines }.message.include?(":flavor: chocolate")
       }
