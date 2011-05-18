@@ -173,8 +173,6 @@ You get all the information you want, and none you don't want. At least, that's 
 
 Wrong is compatible with RSpec and MiniTest::Spec, and probably Cucumber too, so you can use it inside your BDD framework of choice. To make your test code even BDD-er, try aliasing `assert` to either `should` or (Alex's favorite) `expect`. 
 
-[Warning: currently the use of `expect` is **not** compatible with RSpec, since RSpec also defines `expect` as a synonym for `lambda`. We're [working on a fix](https://github.com/sconover/wrong/issues/6).]
-
 Here's an RSpec example: 
 
 	require "wrong"
@@ -196,6 +194,8 @@ This makes your code read like a BDD-style DSL, without RSpec's "should" syntax 
     BleuCheese.new.smell.should > 9000
 
 and consider which one more clearly describes the desired behavior. The object under test doesn't really have a `should` method, so why should it magically get one during a test? And in what human language is "should greater than" a valid phrase?
+
+Warning: currently the use of `alias_assert :expect` is **not** compatible with RSpec, since RSpec also defines `expect` as a synonym for `lambda`. If you really want to use `expect` as an alias form `assert`, then use `Wrong.config.alias_assert :expect, :override => true`. See [issue #6](https://github.com/sconover/wrong/issues/6) for more details.
 
 ## Algorithm ##
 

@@ -23,7 +23,7 @@ helper methods, like rescuing, capturing, and d.
 
   s.extra_rdoc_files = %w[README.markdown]
 
-  s.add_dependency "predicated", ">= 0.2.2"
+  s.add_dependency "predicated", ">= 0.2.3"
   s.add_dependency "ruby_parser", "~> 2.0.4"
   s.add_dependency "ruby2ruby", "~> 1.2"
   s.add_dependency "sexp_processor", "~> 3.0"

@@ -2,12 +2,19 @@ here = File.expand_path(File.dirname(__FILE__))
 require "#{here}/test_helper"
 require "wrong/chunk"
 require 'yaml'
+require 'wrong/helpers'
 
 unless Object.const_defined?(:Chunk)
   Chunk = Wrong::Chunk
 end
 
 describe Chunk do
+
+  # normalize yaml
+  def y(s)
+    s.gsub(/--- $/, "---").chomp
+  end
+
   describe "#from_block" do
     it "reads the source location" do
       file, line = __FILE__, __LINE__
@@ -177,21 +184,19 @@ z
       code_parts = chunk.parts
       assert !code_parts.include?("rescuing")
     end
-    
+
     it "skips assignments" do
       chunk = Chunk.new(__FILE__, __LINE__ + 1); <<-CODE
         x = 7; x
       CODE
       assert !chunk.parts.include?("(x = 7)")
-    end    
+    end
   end
 
   describe "#details" do
     def details(&block)
       chunk = Chunk.from_block(block, 1)
-      d = chunk.details
-#      puts d
-      d
+      chunk.details
     end
 
     it "returns an empty string if there are no parts" do
@@ -256,14 +261,15 @@ z
       # this means it's a literal slash plus t inside double quotes -- i.e. it shows the escaped (inspected) string
       assert d == "\n" + '    x is "flavor:\tvanilla"' + "\n"
     end
-    
+
     it "splits lower-down details correctly (bug)" do
       hash = {:flavor => "vanilla"}
       exception_with_newlines = Exception.new(hash.to_yaml.chomp)
+      p exception_with_newlines
       d = details {
         rescuing { raise exception_with_newlines }.message.include?(":flavor: chocolate")
       }
-      assert d.include? "exception_with_newlines is #<Exception: --- \n      :flavor: vanilla>"
+      assert (y(d).include? "exception_with_newlines is #<Exception: ---\n      :flavor: vanilla>"), d.inspect
     end
 
     it "skips assignments" do
@@ -277,19 +283,19 @@ z
       def initialize(inspected_value)
         @inspected_value = inspected_value
       end
-      
+
       def inspect
         @inspected_value
       end
     end
-      
+
 
     it "indents unescaped newlines inside the inspected value" do
       x = Weirdo.new("first\nsecond\nthird")
       d = details { assert { x == "foo" } }
       assert d == "\n    x is first\n      second\n      third\n"
     end
-    
+
     describe '#pretty_value' do
       before do
         @chunk = chunk = Chunk.new(__FILE__, __LINE__ + 1); <<-CODE
@@ -301,18 +307,18 @@ z
         assert @chunk.pretty_value(12) == "12"
         assert @chunk.pretty_value("foo") == "\"foo\""
       end
-      
+
       it 'escapes newlines in strings' do
         assert @chunk.pretty_value("foo\nbar\nbaz") == "\"foo\\nbar\\nbaz\""
       end
-      
+
       it 'indents newlines in raw inspect values (e.g. exceptions or YAML or whatever)' do
         w = Weirdo.new("foo\nbar\nbaz")
         assert @chunk.pretty_value(w) == "foo\n      bar\n      baz"
       end
-      
+
       # def pretty_value(value, starting_col = 0, indent_wrapped_lines = 3, size = Chunk.terminal_size)
-      
+
       it 'inserts newlines in really long values, wrapped at the terminal width' do
         abc = Weirdo.new("abcdefghijklmnopqrstuvwxyz")
         pretty = @chunk.pretty_value(abc, 0, 0, 10)
@@ -322,7 +328,7 @@ klmnopqrst
 uvwxyz
 DONE
       end
-      
+
       it 'subtracts the starting column from the wrapped width of the first line' do
         abc = Weirdo.new("abcdefghijklmnopqrstuvwxyz")
         pretty = @chunk.pretty_value(abc, 2, 0, 10)
@@ -332,7 +338,7 @@ ijklmnopqr
 stuvwxyz
         DONE
       end
-      
+
       it "indents wrapped lines" do
         abc = Weirdo.new("abcdefghijklmnopqrstuvwxyz")
         pretty = @chunk.pretty_value(abc, 2, 3, 10)
@@ -343,16 +349,17 @@ abcdefgh
    wxyz
         DONE
       end
-      
+
       it "wraps correctly" do
         hash = {:flavor => "vanilla"}
         object = Weirdo.new(hash.to_yaml.chomp)
         pretty = @chunk.pretty_value(object, 2, 3, 80)
-        assert pretty == <<-DONE.chomp
---- 
+        assert y(pretty) == y(<<-DONE), pretty.inspect
+---
       :flavor: vanilla
         DONE
       end
+
 
     end
 
