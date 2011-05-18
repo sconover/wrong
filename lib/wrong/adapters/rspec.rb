@@ -28,10 +28,29 @@ if Object.const_defined? :RSpec
    module Core
      class ExampleGroup
        include Wrong
- 
+
        def failure_class
          RSpec::Expectations::ExpectationNotMetError
        end
+     end
+   end
+ end
+
+ # Disallow alias_assert :expect
+ module Wrong
+   class Config
+     alias :alias_assert_or_deny_original :alias_assert_or_deny
+     def alias_assert_or_deny(valence, extra_name, options = {})
+       if extra_name.to_sym == :expect
+         if options[:override]
+           RSpec::Matchers.class_eval do
+             remove_method(:expect)
+           end
+         else
+           raise ConfigError.new("RSpec already has a method named #{extra_name}. Use alias_#{valence} :#{extra_name}, :override => true if you really want to do this.")
+         end
+       end
+       alias_assert_or_deny_original(valence, extra_name, options)
      end
    end
  end

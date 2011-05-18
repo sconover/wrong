@@ -1,6 +1,7 @@
 require "wrong/chunk"
 
 module Wrong
+
   def self.load_config
     settings = begin
       Chunk.read_here_or_higher(".wrong")
@@ -20,7 +21,11 @@ module Wrong
   end
 
   class Config < Hash
-     def initialize(string = nil)
+
+    class ConfigError < RuntimeError
+    end
+
+    def initialize(string = nil)
       self[:aliases] = {:assert => [:assert], :deny => [:deny]}
       if string
         instance_eval string.gsub(/^(.*=)/, "self.\\1")
@@ -35,18 +40,18 @@ module Wrong
       self[name.to_sym] = value
     end
 
-    def alias_assert_or_deny(valence, extra_name)
+    def alias_assert_or_deny(valence, extra_name, options)
       Wrong::Assert.send(:alias_method, extra_name, valence)
       new_method_name = extra_name.to_sym
       self[:aliases][valence] << new_method_name unless self[:aliases][valence].include?(new_method_name)
     end
 
-    def alias_assert(method_name)
-      alias_assert_or_deny(:assert, method_name)
+    def alias_assert(method_name, options = {})
+      alias_assert_or_deny(:assert, method_name, options)
     end
 
-    def alias_deny(method_name)
-      alias_assert_or_deny(:deny, method_name)
+    def alias_deny(method_name, options = {})
+      alias_assert_or_deny(:deny, method_name, options)
     end
 
     def assert_method_names
