@@ -1,3 +1,6 @@
 Use RSpec 2's new framework extension API for rspec adapter
 
 Switch matchers from predicated to sexp
+
+We may also want to have Wrong's assert method detect when it is passed a parameter and no block, and act like the old assert in that case rather than erroring out. I think that'll fix some other integration hassles/bugs.
+

@@ -1,5 +1,6 @@
 require 'ruby_parser'
 require 'ruby2ruby'
+require 'pp'
 
 def require_optionally(library)
   begin
@@ -175,25 +176,15 @@ module Wrong
     end
     
     def pretty_value(value, starting_col = 0, indent_wrapped_lines = 6, width = Chunk.terminal_width)
-      inspected = value.inspect
+      # inspected = value.inspect
+
+      # note that if the first line overflows due to the starting column then pp won't wrap it right
+      inspected = PP.pp(value, "", width - starting_col).chomp
+
+      # this bit might be redundant with the pp call now
       indented = indent_all(6, inspected)
       if width
-        indented.split("\n").map do |line|
-          s = ""
-          first_line = true
-          width -= starting_col
-          while line.length > width
-            s << line[0...width]
-            s << newline(indent_wrapped_lines)
-            line = line[width..-1]
-            if first_line
-              width += starting_col - indent_wrapped_lines
-              first_line = false
-            end
-          end
-          s << line
-          s
-        end.join("\n")
+        wrap_and_indent(indented, starting_col, indent_wrapped_lines, width)
       else
         indented
       end
@@ -201,6 +192,7 @@ module Wrong
 
     private
 
+    # todo: move to FailureMessage?
     def build_details
       require "wrong/rainbow" if Wrong.config[:color]
       s = ""
@@ -263,6 +255,25 @@ public # don't know exactly why this needs to be public but eval'ed code can't f
       s.gsub("\n", "\n#{indent(amount)}")
     end
     
+    def wrap_and_indent(indented, starting_col, indent_wrapped_lines, full_width)
+      first_line = true
+      width = full_width - starting_col # the first line is essentially shorter
+      indented.split("\n").map do |line|
+        s = ""
+        while line.length > width
+          s << line[0...width]
+          s << newline(indent_wrapped_lines)
+          line = line[width..-1]
+          if first_line
+            width += starting_col - indent_wrapped_lines
+            first_line = false
+          end
+        end
+        s << line
+        s
+      end.join("\n")
+    end
+
     # Returns [width, height] of terminal when detected, nil if not detected.
     # Think of this as a simpler version of Highline's Highline::SystemExtensions.terminal_size()
     # Lifted from https://github.com/cldwalker/hirb/blob/master/lib/hirb/util.rb#L59
@@ -283,7 +294,6 @@ public # don't know exactly why this needs to be public but eval'ed code can't f
     end
     
     def self.terminal_width
-      p terminal_size
       terminal_size && terminal_size.first
     end
     

@@ -1,6 +1,7 @@
 here = File.expand_path(File.dirname(__FILE__))
 require "#{here}/test_helper"
 require "wrong/chunk"
+require 'yaml'
 
 unless Object.const_defined?(:Chunk)
   Chunk = Wrong::Chunk
@@ -256,13 +257,21 @@ z
       assert d == "\n" + '    x is "flavor:\tvanilla"' + "\n"
     end
     
+    it "splits lower-down details correctly (bug)" do
+      hash = {:flavor => "vanilla"}
+      exception_with_newlines = Exception.new(hash.to_yaml.chomp)
+      d = details {
+        rescuing { raise exception_with_newlines }.message.include?(":flavor: chocolate")
+      }
+      assert d.include? "exception_with_newlines is #<Exception: --- \n      :flavor: vanilla>"
+    end
+
     it "skips assignments" do
       y = 14
       d = details { x = 7; y }
       assert d !~ /x = 7/
       assert d =~ /y is 14/
     end
-    
 
     class Weirdo
       def initialize(inspected_value)
@@ -335,6 +344,16 @@ abcdefgh
         DONE
       end
       
+      it "wraps correctly" do
+        hash = {:flavor => "vanilla"}
+        object = Weirdo.new(hash.to_yaml.chomp)
+        pretty = @chunk.pretty_value(object, 2, 3, 80)
+        assert pretty == <<-DONE.chomp
+--- 
+      :flavor: vanilla
+        DONE
+      end
+
     end
 
   end
