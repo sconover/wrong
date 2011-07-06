@@ -20,7 +20,7 @@ We have deployed gems for both Ruby and JRuby; if you get dependency issues on y
 
 Wrong provides a simple assert method that takes a block:
 
-	require "wrong"
+	require "wrong"   # or require "wrong/adapters/rspec" (see below)
 
 	include Wrong
 
@@ -98,6 +98,38 @@ There's also a spreadsheet showing a translation from Test::Unit and RSpec to Wr
 
 And don't miss the [slideshare presentation](http://www.slideshare.net/alexchaffee/wrong-5069976).
 
+## Test Framework Adapters ##
+
+Adapters for various test frameworks sit under wrong/adapters.
+
+Currently we support
+
+  * Test::Unit - `require 'wrong/adapters/test_unit'`
+  * Minitest - `require 'wrong/adapters/minitest'`
+  * RSpec - `require 'wrong/adapters/rspec'` (now supports both 1.3 and 2.0)
+
+To use these, put the appropriate `require` in your helper, **after** requiring your test framework; it should extend the framework enough that you can use `assert { }` in your test cases without extra fussing around.
+
+For example:
+
+    require "test/unit"
+    require "wrong/adapters/test_unit"
+    class PlusTest < Test::Unit::TestCase
+      def test_adding_two_and_two
+        assert { 2 + 2 == 4 }
+      end
+    end
+
+---
+
+    require "rspec"
+    require "wrong/adapters/rspec"
+    describe "plus" do
+      it "adds two and two" do
+        assert { 2 + 2 == 4 }
+      end
+    end
+
 ## Piecemeal Usage ##
 
 We know that sometimes you don't want all the little doodads from a library cluttering up your namespace. If you **don't** want to do
@@ -171,14 +203,14 @@ You get all the information you want, and none you don't want. At least, that's 
 
 ## BDD with Wrong ##
 
-Wrong is compatible with RSpec and MiniTest::Spec, and probably Cucumber too, so you can use it inside your BDD framework of choice. To make your test code even BDD-er, try aliasing `assert` to either `should` or (Alex's favorite) `expect`. 
+Wrong is compatible with RSpec and MiniTest::Spec, and probably Cucumber too, so you can use it inside your BDD framework of choice. To make your test code even BDD-er, try aliasing `assert` to either `should` or (Alex's favorite) `expect`.
 
-Here's an RSpec example: 
+Here's an RSpec example:
 
 	require "wrong"
 	require "wrong/adapters/rspec"
 	Wrong.config.alias_assert :expect_that
-	
+
 	describe BleuCheese do
 	  it "stinks" do
 	    expect_that { BleuCheese.new.smell > 9000 }
@@ -190,7 +222,7 @@ This makes your code read like a BDD-style DSL, without RSpec's "should" syntax 
     expect_that { BleuCheese.new.smell > 9000 }
 
  to
- 
+
     BleuCheese.new.smell.should > 9000
 
 and consider which one more clearly describes the desired behavior. The object under test doesn't really have a `should` method, so why should it magically get one during a test? And in what human language is "should greater than" a valid phrase?
@@ -218,17 +250,6 @@ Before you get your knickers in a twist about how this is totally unacceptable b
 * Beware of Side Effects! (See discussion elsewhere in this document.)
 * "Doesn't all this parsing slow down my test run"?  No - this applies to failure cases only. If the assert block returns true then Wrong simply moves on.
 
-## Adapters ##
-
-Adapters for various test frameworks sit under wrong/adapters.
-
-Currently we support
-
-  * Test::Unit - `require 'wrong/adapters/test_unit'`
-  * Minitest - `require 'wrong/adapters/minitest'`
-  * RSpec - `require 'wrong/adapters/rspec'` (now supports both 1.3 and 2.0)
-
-To use these, put the appropriate `require` in your helper, **after** requiring your test framework; it should extend the framework enough that you can use `assert { }` in your test cases without extra fussing around.
 
 ## Explanations ##
 
@@ -281,11 +302,12 @@ To use the Array formatter, you may also need to `gem install diff-lcs` (it's an
     assert { "the quick brown fox jumped over the lazy dog" ==
              "the quick brown hamster jumped over the lazy gerbil" }
      ==>
-	Expected ("the quick brown fox jumped over the lazy dog" == "the quick brown hamster jumped over the lazy gerbil"), but
-	Strings differ at position 16:
-	 first: ..."quick brown fox jumped over the lazy dog"
-	second: ..."quick brown hamster jumped over the lazy gerbil"
---
+    Expected ("the quick brown fox jumped over the lazy dog" == "the quick brown hamster jumped over the lazy gerbil"), but
+    Strings differ at position 16:
+     first: ..."quick brown fox jumped over the lazy dog"
+    second: ..."quick brown hamster jumped over the lazy gerbil"
+
+---
 
     require "wrong/message/array_diff"
     assert { ["venus", "mars", "pluto", "saturn"] ==
@@ -326,14 +348,14 @@ in your `.wrong` file and get ready to be **bedazzled**. If you need custom colo
 
 ### Aliases ###
 
-An end to the language wars! Name your "assert" and "deny" methods anything you want. 
+An end to the language wars! Name your "assert" and "deny" methods anything you want.
 
 * In your code, use `Wrong.config.alias_assert` and `Wrong.config.alias_deny`
 * In your `.wrong` file, put `alias_assert :expect` on a line by itself
 
 Here are some suggestions:
 
-    alias_assert :expect
+    alias_assert :expect # warning: not compatible with RSpec
     alias_assert :should # This looks nice in RSpec
     alias_assert :confirm
     alias_assert :be

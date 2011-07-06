@@ -1,9 +1,5 @@
 require "./test/test_helper"
 
-require "test/unit"
-
-#require "wrong/assert"
-require "wrong/adapters/test_unit"
 
 # get rid of atrocious Test::Unit color scheme (gray on green = puke)
 Test::Unit::AutoRunner.setup_option do |auto_runner, opts|
