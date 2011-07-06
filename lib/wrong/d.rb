@@ -1,5 +1,6 @@
 require "sexp"
 require "wrong/chunk"
+require "pp"
 
 class ::Sexp < ::Array
   def d?
@@ -26,7 +27,9 @@ module Wrong
       end
 
       code = sexp.to_ruby
-      value = eval(code, block.binding, called_from[0], called_from[1].to_i).inspect
+      value = eval(code, block.binding, called_from[0], called_from[1].to_i)
+      width = Chunk.terminal_width
+      value = PP.pp(value, "", width - (code.size + 3)).chomp
 
       if Wrong.config[:color]
         require "wrong/rainbow"

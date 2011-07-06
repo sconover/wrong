@@ -1,3 +1,7 @@
+==
+
+* "d" pretty-prints long values
+
 == 0.5.1
 
 * fix RSpec alias_assert :expect issue https://github.com/sconover/wrong/issues/6

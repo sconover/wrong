@@ -294,7 +294,11 @@ public # don't know exactly why this needs to be public but eval'ed code can't f
     end
     
     def self.terminal_width
-      terminal_size && terminal_size.first
+      @terminal_width || (terminal_size && terminal_size.first) || 80
+    end
+
+    def self.terminal_width= forced_with
+      @terminal_width = forced_with
     end
     
     # Determines if a shell command exists by searching for it in ENV['PATH'].

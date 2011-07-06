@@ -22,6 +22,15 @@ describe "d" do
     assert { output == "x is \"one\\ttwo\"\n" }
   end
 
+  it "pretty-prints the value" do
+    Wrong::Chunk.terminal_width = 80
+    x = {:a => "a" * 60, :b => "b" * 60}
+    output = capturing do
+      d { x }
+    end
+    assert { output == "x is {:a=>\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n :b=>\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"}\n" }
+  end
+
   it "works on an expression" do
     x = 5
     output = capturing do
