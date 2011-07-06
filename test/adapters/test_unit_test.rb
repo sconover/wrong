@@ -19,21 +19,21 @@ class MyFailingAssertTest <  Test::Unit::TestCase
         assert{1==2}
       end
     end
-    
+
     my_failing_deny_test = Class.new(Test::Unit::TestCase)
     my_failing_deny_test.class_eval do
       def test_fail
         deny{1==1}
       end
     end
-    
+
     result = Test::Unit::TestResult.new
     my_failing_assert_test.new("test_fail").run(result) {|started, name| }
     #I can do without all the TU Listener business, thank you
     failures = result.instance_variable_get("@failures".to_sym)
     assert{ failures.length==1 }
     assert{ failures.first.long_display.include?("Expected (1 == 2)") }
-    
+
     result = Test::Unit::TestResult.new
     failures = result.instance_variable_get("@failures".to_sym)
     my_failing_deny_test.new("test_fail").run(result) {|started, name| }
@@ -55,5 +55,21 @@ class MyFailingAssertTest <  Test::Unit::TestCase
 
     e = rescuing { deny(2 + 2 == 4, "up is down") }
     assert { e.message == "up is down.\n<false> is not true." }
+  end
+end
+
+class TestUnitAdapterTest < Test::Unit::TestCase
+  def setup
+    @actual_assertion_count = 0
+  end
+
+  def add_assertion
+    @actual_assertion_count += 1
+  end
+
+  def test_assert_bumps_assertion_count
+    assert_equal 0, @actual_assertion_count
+    assert { true }
+    assert_equal 1, @actual_assertion_count
   end
 end
