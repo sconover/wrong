@@ -1,5 +1,11 @@
-require "./test/test_helper"
+here = File.dirname(__FILE__)
+$LOAD_PATH.unshift "#{here}/../../lib"
 
+# gem "test-unit"
+require "test/unit"
+require "test/unit/autorunner"
+
+require "wrong/adapters/test_unit"
 
 # get rid of atrocious Test::Unit color scheme (gray on green = puke)
 Test::Unit::AutoRunner.setup_option do |auto_runner, opts|
@@ -56,16 +62,27 @@ end
 
 class TestUnitAdapterTest < Test::Unit::TestCase
   def setup
-    @actual_assertion_count = 0
+    @add_assertion_called = 0
   end
 
   def add_assertion
-    @actual_assertion_count += 1
+    super
+    @add_assertion_called += 1
+  end
+
+  def current_result
+    @_result
   end
 
   def test_assert_bumps_assertion_count
-    assert_equal 0, @actual_assertion_count
+    assertion_count = current_result.assertion_count
     assert { true }
-    assert_equal 1, @actual_assertion_count
+    assert_equal assertion_count+1, current_result.assertion_count
+  end
+
+  def test_assert_calls_add_assertion
+    assert_equal 0, @add_assertion_called
+    assert { true }
+    assert_equal 1, @add_assertion_called
   end
 end

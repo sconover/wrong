@@ -55,13 +55,17 @@ module Wrong
       @@last_predicated_error ||= nil
     end
 
+    # override (redefine) in adapter if necessary
+    def increment_assertion_count
+    end
+
     def aver(valence, explanation = nil, depth = 0, &block)
+      increment_assertion_count
       require "wrong/rainbow" if Wrong.config[:color]
 
       value = block.call
       value = !value if valence == :deny
       unless value
-
         chunk = Wrong::Chunk.from_block(block, depth + 2)
 
         message = FailureMessage.new(chunk, valence, explanation).full

@@ -1,6 +1,8 @@
-==
+== 0.5.2 2011/07/07
 
 * "d" pretty-prints long values
+* test-unit adapter strictly enforces version
+* test-unit adapter counts assertions and passes
 
 == 0.5.1
 
