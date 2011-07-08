@@ -23,12 +23,18 @@ describe "d" do
   end
 
   it "pretty-prints the value" do
-    Wrong::Chunk.terminal_width = 80
-    x = {:a => "a" * 60, :b => "b" * 60}
-    output = capturing do
-      d { x }
+    begin
+      Wrong::Chunk.terminal_width = 20
+      x = ["a" * 10, "b" * 10]
+      output = capturing do
+        d { x }
+      end
+      assert { output == 
+        "x is [\"aaaaaaaaaa\",\n \"bbbbbbbbbb\"]\n" 
+      }
+    ensure
+      Wrong::Chunk.terminal_width = nil    
     end
-    assert { output == "x is {:a=>\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n :b=>\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"}\n" }
   end
 
   it "works on an expression" do
