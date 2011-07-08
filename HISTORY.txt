@@ -1,3 +1,7 @@
+==
+
+* better error messaging in test-unit adapter
+
 == 0.5.2 2011/07/07
 
 * "d" pretty-prints long values

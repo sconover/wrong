@@ -23,7 +23,7 @@ begin
 
   require 'test/unit/failure'
   Test::Unit::TestResultFailureSupport # this class is only in 2.x, to catch mixups between 1.8's lib and gem versions
-rescue => e
+rescue Exception => e
   wrong_adapter_failure "You are using an outdated version of Test::Unit."
 end
 
