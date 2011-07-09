@@ -1,6 +1,6 @@
-==
+== 0.5.3 2011/07/09
 
-* better error messaging in test-unit adapter
+* even better error messaging in test-unit adapter
 
 == 0.5.2 2011/07/07
 
