@@ -16,7 +16,7 @@ Inspired by [assert { 2.0 }](http://assert2.rubyforge.org/) but rewritten from s
 
 We have deployed gems for both Ruby and JRuby; if you get dependency issues on your platform, please let us know what Ruby interpreter and version you're using and what errors you get, and we'll try to track it down.
 
-## Usage ##
+## Usage
 
 Wrong provides a simple assert method that takes a block:
 
@@ -56,6 +56,16 @@ And a companion, 'deny':
 
 	deny{'abc'.include?('bc')}
 	 ==> Didn't expect "abc".include?("bc")
+	
+More examples are in the file `examples.rb` <http://github.com/alexch/wrong/blob/master/examples.rb>
+
+There's also a spreadsheet showing a translation from Test::Unit and RSpec to Wrong, with notes, at [this Google Doc](https://spreadsheets.google.com/pub?key=0AouPn6oLrimWdE0tZDVOWnFGMzVPZy0tWHZwdnhFYkE&hl=en&output=html). (Ask <alexch@gmail.com> if you want editing privileges.)
+
+And don't miss the [slideshare presentation](http://www.slideshare.net/alexchaffee/wrong-5069976).
+
+## Helper methods
+
+### rescuing
 
 There's also a convenience method for catching errors:
 
@@ -66,6 +76,8 @@ There's also a convenience method for catching errors:
         rescuing { raise("vanilla") } is #<RuntimeError: vanilla>
         raise("vanilla") raises RuntimeError: vanilla
 
+### capturing
+
 And one for capturing output streams:
 
     assert { capturing { puts "hi" } == "hi\n" }
@@ -75,12 +87,16 @@ And one for capturing output streams:
     assert { out == "something standard\n" }
     assert { err =~ /something erroneous/ }
 
+### close_to?
+
 If you want to compare floats, try this:
 
     assert { 5.0.close_to?(5.0001) }   # default tolerance = 0.001
     assert { 5.0.close_to?(5.1, 0.5) } # optional tolerance parameter
 
-(If you don't want `close_to?` cluttering up `Float` in your test runs then use `include Wrong::Assert` instead of `include Wrong`.)
+If you don't want `close_to?` cluttering up `Float` in your test runs then use `include Wrong::Assert` instead of `include Wrong`.
+
+### d
 
 We also implement the most amazing debugging method ever, `d`, which gives you a sort of mini-wrong wherever you want it
 , even in production code at runtime:
@@ -90,13 +106,9 @@ We also implement the most amazing debugging method ever, `d`, which gives you a
     d { x } # => prints "x is 7" to the console
     d { x * 2 } # => prints "(x * 2) is 14" to the console
 
-(`d` was originally implemented by Rob Sanheim in LogBuddy; as with Assert2 this version is a rewrite and homage.) Remember, if you want `d` to work at runtime (e.g. in a webapp) then you must `include Wrong::D` inside your app, e.g. in your `environment.rb` file.
+`d` was originally implemented by Rob Sanheim in LogBuddy; as with Assert2 this version is a rewrite and homage. You may also enjoy [g](https://github.com/jugyo/g) by [jugyo](http://jugyo.org/).
 
-More examples are in the file `examples.rb` <http://github.com/alexch/wrong/blob/master/examples.rb>
-
-There's also a spreadsheet showing a translation from Test::Unit and RSpec to Wrong, with notes, at [this Google Doc](https://spreadsheets.google.com/pub?key=0AouPn6oLrimWdE0tZDVOWnFGMzVPZy0tWHZwdnhFYkE&hl=en&output=html). (Ask <alexch@gmail.com> if you want editing privileges.)
-
-And don't miss the [slideshare presentation](http://www.slideshare.net/alexchaffee/wrong-5069976).
+Remember, if you want `d` to work at runtime (e.g. in a webapp) then you must `include Wrong::D` inside your app, e.g. in your `environment.rb` file.
 
 ## Test Framework Adapters ##
 
@@ -250,7 +262,6 @@ Before you get your knickers in a twist about how this is totally unacceptable b
 * Beware of Side Effects! (See discussion elsewhere in this document.)
 * "Doesn't all this parsing slow down my test run"?  No - this applies to failure cases only. If the assert block returns true then Wrong simply moves on.
 
-
 ## Explanations ##
 
 `assert` and `deny` can take an optional explanation, e.g.
@@ -285,6 +296,26 @@ We hope this structure lets your eyes focus on the meaningful values and differe
 (Why does VALUE use `inspect` and not `to_s`? Because `inspect` on standard objects like String and Array are sure to show all relevant details, such as white space, in a console-safe way, and we hope other libraries follow suit. Also, `to_s` often inserts line breaks and that messes up formatting and legibility.)
 
 Wrong tries to maintain indentation to improve readability. If the inspected VALUE contains newlines, or is longer than will fit on your console, the succeeding lines will be indented to a pleasant level.
+
+Sometimes Wrong will not be able to evaluate a detail without raising an exception. This exception will be duly noted, which might be misleading. For example, 
+
+	a = [1,2,3,4]
+	assert { a.all? {|i| i<4} }
+	
+would fail, since on the final pass, `(i < 4)` is false. But the error message is a bit vague:
+
+	Wrong::Assert::AssertionFailedError: Expected a.all? { |i| (i < 4) }, but
+	    i raises NameError: undefined local variable or method `i' for main:Object
+
+In evaluating the inner expression, Wrong does not have access to the block parameter `i`, since `i` is not in the scope of the outer expression. A better way to write the assertion would be
+
+    a = [1,2,3,4]
+    a.each {|i| assert {i < 4}}
+
+which gives
+
+	Wrong::Assert::AssertionFailedError: Expected (i < 4), but
+	    i is 4
 
 ## Formatters ##
 
