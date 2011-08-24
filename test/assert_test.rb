@@ -10,7 +10,7 @@ describe "basic assert features" do
   end
 
   describe "pass/fail basics" do
-    it "passes when the result is true.  deny does the reverse" do
+    it "assert passes when the result is true.  deny does the reverse" do
       @m.assert { true }
       @m.assert { 1==1 }
 

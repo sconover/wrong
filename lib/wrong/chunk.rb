@@ -77,18 +77,7 @@ module Wrong
     end
 
     def read_source_file(file)
-      Chunk.read_here_or_higher(file)
-    end
-
-    def self.read_here_or_higher(file, dir = ".")
-      File.read "#{dir}/#{file}"
-    rescue Errno::ENOENT, Errno::EACCES => e
-      # we may be in a chdir underneath where the file is, so move up one level and try again
-      parent = "#{dir}/..".gsub(/^(\.\/)*/, '')
-      if File.expand_path(dir) == File.expand_path(parent)
-        raise Errno::ENOENT, "couldn't find #{file}"
-      end
-      read_here_or_higher(file, parent)
+      Config.read_here_or_higher(file)
     end
 
     # Algorithm:
@@ -294,7 +283,7 @@ public # don't know exactly why this needs to be public but eval'ed code can't f
     end
     
     def self.terminal_width
-      @terminal_width || (terminal_size && terminal_size.first) || 80
+      (@terminal_width ||= nil) || (terminal_size && terminal_size.first) || 80
     end
 
     def self.terminal_width= forced_with

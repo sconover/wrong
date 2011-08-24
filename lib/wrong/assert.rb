@@ -20,7 +20,7 @@ module Wrong
     # Actual signature: assert(explanation = nil, depth = 0, &block)
     def assert(*args, &block)
       # to notice (and fail fast from) odd recursion problem
-      raise "Reentry bug while trying to assert(#{args.join(', ')})" if @_inside_wrong_assert
+      raise "Reentry bug while trying to assert(#{args.join(', ')})" if (@_inside_wrong_assert ||= nil)
       @_inside_wrong_assert = true
 
       if block.nil?

@@ -1,17 +1,16 @@
-require "wrong/chunk"
 
 module Wrong
 
   def self.load_config
     settings = begin
-      Chunk.read_here_or_higher(".wrong")
+      Config.read_here_or_higher(".wrong")
     rescue Errno::ENOENT => e
       # couldn't find it
       nil # In Ruby 1.8, "e" would be returned here otherwise
     end
     Config.new settings
   end
-
+  
   def self.config
     @config ||= load_config
   end
@@ -23,6 +22,17 @@ module Wrong
   class Config < Hash
 
     class ConfigError < RuntimeError
+    end
+
+    def self.read_here_or_higher(file, dir = ".")
+      File.read "#{dir}/#{file}"
+    rescue Errno::ENOENT, Errno::EACCES => e
+      # we may be in a chdir underneath where the file is, so move up one level and try again
+      parent = "#{dir}/..".gsub(/^(\.\/)*/, '')
+      if File.expand_path(dir) == File.expand_path(parent)
+        raise Errno::ENOENT, "couldn't find #{file}"
+      end
+      read_here_or_higher(file, parent)
     end
 
     def initialize(string = nil)
