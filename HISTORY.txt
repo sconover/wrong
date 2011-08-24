@@ -1,8 +1,10 @@
-== 0.5.5 2011/08/24
+== 0.5.6 2011/08/24
 
 * clean up some warnings to close bug#10
 * improve recognition of Rails 3 under RSpec 2
 * improve readme
+
+Note: (0.5.4 and 0.5.5 were transient due to a "gem push" problem)
 
 == 0.5.3 2011/07/09
 
