@@ -1,4 +1,4 @@
-== 0.5.4 2011/08/24
+== 0.5.5 2011/08/24
 
 * clean up some warnings to close bug#10
 * improve recognition of Rails 3 under RSpec 2
