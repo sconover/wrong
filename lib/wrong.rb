@@ -19,6 +19,8 @@ module Wrong
   extend Wrong::Assert
   include Wrong::Helpers
   extend Wrong::Helpers
+  include Wrong::Eventually
+  extend Wrong::Eventually
 end
 
 # this does some magic; if you don't like it...

@@ -110,6 +110,28 @@ We also implement the most amazing debugging method ever, `d`, which gives you a
 
 Remember, if you want `d` to work at runtime (e.g. in a webapp) then you must `include Wrong::D` inside your app, e.g. in your `environment.rb` file.
 
+### eventually
+
+If you care that something is going to be true *soon*, but maybe not *right* now, use `eventually`. It will keep executing the block, up to 4 times a second, until either
+
+  * the block returns true(ish)
+  * 5 seconds elapse
+
+If the block raises an exception, then `eventually` will treat that as a false and keep trying. The last time it fails, it'll raise that exception instead of a mere `AssertionFailedError`. That way, the following are all possible:
+
+    eventually { false }
+    eventually { assert { false } }
+    eventually { false.should be_true }  # in RSpec
+
+and you should get the expected failure after time expires.
+
+You can also send options to eventually as hash parameters.
+
+    eventually(:timeout => 10) { false } # keep trying for 10 sec
+    eventually(:delay => 1) { false }    # try every 1.0 sec, not every 0.25 sec
+
+(For now, `eventually` is in its own module, but you get it when you `include Wrong`. Maybe it should be in Helpers like the rest?)
+
 ## Test Framework Adapters ##
 
 Adapters for various test frameworks sit under wrong/adapters.

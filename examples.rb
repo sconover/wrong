@@ -118,3 +118,12 @@ example "the d method" do
   x = 7
   d { x * 2 }
 end
+
+example "eventually fails after 5 seconds" do
+  eventually { false }
+end
+
+example "eventually fails with a friendly error" do
+  x = 2
+  eventually { x + x == 5 }
+end
