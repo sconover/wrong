@@ -4,7 +4,9 @@
 # see
 # http://rubyforge.org/pipermail/rspec-users/2011-September/020575.html
 
-require "./test/test_helper"
+here = File.expand_path(File.dirname(__FILE__))
+
+require "#{here}/test_helper"
 require "wrong/assert"
 require "wrong/helpers"
 require "wrong/d"
@@ -66,7 +68,8 @@ describe "eventually" do
     e = rescuing {
       eventually
     }
-    assert { e.message == "please pass a block to the eventually method" }
+    assert { e.message == Wrong::Eventually::NO_BLOCK_PASSED }
+    assert { e.message =~ /pass a block/ }
   end
 
   it "returns immediately if the block evaluates to true" do
@@ -82,6 +85,24 @@ describe "eventually" do
     end
     deny { e.nil? }
     assert { Time.now == original_now + 5}
+  end
+  
+  it "calls the block every 0.25 seconds" do
+    original_now = Time.now            
+    called_at = []
+    rescuing {
+      eventually { 
+        called_at << (Time.now - original_now)
+        false
+      }
+    }
+    assert { called_at.uniq == [
+      0.0, 0.25, 0.5, 0.75, 
+      1.0, 1.25, 1.5, 1.75, 
+      2.0, 2.25, 2.5, 2.75, 
+      3.0, 3.25, 3.5, 3.75, 
+      4.0, 4.25, 4.5, 4.75, 
+    ] }
   end
   
   it "puts the elapsed time in the exception message"
@@ -145,7 +166,26 @@ describe "eventually" do
   end
   
   describe "takes an options hash" do
-    it "that can change the timeout"
-    it "that can change the delay"
+    it "that can change the timeout" do
+      original_now = Time.now      
+      rescuing {
+        eventually(:timeout => 2) { false }
+      }
+      assert {
+        Time.now == original_now + 2        
+      }
+    end
+    
+    it "that can change the delay" do
+      original_now = Time.now            
+      called_at = []
+      rescuing {
+        eventually(:delay => 1.5) { 
+          called_at << (Time.now - original_now)
+          false
+        }
+      }
+      assert { called_at.uniq == [0.0, 1.5, 3.0, 4.5] }
+    end
   end
 end
