@@ -8,11 +8,19 @@ require "./test/test_helper"
 require "wrong/assert"
 require "wrong/helpers"
 require "wrong/d"
-require 'rspec/mocks'
 
 require "wrong/eventually"
 
-# this test really does require rspec
+# todo: move this to a monkey patch file
+class Object
+  unless Object.method_defined? :singleton_class
+    def singleton_class
+       class << self
+         self
+       end
+    end
+  end
+end
 
 describe "eventually" do
   include Wrong::Eventually
@@ -20,33 +28,60 @@ describe "eventually" do
   include Wrong::Helpers
   include Wrong::D
 
+  # rolling our own mock clock and stubbing framework since we want these 
+  # tests to run in MiniTest or in any version of RSpec
+
+  class ::Time
+    class << self
+      alias_method :real_now, :now
+      def now
+        # puts "in new now; original_now = #{original_now}, @now = #{@now}"
+        @now ||= real_now
+      end
+      def now= new_now
+        @now = new_now
+      end
+    end    
+  end
+
+  def stub_it(receiver, method_name, &block)
+    receiver.singleton_class.send(:define_method, method_name, &block)
+  end
+  
+  def unstub_it(receiver, method_name)
+    receiver.singleton_class.send(:remove_method, method_name)
+  end
+
   before do
-    @fake_now = Time.now
-    Time.stub!(:now).and_return { @fake_now }
-    self.stub!(:sleep).and_return do |secs| 
-      @fake_now += secs
+    stub_it(self, :sleep) do |secs| 
+      Time.now += secs
     end
+  end
+  
+  after do
+    unstub_it(self, :sleep)
   end
     
   it "requires a block" do
-    rescuing {
+    e = rescuing {
       eventually
-    }.message.should == "please pass a block to the eventually method"
+    }
+    assert { e.message == "please pass a block to the eventually method" }
   end
 
   it "returns immediately if the block evaluates to true" do
-    original_now = @fake_now
+    original_now = Time.now
     eventually { true }
-    assert { @fake_now == original_now }
+    assert { Time.now == original_now }
   end
 
   it "raises an exception after 5 seconds of being false" do
-    original_now = @fake_now
+    original_now = Time.now
     e = rescuing do
       eventually { false }
     end
     deny { e.nil? }
-    assert { @fake_now == original_now + 5}
+    assert { Time.now == original_now + 5}
   end
   
   it "puts the elapsed time in the exception message"
@@ -54,22 +89,21 @@ describe "eventually" do
   
   
   it "returns after the condition is false for a while then true" do
-    original_now = @fake_now
+    original_now = Time.now
     eventually {
       # cleverly, I am asserting that time has passed
-      @fake_now >= original_now + 2
+      Time.now >= original_now + 2
     }
     assert {
-      @fake_now == original_now + 2
+      Time.now == original_now + 2
     }
   end
 
   it "raises a detailed Wrong exception if the result keeps being false" do
-    original_now = @fake_now
+    original_now = Time.now
     e = rescuing do
       eventually { false }
     end
-    assert { e.is_a? Wrong::Assert::AssertionFailedError }
     assert { e.message == "Expected false" }
     
     x = 1
@@ -81,27 +115,27 @@ describe "eventually" do
   
   describe "if the block raises an exception" do
     it "for 5 seconds, it raises that exception" do
-      original_now = @fake_now
+      original_now = Time.now
       e = rescuing do
         eventually { raise "nope" }
       end
       deny { e.nil? }
-      assert { @fake_now == original_now + 5}
+      assert { Time.now == original_now + 5}
       assert { e.is_a? RuntimeError }
       assert { e.message == "nope" }
     end
 
     it "but then returns true, it succeeds silently" do
-      original_now = @fake_now
+      original_now = Time.now
       eventually {
-         if @fake_now < original_now + 2
+         if Time.now < original_now + 2
            raise "not yet"
          else
            true
          end
       }
       assert {
-        @fake_now == original_now + 2
+        Time.now == original_now + 2
       }
     end
   end
