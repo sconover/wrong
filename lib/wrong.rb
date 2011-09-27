@@ -12,6 +12,7 @@ require "wrong/irb"
 require "wrong/d"
 require "wrong/message/array_diff"
 require "wrong/message/string_comparison"
+require "wrong/eventually"
 
 module Wrong
   include Wrong::Assert
