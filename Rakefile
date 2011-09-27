@@ -11,13 +11,20 @@ def separate
   ]
 end
 
+def sys cmd
+  puts "$ #{cmd}"
+  Bundler.with_clean_env do
+    system cmd
+  end
+end
+
 desc 'run all tests (in current ruby)'
 task :test do
-
   all_passed = separate.collect do |test_file|
     puts "\n>> Separately running #{test_file} under #{ENV['RUBY_VERSION']}..."
-    clear_bundler_env
-    system("ruby #{test_file}")
+    Bundler.with_clean_env do
+      sys("ruby #{test_file}")
+    end
   end.uniq == [true]
   if !all_passed
     at_exit { exit false }
@@ -45,10 +52,10 @@ task :suite do
   sh "ruby test/suite.rb"
 end
 
-def clear_bundler_env
-  # Bundler inherits its environment by default, so clear it here
-  %w{BUNDLE_PATH BUNDLE_BIN_PATH BUNDLE_GEMFILE}.each { |var| ENV.delete(var) }
-end
+# def clear_bundler_env
+#   # Bundler inherits its environment by default, so clear it here
+#   %w{BUNDLE_PATH BUNDLE_BIN_PATH BUNDLE_GEMFILE}.each { |var| ENV.delete(var) }
+# end
 
 namespace :rvm do
 
@@ -64,24 +71,30 @@ namespace :rvm do
     rvm
   end
 
-  def rvm_run(cmd)
-    clear_bundler_env
+  def rvm_run(cmd, options = {})
+    options = {:bundle_check => true}.merge(options)
     @rubies.split(',').each do |version|
       puts "\n== Using #{version}"
       using = `#{rvm} use #{version}`
       if using =~ /not installed/
         puts "== #{using}"
       else
-        system "#{rvm} #{version} exec bundle check"
-        if $?.exitstatus != 0
-          puts "try rake rvm:install_bundler or rake rvm:install_gems"
+        if options[:bundle_check]
+          Bundler.with_clean_env do
+            sys "#{rvm} #{version} exec bundle check"
+            if $?.exitstatus != 0
+              puts "try rake rvm:install_bundler or rake rvm:install_gems"
+            end
+          end
         end
 
-        system "#{rvm} #{version} exec #{cmd}"
-        if $?.exitstatus == 7
-          puts "try rake rvm:install_gems"
-        elsif $?.exitstatus == 1
-          # uh...
+        Bundler.with_clean_env do
+          sys "#{rvm} #{version} exec #{cmd}"
+          if $?.exitstatus == 7
+            puts "try rake rvm:install_gems"
+          elsif $?.exitstatus == 1
+            # uh...
+          end
         end
       end
     end
@@ -95,14 +108,16 @@ namespace :rvm do
     # todo: figure out a way to run suite with jruby --1.9 (it's harder than you'd think)
   end
 
-  desc "run 'bundle install' with rvm in each of #{@rubies}"
-  task :install_gems do
-    rvm_run("bundle install")
-  end
+  task :install => [:install_bundler, :install_gems]
 
   desc "run 'gem install bundler' with rvm in each of #{@rubies}"
   task :install_bundler do
-    rvm_run("gem install bundler")
+    rvm_run("gem install bundler", :bundle_check => false)
+  end
+
+  desc "run 'bundle install' with rvm in each of #{@rubies}"
+  task :install_gems do
+    rvm_run("bundle install", :bundle_check => false)
   end
 end
 
