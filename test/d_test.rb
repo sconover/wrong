@@ -29,11 +29,11 @@ describe "d" do
       output = capturing do
         d { x }
       end
-      assert { output == 
-        "x is [\"aaaaaaaaaa\",\n \"bbbbbbbbbb\"]\n" 
+      assert { output ==
+        "x is [\"aaaaaaaaaa\",\n \"bbbbbbbbbb\"]\n"
       }
     ensure
-      Wrong::Chunk.terminal_width = nil    
+      Wrong::Chunk.terminal_width = nil
     end
   end
 
@@ -72,10 +72,24 @@ describe "d" do
 
   it "works when called on the D module" do
     x = 9
-    output = capturing { 
+    output = capturing {
       Wrong::D.d { x }
     }
     assert { output == "x is 9\n" }
+  end
+
+  it "takes an optional message string" do
+    output = capturing {
+      Wrong::D.d("basic math") { 2 + 2 }
+    }
+    assert { output == "basic math: (2 + 2) is 4\n" }
+  end
+
+  it "takes a bunch of optional messages" do
+    output = capturing {
+      Wrong::D.d(2, "plus", :two) { 2 + 2 }
+    }
+    assert { output == "2, plus, two: (2 + 2) is 4\n" }
   end
 
 end

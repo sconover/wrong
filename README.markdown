@@ -56,7 +56,7 @@ And a companion, 'deny':
 
 	deny{'abc'.include?('bc')}
 	 ==> Didn't expect "abc".include?("bc")
-	
+
 More examples are in the file `examples.rb` <http://github.com/alexch/wrong/blob/master/examples.rb>
 
 There's also a spreadsheet showing a translation from Test::Unit and RSpec to Wrong, with notes, at [this Google Doc](https://spreadsheets.google.com/pub?key=0AouPn6oLrimWdE0tZDVOWnFGMzVPZy0tWHZwdnhFYkE&hl=en&output=html). (Ask <alexch@gmail.com> if you want editing privileges.)
@@ -105,6 +105,7 @@ We also implement the most amazing debugging method ever, `d`, which gives you a
     x = 7
     d { x } # => prints "x is 7" to the console
     d { x * 2 } # => prints "(x * 2) is 14" to the console
+    d("math is hard") { 2 + 2 } #=> prints "math is hard: (2 + 2) is 4"
 
 `d` was originally implemented by Rob Sanheim in LogBuddy; as with Assert2 this version is a rewrite and homage. You may also enjoy [g](https://github.com/jugyo/g) by [jugyo](http://jugyo.org/).
 
@@ -319,11 +320,11 @@ We hope this structure lets your eyes focus on the meaningful values and differe
 
 Wrong tries to maintain indentation to improve readability. If the inspected VALUE contains newlines, or is longer than will fit on your console, the succeeding lines will be indented to a pleasant level.
 
-Sometimes Wrong will not be able to evaluate a detail without raising an exception. This exception will be duly noted, which might be misleading. For example, 
+Sometimes Wrong will not be able to evaluate a detail without raising an exception. This exception will be duly noted, which might be misleading. For example,
 
 	a = [1,2,3,4]
 	assert { a.all? {|i| i<4} }
-	
+
 would fail, since on the final pass, `(i < 4)` is false. But the error message is a bit vague:
 
 	Wrong::Assert::AssertionFailedError: Expected a.all? { |i| (i < 4) }, but
