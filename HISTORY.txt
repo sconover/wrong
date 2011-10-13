@@ -1,3 +1,8 @@
+== 0.6.0 2011/10/13
+
+* "eventually" helper method
+* "d" takes an optional message argument
+
 == 0.5.6 2011/08/24
 
 * clean up some warnings to close bug#10

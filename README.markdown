@@ -56,7 +56,7 @@ And a companion, 'deny':
 
 	deny{'abc'.include?('bc')}
 	 ==> Didn't expect "abc".include?("bc")
-	
+
 More examples are in the file `examples.rb` <http://github.com/alexch/wrong/blob/master/examples.rb>
 
 There's also a spreadsheet showing a translation from Test::Unit and RSpec to Wrong, with notes, at [this Google Doc](https://spreadsheets.google.com/pub?key=0AouPn6oLrimWdE0tZDVOWnFGMzVPZy0tWHZwdnhFYkE&hl=en&output=html). (Ask <alexch@gmail.com> if you want editing privileges.)
@@ -105,10 +105,33 @@ We also implement the most amazing debugging method ever, `d`, which gives you a
     x = 7
     d { x } # => prints "x is 7" to the console
     d { x * 2 } # => prints "(x * 2) is 14" to the console
+    d("math is hard") { 2 + 2 } #=> prints "math is hard: (2 + 2) is 4"
 
 `d` was originally implemented by Rob Sanheim in LogBuddy; as with Assert2 this version is a rewrite and homage. You may also enjoy [g](https://github.com/jugyo/g) by [jugyo](http://jugyo.org/).
 
 Remember, if you want `d` to work at runtime (e.g. in a webapp) then you must `include Wrong::D` inside your app, e.g. in your `environment.rb` file.
+
+### eventually
+
+If you care that something is going to be true *soon*, but maybe not *right* now, use `eventually`. It will keep executing the block, up to 4 times a second, until either
+
+  * the block returns true(ish)
+  * 5 seconds elapse
+
+If the block raises an exception, then `eventually` will treat that as a false and keep trying. The last time it fails, it'll raise that exception instead of a mere `AssertionFailedError`. That way, the following are all possible:
+
+    eventually { false }
+    eventually { assert { false } }
+    eventually { false.should be_true }  # in RSpec
+
+and you should get the expected failure after time expires.
+
+You can also send options to eventually as hash parameters.
+
+    eventually(:timeout => 10) { false } # keep trying for 10 sec
+    eventually(:delay => 1) { false }    # try every 1.0 sec, not every 0.25 sec
+
+(For now, `eventually` is in its own module, but you get it when you `include Wrong`. Maybe it should be in Helpers like the rest?)
 
 ## Test Framework Adapters ##
 
@@ -297,11 +320,11 @@ We hope this structure lets your eyes focus on the meaningful values and differe
 
 Wrong tries to maintain indentation to improve readability. If the inspected VALUE contains newlines, or is longer than will fit on your console, the succeeding lines will be indented to a pleasant level.
 
-Sometimes Wrong will not be able to evaluate a detail without raising an exception. This exception will be duly noted, which might be misleading. For example, 
+Sometimes Wrong will not be able to evaluate a detail without raising an exception. This exception will be duly noted, which might be misleading. For example,
 
 	a = [1,2,3,4]
 	assert { a.all? {|i| i<4} }
-	
+
 would fail, since on the final pass, `(i < 4)` is false. But the error message is a bit vague:
 
 	Wrong::Assert::AssertionFailedError: Expected a.all? { |i| (i < 4) }, but

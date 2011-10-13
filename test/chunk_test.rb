@@ -164,8 +164,8 @@ describe Chunk do
         assert { (x == 5) && (y == (z + 10)) }
       CODE
       code_parts = chunk.parts
-      assert code_parts == <<-PARTS.split("\n")
-((x == 5) and (y == (z + 10)))
+      assert code_parts == <<-PARTS.split("\n"), code_parts
+(x == 5) and (y == (z + 10))
 (x == 5)
 x
 5
