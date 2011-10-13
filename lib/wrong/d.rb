@@ -37,7 +37,8 @@ module Wrong
         value = value.color(:magenta)
       end
 
-      puts [code, "is", value].join(" ")
+      message = args.compact.join(", ") + ":" unless args.empty?
+      puts [message, code, "is", value].compact.join(" ")
     end
 
     extend D # this allows you to call Wrong::D.d if you like

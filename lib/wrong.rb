@@ -12,12 +12,15 @@ require "wrong/irb"
 require "wrong/d"
 require "wrong/message/array_diff"
 require "wrong/message/string_comparison"
+require "wrong/eventually"
 
 module Wrong
   include Wrong::Assert
   extend Wrong::Assert
   include Wrong::Helpers
   extend Wrong::Helpers
+  include Wrong::Eventually
+  extend Wrong::Eventually
 end
 
 # this does some magic; if you don't like it...
