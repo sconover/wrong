@@ -6,7 +6,6 @@ def require_optionally(library)
   begin
     require library
   rescue LoadError => e
-    raise e unless e.message == "no such file to load -- #{library}"
   end
 end
 
