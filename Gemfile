@@ -5,7 +5,6 @@ gem "ruby2ruby"
 gem "sexp_processor"
 gem "predicated", '~> 0.2.1'
 gem "diff-lcs"
-gem "rake"
 
 platforms :ruby do
   gem "sourcify", '~> 0.4'
