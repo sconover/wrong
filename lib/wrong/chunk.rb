@@ -9,7 +9,6 @@ def require_optionally(library)
   end
 end
 
-require_optionally "ParseTree"
 require_optionally "sourcify"
 
 require "wrong/config"
