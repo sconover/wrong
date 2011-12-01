@@ -4,7 +4,9 @@
 
 ## Abstract ##
 
-Wrong provides a general assert method that takes a predicate block. Assertion failure messages are rich in detail. The Wrong idea is to replace all those countless `assert\_this`, `assert\_that`, `should\_something` library methods which only exist to give a failure message that's not simply "assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it in Ruby, Wrong can make a sensible failure message out of it.
+Wrong provides a simple, general assert method that takes a block, and understands the code inside it, providing verbose failure messages for free.
+
+The Wrong idea is to replace `assert_equal` and all those countless `assert\_this`, `assert\_that`, `should\_something` library methods which only exist to give a failure message that's not simply "assertion failed". Wrong replaces all of them in one fell swoop, since if you can write it in Ruby, Wrong can make a sensible failure message out of it.
 
 We'd very much appreciate feedback and bug reports. There are plenty of things left to be done to make the results look uniformly clean and beautiful. We want your feedback, and especially to give us cases where either it blows up or the output is ugly or uninformative.
 
@@ -113,7 +115,11 @@ Remember, if you want `d` to work at runtime (e.g. in a webapp) then you must `i
 
 ### eventually
 
-If you care that something is going to be true *soon*, but maybe not *right* now, use `eventually`. It will keep executing the block, up to 4 times a second, until either
+If you care that something is going to be true *soon*, but maybe not *right* now, use `eventually`.
+
+    eventually { night? }
+
+It will keep executing the block, up to 4 times a second, until either
 
   * the block returns true(ish)
   * 5 seconds elapse
