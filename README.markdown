@@ -434,6 +434,18 @@ Here are some suggestions:
 
 Just don't use "`aver`" since we took that one for an internal method in `Wrong::Assert`.
 
+### Verbose ###
+
+Wrong works inside frameworks like Test::Unit and RSpec, but sometimes you just want to stick a bunch of assertions in a file and run it. In that case, *verbose mode* might come in handy. It prints every *successful* assertion to the console (including explanations, if provided, and in color, if desired).
+
+    Wrong.config.verbose
+    assert("basic math") { 2 + 2 == 4}
+    
+prints
+
+    basic math: ((2 + 2) == 4)
+
+
 ## Helper Assert Methods ##
 
 If you really want to, you can define your proc in one method, pass it in to another method, and have that method assert it. This is a challenge for Wrong and you probably shouldn't do it. Wrong will do its best to figure out where the actual assertion code is but it might not succeed.

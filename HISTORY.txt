@@ -1,3 +1,7 @@
+== 0.6.1 2012/02/03
+
+* verbose mode (inching towards a framework)
+
 == 0.6.0 2011/10/13
 
 * "eventually" helper method

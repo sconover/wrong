@@ -12,6 +12,9 @@ include Wrong
 
 Wrong.config.color # or just put the line "color" in a file called ".wrong" in the current dir
 
+Wrong.config.verbose # you probably don't want to do this in your own code
+assert("basic math") { 2 + 2 == 4 }
+
 def example(name = nil)
   puts "\n=== Example#{":" if name} #{name}"
   e = rescuing do

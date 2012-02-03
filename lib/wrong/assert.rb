@@ -6,6 +6,7 @@ require "wrong/chunk"
 require "wrong/config"
 require "wrong/failure_message"
 require "wrong/ruby2ruby_patch" # need to patch it after some other stuff loads
+require "wrong/rainbow"
 
 module Wrong
   module Assert
@@ -65,7 +66,17 @@ module Wrong
 
       value = block.call
       value = !value if valence == :deny
-      unless value
+      if value
+        if Wrong.config[:verbose]
+          code = Wrong::Chunk.from_block(block, depth + 2).code 
+          if Wrong.config[:color]
+            explanation = explanation.color(:blue) if explanation
+            code = code.color(:green)
+          end
+          message = "#{explanation + ": " if explanation}#{code}"
+          puts message
+        end
+      else
         chunk = Wrong::Chunk.from_block(block, depth + 2)
 
         message = FailureMessage.new(chunk, valence, explanation).full
