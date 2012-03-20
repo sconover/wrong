@@ -6,7 +6,8 @@ def require_optionally(library)
   begin
     require library
   rescue LoadError => e
-    raise e unless e.message == "no such file to load -- #{library}"
+    raise e unless e.message == "no such file to load -- #{library}" or
+      e.message == "cannot load such file -- #{library}" # 1.9.3 changed the error message
   end
 end
 
@@ -27,10 +28,7 @@ module Wrong
                 as_proc.source_location
               else
                 # in Ruby 1.8, it reads the source location from the call stack
-                # # $stderr.puts "---"
-                # $stderr.puts caller.join("\n")
                 relevant_caller = caller[depth]
-                # $stderr.puts "*** #{relevant_caller}"
                 relevant_caller.split(":")
               end
 

@@ -1,3 +1,7 @@
+== 0.6.2 2012/03/20
+
+* fix bug under 1.9.3 (cannot load such file -- ParseTree)
+
 == 0.6.1 2012/02/03
 
 * verbose mode (inching towards a framework)
