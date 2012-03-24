@@ -5,6 +5,7 @@ require "fileutils"
 
 require "./test/test_helper"
 require "wrong/adapters/minitest"
+require "bundler"
 
 include Wrong
 
@@ -31,10 +32,12 @@ describe "testing rspec" do
             assert { line =~ /rspec[-\w]* \(#{rspec_version}\.[\w.]*\)/ }
           end
         end
-
-        spec_output = sys "ruby #{dir}/failing_spec.rb",
+        
+        Bundler.with_clean_env do
+          spec_output = sys "ruby #{dir}/failing_spec.rb",
                           (rspec_version == 1 || RUBY_VERSION =~ /^1\.8\./ || RUBY_VERSION == '1.9.1' ? nil : 1) # RSpec v1 exits with 0 on failure :-(
-      end
+          end
+        end
 
       assert { spec_output.include? "1 failure" }
       assert { spec_output.include? "Expected ((2 + 2) == 5), but" }

@@ -63,7 +63,7 @@ namespace :rvm do
   $: << ENV["HOME"] + "/.rvm/lib"
   require 'rvm'
   
-  @rubies='1.8.6,1.8.7,1.9.1,1.9.2,jruby'
+  @rubies='1.8.6,1.8.7,1.9.1,1.9.2,1.9.3,jruby'
 
   def rvm
     rvm = `which rvm`.strip
@@ -75,7 +75,7 @@ namespace :rvm do
     options = {:bundle_check => true}.merge(options)
     @rubies.split(',').each do |version|
       puts "\n== Using #{version}"
-      using = `#{rvm} use #{version}`
+      using = `#{rvm} #{version} exec true`
       if using =~ /not installed/
         puts "== #{using}"
       else
@@ -102,7 +102,7 @@ namespace :rvm do
 
   desc "run all tests with rvm in #{@rubies}"
   task :test do
-    rvm_run "rake test"
+    rvm_run "bundle exec rake test"
     rvm_run "ruby ./test/suite.rb"
     # todo: fail if any test failed
     # todo: figure out a way to run suite with jruby --1.9 (it's harder than you'd think)
@@ -118,6 +118,8 @@ namespace :rvm do
   desc "run 'bundle install' with rvm in each of #{@rubies}"
   task :install_gems do
     rvm_run("bundle install", :bundle_check => false)
+    rvm_run("bundle install --gemfile=#{File.dirname __FILE__}/test/adapters/rspec1/Gemfile", :bundle_check => false)
+    rvm_run("bundle install --gemfile=#{File.dirname __FILE__}/test/adapters/rspec2/Gemfile", :bundle_check => false)
   end
 end
 

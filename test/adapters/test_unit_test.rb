@@ -1,7 +1,7 @@
 here = File.dirname(__FILE__)
 $LOAD_PATH.unshift "#{here}/../../lib"
 
-# gem "test-unit"
+gem "test-unit"
 require "test/unit"
 require "test/unit/autorunner"
 
