@@ -440,7 +440,7 @@ Wrong works inside frameworks like Test::Unit and RSpec, but sometimes you just 
 
     Wrong.config.verbose
     assert("basic math") { 2 + 2 == 4}
-    
+
 prints
 
     basic math: ((2 + 2) == 4)
@@ -458,6 +458,14 @@ If you're in Ruby 1.8, you **really** shouldn't do it! But if you do, you can us
 * Alex Chaffee - <alex@stinky.com> - <http://alexch.github.com>
 * John Firebaugh
 * Thierry Henrio
+
+## Bugs ##
+
+* assert doesn't work (can't find the source code) from inside a "Dir.chdir" block
+
+## todo ##
+
+* Use RubyParser 3.0 <http://www.ruby-forum.com/topic/4403549>
 
 ## Etc ##
 
