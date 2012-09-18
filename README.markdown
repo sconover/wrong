@@ -67,6 +67,8 @@ And don't miss the [slideshare presentation](http://www.slideshare.net/alexchaff
 
 ## Helper methods
 
+All these helper methods are provided if you do `include Wrong`.
+
 ### rescuing
 
 There's also a convenience method for catching errors:
@@ -248,7 +250,6 @@ Wrong is compatible with RSpec and MiniTest::Spec, and probably Cucumber too, so
 
 Here's an RSpec example:
 
-	require "wrong"
 	require "wrong/adapters/rspec"
 	Wrong.config.alias_assert :expect_that
 
@@ -276,7 +277,7 @@ So wait a second. How do we do it? Doesn't Ruby have [poor support for AST intro
 
 Before you get your knickers in a twist about how this is totally unacceptable because it doesn't support this or that use case, here are our caveats and excuses:
 
-* It works! Tested in MRI 1.8.6, 1.8.7, 1.9.1, 1.9.2, and JRuby 1.5.3. (Thank you, [rvm](http://rvm.beginrescueend.com/)!)
+* It works! Tested in MRI 1.8.6, 1.8.7, 1.9.1, 1.9.2, 1.9.3, and JRuby 1.5.3. (Thank you, [rvm](http://rvm.io/)!)
 * Your code needs to be in a file.
   * If you're developing Ruby code without saving it to a mounted disk, then sorry, Wrong is not right for you.
   * We monkey-patch IRB so if you do `irb -rwrong` it'll save off your session in memory where Wrong can read it.

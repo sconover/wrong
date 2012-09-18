@@ -16,6 +16,7 @@ require_optionally "sourcify"
 
 require "wrong/config"
 require "wrong/sexp_ext"
+require "wrong/capturing"
 
 module Wrong
   class Chunk
@@ -34,6 +35,8 @@ module Wrong
 
       new(file, line, &block)
     end
+
+    include Capturing
 
     attr_reader :file, :line_number, :block
 
@@ -92,7 +95,10 @@ module Wrong
       while sexp.nil? && line_index + c < lines.size
         begin
           @chunk = lines[line_index..line_index+c].join("\n")
-          sexp = @parser.parse(@chunk)
+
+          capturing(:stderr) do  # new RubyParser is too loud
+            sexp = @parser.parse(@chunk)
+          end
         rescue Racc::ParseError => e
           # loop and try again
           c += 1
@@ -161,7 +167,7 @@ module Wrong
     def details
       @details ||= build_details
     end
-    
+
     def pretty_value(value, starting_col = 0, indent_wrapped_lines = 6, width = Chunk.terminal_width)
       # inspected = value.inspect
 
@@ -175,7 +181,7 @@ module Wrong
       else
         indented
       end
-    end    
+    end
 
     private
 
@@ -241,7 +247,7 @@ public # don't know exactly why this needs to be public but eval'ed code can't f
     def indent_all(amount, s)
       s.gsub("\n", "\n#{indent(amount)}")
     end
-    
+
     def wrap_and_indent(indented, starting_col, indent_wrapped_lines, full_width)
       first_line = true
       width = full_width - starting_col # the first line is essentially shorter
@@ -277,9 +283,9 @@ public # don't know exactly why this needs to be public but eval'ed code can't f
         end
       rescue
         nil
-      end  
+      end
     end
-    
+
     def self.terminal_width
       (@terminal_width ||= nil) || (terminal_size && terminal_size.first) || 80
     end
@@ -287,12 +293,12 @@ public # don't know exactly why this needs to be public but eval'ed code can't f
     def self.terminal_width= forced_with
       @terminal_width = forced_with
     end
-    
+
     # Determines if a shell command exists by searching for it in ENV['PATH'].
     def self.command_exists?(command)
       ENV['PATH'].split(File::PATH_SEPARATOR).any? {|d| File.exists? File.join(d, command) }
     end
-    
+
 
   end
 

@@ -20,7 +20,7 @@ describe "testing rspec" do
         clear_bundler_env
         FileUtils.rm "#{dir}/Gemfile.lock", :force => true
 
-        sys "bundle check" do |output|
+        sys "bundle check", nil do |output|
           unless output == "The Gemfile's dependencies are satisfied\n"
             sys "bundle install --gemfile=#{dir}/Gemfile --local"
           end
@@ -32,12 +32,13 @@ describe "testing rspec" do
             assert { line =~ /rspec[-\w]* \(#{rspec_version}\.[\w.]*\)/ }
           end
         end
-        
+
         Bundler.with_clean_env do
-          spec_output = sys "ruby #{dir}/failing_spec.rb",
-                          (rspec_version == 1 || RUBY_VERSION =~ /^1\.8\./ || RUBY_VERSION == '1.9.1' ? nil : 1) # RSpec v1 exits with 0 on failure :-(
-          end
+          # RSpec v1 exits with 0 on failure :-( (as do older rubies)
+          expected_status = (rspec_version == 1 || RUBY_VERSION =~ /^1\.8\./ || RUBY_VERSION == '1.9.1' ? nil : 1)
+          spec_output = sys "ruby #{dir}/failing_spec.rb", expected_status
         end
+      end
 
       assert { spec_output.include? "1 failure" }
       assert { spec_output.include? "Expected ((2 + 2) == 5), but" }

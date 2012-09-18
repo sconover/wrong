@@ -60,10 +60,16 @@ end
 namespace :rvm do
 
   # todo: use https://gist.github.com/674648 technique instead
-  $: << ENV["HOME"] + "/.rvm/lib"
+#  $: << ENV["HOME"] + "/.rvm/lib"
   require 'rvm'
-  
-  @rubies='1.8.6,1.8.7,1.9.1,1.9.2,1.9.3,jruby'
+
+  @rubies=['1.8.6',
+           '1.8.7',
+           '1.9.1-p378',  # we can't use p429 or p431, see http://bugs.ruby-lang.org/issues/show/3584
+           '1.9.2',
+           '1.9.3',
+           'jruby']
+  @rubies_str = @rubies.join(', ')
 
   def rvm
     rvm = `which rvm`.strip
@@ -73,7 +79,7 @@ namespace :rvm do
 
   def rvm_run(cmd, options = {})
     options = {:bundle_check => true}.merge(options)
-    @rubies.split(',').each do |version|
+    @rubies.each do |version|
       puts "\n== Using #{version}"
       using = `#{rvm} #{version} exec true`
       if using =~ /not installed/
@@ -100,7 +106,7 @@ namespace :rvm do
     end
   end
 
-  desc "run all tests with rvm in #{@rubies}"
+  desc "run all tests with rvm in #{@rubies_str}"
   task :test do
     rvm_run "bundle exec rake test"
     rvm_run "ruby ./test/suite.rb"
@@ -110,12 +116,12 @@ namespace :rvm do
 
   task :install => [:install_bundler, :install_gems]
 
-  desc "run 'gem install bundler' with rvm in each of #{@rubies}"
+  desc "run 'gem install bundler' with rvm in each of #{@rubies_str}"
   task :install_bundler do
     rvm_run("gem install bundler", :bundle_check => false)
   end
 
-  desc "run 'bundle install' with rvm in each of #{@rubies}"
+  desc "run 'bundle install' with rvm in each of #{@rubies_str}"
   task :install_gems do
     rvm_run("bundle install", :bundle_check => false)
     rvm_run("bundle install --gemfile=#{File.dirname __FILE__}/test/adapters/rspec1/Gemfile", :bundle_check => false)

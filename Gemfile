@@ -1,9 +1,9 @@
 source :gemcutter
 
-gem "ruby_parser"
-gem "ruby2ruby"
+gem "ruby_parser", ">= 3.0.0.a6"
+gem "ruby2ruby", ">= 2.0.0.b1"
 gem "sexp_processor"
-gem "predicated", '~> 0.2.1'
+gem "predicated", '~> 0.2.6'
 gem "diff-lcs"
 
 platforms :ruby do
@@ -11,11 +11,8 @@ platforms :ruby do
   gem "file-tail", '~> 1.0' # Sourcify requires this but doesn't declare it
 end
 
-platforms :ruby_18 do
-  gem "ParseTree"
-end
-
 group :development, :test do
+  gem "rvm"
   gem "bundler"
   gem "rake"
   gem "minitest", "~> 1.7.2"

@@ -3,13 +3,26 @@ require "wrong/sexp_ext"
 
 describe Sexp do
   describe "#deep_clone" do
+
+    def deeply_compare x, y
+      assert (x == y)
+      case x
+        when Symbol, Numeric, NilClass
+          # these are OK
+        else
+          assert (x.object_id != y.object_id)
+      end
+      if x.is_a? Sexp
+        x.each_with_index do |val, i|
+          deeply_compare(x[i], y[i])
+        end
+      end
+    end
+
     it "deeply duplicates the sexp" do
       original = RubyParser.new.parse("x == 5")
       duplicate = original.deep_clone
-      assert(original.object_id != duplicate.object_id)
-      assert(original[1].object_id != duplicate[1].object_id)
-      assert(original[1][3].object_id != duplicate[1][3].object_id)
-      assert(original[3].object_id != duplicate[3].object_id)
+      deeply_compare original, duplicate
     end
   end
 
