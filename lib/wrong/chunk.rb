@@ -270,6 +270,12 @@ public # don't know exactly why this needs to be public but eval'ed code can't f
     # Returns [width, height] of terminal when detected, nil if not detected.
     # Think of this as a simpler version of Highline's Highline::SystemExtensions.terminal_size()
     # Lifted from https://github.com/cldwalker/hirb/blob/master/lib/hirb/util.rb#L59
+    #
+    # See also http://stackoverflow.com/questions/2068859/how-to-get-the-width-of-terminal-window-in-ruby
+    #  https://github.com/genki/ruby-terminfo/blob/master/lib/terminfo.rb
+    #  http://www.mkssoftware.com/docs/man1/stty.1.asp
+
+
     def self.terminal_size
       @@terminal_size ||= begin
         if (ENV['COLUMNS'] =~ /^\d+$/) && (ENV['LINES'] =~ /^\d+$/)
