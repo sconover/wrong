@@ -5,7 +5,6 @@ require "predicated/to/sentence"
 require "wrong/chunk"
 require "wrong/config"
 require "wrong/failure_message"
-require "wrong/ruby2ruby_patch" # need to patch it after some other stuff loads
 require "wrong/rainbow"
 
 module Wrong
@@ -68,7 +67,7 @@ module Wrong
       value = !value if valence == :deny
       if value
         if Wrong.config[:verbose]
-          code = Wrong::Chunk.from_block(block, depth + 2).code 
+          code = Wrong::Chunk.from_block(block, depth + 2).code
           if Wrong.config[:color]
             explanation = explanation.color(:blue) if explanation
             code = code.color(:green)

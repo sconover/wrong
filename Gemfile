@@ -1,15 +1,6 @@
-source :gemcutter
+source :rubygems
 
-gem "ruby_parser", ">= 3.0.0.a6"
-gem "ruby2ruby", ">= 2.0.0.b1"
-gem "sexp_processor"
-gem "predicated", '~> 0.2.6'
-gem "diff-lcs"
-
-platforms :ruby do
-  gem "sourcify", '~> 0.4'
-  gem "file-tail", '~> 1.0' # Sourcify requires this but doesn't declare it
-end
+gemspec name: "wrong"
 
 group :development, :test do
   gem "rvm"

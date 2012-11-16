@@ -275,7 +275,7 @@ Warning: currently the use of `alias_assert :expect` is **not** compatible with 
 
 ## Algorithm ##
 
-So wait a second. How do we do it? Doesn't Ruby have [poor support for AST introspection](http://blog.zenspider.com/2009/04/parsetree-eol.html)? Well, yes, it does, so we cheat: we figure out what file and line the assert block is defined in, then open the file, read the code, and parse it directly using Ryan Davis' amazing [RubyParser](http://parsetree.rubyforge.org/ruby_parser/) and [Ruby2Ruby](http://seattlerb.rubyforge.org/ruby2ruby/). You can bask in the kludge by examining `chunk.rb` and `assert.rb`. If you find some code it can't parse, please send it our way. As a failsafe we also use Sourcify, which has yet another home baked RACC parser, so we have many chances to parse your code.
+So wait a second. How do we do it? Doesn't Ruby have [poor support for AST introspection](http://blog.zenspider.com/2009/04/parsetree-eol.html)? Well, yes, it does, so we cheat: we figure out what file and line the assert block is defined in, then open the file, read the code, and parse it directly using Ryan Davis' amazing [RubyParser](http://parsetree.rubyforge.org/ruby_parser/) and [Ruby2Ruby](http://seattlerb.rubyforge.org/ruby2ruby/). You can bask in the kludge by examining `chunk.rb` and `assert.rb`. If you find some code it can't parse, please send it our way.
 
 Before you get your knickers in a twist about how this is totally unacceptable because it doesn't support this or that use case, here are our caveats and excuses:
 
@@ -464,7 +464,7 @@ If you're in Ruby 1.8, you **really** shouldn't do it! But if you do, you can us
 
 ## Bugs ##
 
-* assert doesn't work (can't find the source code) from inside a "Dir.chdir" block
+* see Github Issues <http://github.com/sconover/wrong/issues>
 
 ## todo ##
 

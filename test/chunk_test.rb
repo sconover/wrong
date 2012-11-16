@@ -273,7 +273,9 @@ z
 
     it "skips assignments" do
       y = 14
-      d = details { x = 7; y }
+      d = details do
+        x = 7; y
+      end
       assert d !~ /x = 7/
       assert d =~ /y is 14/
     end

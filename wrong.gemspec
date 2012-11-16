@@ -23,15 +23,10 @@ helper methods, like rescuing, capturing, and d.
 
   s.extra_rdoc_files = %w[README.markdown]
 
-  s.add_dependency "predicated", ">= 0.2.3"
+  s.add_dependency "predicated", "~> 0.2.6"
   s.add_dependency "ruby_parser", ">= 3.0.1"
   s.add_dependency "ruby2ruby", ">= 2.0.1"
   s.add_dependency "sexp_processor", ">= 4.0"
   s.add_dependency "diff-lcs", "~> 1.1.2"
-
-  # we'd like these to be optional, but RubyGems doesn't allow that
-  s.add_dependency "ParseTree", "~> 3.0"
-  s.add_dependency "sourcify", ">= 0.3.0"
-  s.add_dependency "file-tail", '~> 1.0' # Sourcify requires this but doesn't declare it
 
 end

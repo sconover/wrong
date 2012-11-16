@@ -4,4 +4,8 @@ gem "rspec", "~> 2.0"
 gem "rspec-core", "~> 2.0"
 gem "rspec-expectations", "~> 2.0"
 
-eval File.read("#{here}/../../../Gemfile")
+gem "rvm"
+gem "bundler"
+gem "rake"
+
+gemspec path: "#{here}/../../..", name: "wrong"

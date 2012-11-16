@@ -21,6 +21,7 @@ module Wrong
 
       # look for a "d" inside the block
       sexp.each_subexp do |subexp|
+      #sexp.deep_each do |subexp|  # todo: try to use deep_each
         if subexp.d?
           sexp = subexp[3] # swap in the block part of the nested d call
         end

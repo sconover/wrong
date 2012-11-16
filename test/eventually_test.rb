@@ -1,4 +1,4 @@
-# based on 
+# based on
 # * https://gist.github.com/1228927
 # * https://github.com/pivotal/selenium/blob/master/lib/selenium/wait_for.rb
 # see
@@ -30,7 +30,7 @@ describe "eventually" do
   include Wrong::Helpers
   include Wrong::D
 
-  # rolling our own mock clock and stubbing framework since we want these 
+  # rolling our own mock clock and stubbing framework since we want these
   # tests to run in MiniTest or in any version of RSpec
 
   class ::Time
@@ -43,27 +43,27 @@ describe "eventually" do
       def now= new_now
         @now = new_now
       end
-    end    
+    end
   end
 
   def stub_it(receiver, method_name, &block)
     receiver.singleton_class.send(:define_method, method_name, &block)
   end
-  
+
   def unstub_it(receiver, method_name)
     receiver.singleton_class.send(:remove_method, method_name)
   end
 
   before do
-    stub_it(self, :sleep) do |secs| 
+    stub_it(self, :sleep) do |secs|
       Time.now += secs
     end
   end
-  
+
   after do
     unstub_it(self, :sleep)
   end
-    
+
   it "requires a block" do
     e = rescuing {
       eventually
@@ -86,29 +86,25 @@ describe "eventually" do
     deny { e.nil? }
     assert { Time.now == original_now + 5}
   end
-  
+
   it "calls the block every 0.25 seconds" do
-    original_now = Time.now            
+    original_now = Time.now
     called_at = []
     rescuing {
-      eventually { 
+      eventually {
         called_at << (Time.now - original_now)
         false
       }
     }
     assert { called_at.uniq == [
-      0.0, 0.25, 0.5, 0.75, 
-      1.0, 1.25, 1.5, 1.75, 
-      2.0, 2.25, 2.5, 2.75, 
-      3.0, 3.25, 3.5, 3.75, 
-      4.0, 4.25, 4.5, 4.75, 
+      0.0, 0.25, 0.5, 0.75,
+      1.0, 1.25, 1.5, 1.75,
+      2.0, 2.25, 2.5, 2.75,
+      3.0, 3.25, 3.5, 3.75,
+      4.0, 4.25, 4.5, 4.75,
     ] }
   end
-  
-  it "puts the elapsed time in the exception message"
-  # assert { e.message =~ /\(after 5 sec\)$/}
-  
-  
+
   it "returns after the condition is false for a while then true" do
     original_now = Time.now
     eventually {
@@ -121,19 +117,20 @@ describe "eventually" do
   end
 
   it "raises a detailed Wrong exception if the result keeps being false" do
-    original_now = Time.now
     e = rescuing do
       eventually { false }
     end
     assert { e.message == "Expected false" }
-    
+
     x = 1
     e = rescuing do
-      eventually { x + 2 == 4 }
+      eventually do
+        x + 2 == 4
+      end
     end
     assert { e.message == "Expected ((x + 2) == 4), but\n    (x + 2) is 3\n    x is 1\n" }
   end
-  
+
   describe "if the block raises an exception" do
     it "for 5 seconds, it raises that exception" do
       original_now = Time.now
@@ -160,27 +157,23 @@ describe "eventually" do
       }
     end
   end
-  
-  describe "passes a context hash to the block" do
-    it "that influences the error message"
-  end
-  
+
   describe "takes an options hash" do
     it "that can change the timeout" do
-      original_now = Time.now      
+      original_now = Time.now
       rescuing {
         eventually(:timeout => 2) { false }
       }
       assert {
-        Time.now == original_now + 2        
+        Time.now == original_now + 2
       }
     end
-    
+
     it "that can change the delay" do
-      original_now = Time.now            
+      original_now = Time.now
       called_at = []
       rescuing {
-        eventually(:delay => 1.5) { 
+        eventually(:delay => 1.5) {
           called_at << (Time.now - original_now)
           false
         }

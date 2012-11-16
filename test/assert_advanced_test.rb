@@ -16,7 +16,7 @@ describe "advanced assert features" do
         assert_later { x > 10 }
       end
 
-      assert(e.message =~ /Expected \(x > 10\), but.*x is 10/m, e.message)
+      assert(e.message =~ /Expected assert_later { \(x > 10\) }, but.*x is 10/m, e.message)
     end
   end
 
@@ -48,4 +48,8 @@ describe "advanced assert features" do
 
   # todo: test for finding it if you'd changed dirs into a parent or sibling or cousin dir
 
+  it "can compare two hashes" do
+    assert { {1=>2} == {1=>2} }
+    assert { {a:2} == {a:2} }
+  end
 end

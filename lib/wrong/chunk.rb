@@ -11,9 +11,6 @@ def require_optionally(library)
   end
 end
 
-require_optionally "ParseTree"
-require_optionally "sourcify"
-
 require "wrong/config"
 require "wrong/sexp_ext"
 require "wrong/capturing"
@@ -60,21 +57,11 @@ module Wrong
     end
 
     def build_sexp
-      sexp = begin
-        unless @block.nil? or @block.is_a?(String) or !Object.const_defined?(:Sourcify)
-          # first try sourcify
-          @block.to_sexp[3] # the [3] is to strip out the "proc {" sourcify adds to everything
-        end
-      rescue Exception => e
-        # sourcify failed, so fall through
-      end
-
-      # next try glomming
-      sexp ||= glom(if @file == "(irb)"
-                      IRB.CurrentContext.all_lines
-                    else
-                      read_source_file(@file)
-                    end)
+      glom(if @file == "(irb)"
+             IRB.CurrentContext.all_lines
+           else
+             read_source_file(@file)
+           end)
     end
 
     def read_source_file(file)
@@ -190,6 +177,8 @@ module Wrong
       require "wrong/rainbow" if Wrong.config[:color]
       s = ""
       parts = self.parts
+
+      parts.shift while parts.first == "()" # the parser adds this sometimes
       parts.shift # remove the first part, since it's the same as the code
 
       details = []

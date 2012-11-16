@@ -12,6 +12,7 @@ class Sexp < Array
 
   # visit every node in the tree, including the root, that is an Sexp
   # todo: test
+  # todo: use deep_each instead
   def each_subexp(include_root = true, &block)
     yield self if include_root
     each do |child|
@@ -26,7 +27,7 @@ class Sexp < Array
       self[0] == :iter and
       self[1].is_a? Sexp and
       self[1][0] == :call and
-      Wrong.config.assert_methods.include? self[1][2]
+      Wrong.config.hidden_methods.include? self[1][2]
   end
 
   def assertion

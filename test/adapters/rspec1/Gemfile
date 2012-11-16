@@ -1,5 +1,9 @@
 here = File.expand_path(File.dirname(__FILE__))
 
 gem "rspec", "~> 1.3", :require => "spec"
+gem "rvm"
+gem "bundler"
+gem "rake"
 
-eval File.read("#{here}/../../../Gemfile")
+gemspec path: "#{here}/../../..", name: "wrong"
+

@@ -10,7 +10,7 @@ module Wrong
     end
     Config.new settings
   end
-  
+
   def self.config
     @config ||= load_config
   end
@@ -72,8 +72,8 @@ module Wrong
       self[:aliases][:deny]
     end
 
-    def assert_methods
-      assert_method_names + deny_method_names
+    def hidden_methods
+      assert_method_names + deny_method_names + [:eventually]
     end
   end
 end
