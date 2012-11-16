@@ -100,6 +100,8 @@ If you want to compare floats, try this:
 
 If you don't want `close_to?` cluttering up `Float` in your test runs then use `include Wrong::Assert` instead of `include Wrong`.
 
+`close_to?` also works on `Time`s, `Date`s, and `DateTime`s. (The default tolerance of 1 msec may be too small for you.)
+
 ### d
 
 We also implement the most amazing debugging method ever, `d`, which gives you a sort of mini-wrong wherever you want it

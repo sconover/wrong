@@ -1,3 +1,11 @@
+== 0.6.4
+
+* `close_to?` also works on `Time`s, `Date`s, and `DateTime`s
+
+== 0.6.3 2012/11/14
+
+* fix gem dependency issue
+
 == 0.6.2 2012/03/20
 
 * fix bug under 1.9.3 (cannot load such file -- ParseTree)
