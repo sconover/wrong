@@ -253,23 +253,24 @@ Wrong is compatible with RSpec and MiniTest::Spec, and probably Cucumber too, so
 Here's an RSpec example:
 
 	require "wrong/adapters/rspec"
-	Wrong.config.alias_assert :expect_that
+	Wrong.config.alias_assert :expect, override: true
 
 	describe BleuCheese do
 	  it "stinks" do
-	    expect_that { BleuCheese.new.smell > 9000 }
+	    cheese = BleuCheese.new
+	    expect { cheese.smell > 9000 }
 	  end
 	end
 
 This makes your code read like a BDD-style DSL, without RSpec's "should" syntax (which is, let's face it, pretty weird the first few hundred times you have to use it). Compare
 
-    expect_that { BleuCheese.new.smell > 9000 }
+    expect { cheese.smell > 9000 }
 
  to
 
-    BleuCheese.new.smell.should > 9000
+    cheese.smell.should be > 9000
 
-and consider which one more clearly describes the desired behavior. The object under test doesn't really have a `should` method, so why should it magically get one during a test? And in what human language is "should greater than" a valid phrase?
+and consider which one more clearly describes the desired behavior. The object under test doesn't really have a `should` method, so why should it magically get one during a test?
 
 Warning: currently the use of `alias_assert :expect` is **not** compatible with RSpec, since RSpec also defines `expect` as a synonym for `lambda`. If you really want to use `expect` as an alias form `assert`, then use `Wrong.config.alias_assert :expect, :override => true`. See [issue #6](https://github.com/sconover/wrong/issues/6) for more details.
 
