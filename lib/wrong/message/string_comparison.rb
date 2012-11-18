@@ -2,7 +2,7 @@ require "wrong/failure_message"
 
 module Wrong
   class StringComparison
-    @@window = 64
+    @@window = [64, Terminal.width - 20].min
     @@prelude = 12
 
     def self.window

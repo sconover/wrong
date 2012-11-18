@@ -1,3 +1,6 @@
+require "wrong/chunk"
+require "wrong/terminal"
+
 module Wrong
   class FailureMessage
     @@formatters = []
@@ -124,7 +127,7 @@ module Wrong
     end
 
     # todo: use awesome_print
-    def pretty_value(value, starting_col = 0, indent_wrapped_lines = 6, width = Chunk.terminal_width)
+    def pretty_value(value, starting_col = 0, indent_wrapped_lines = 6, width = Terminal.width)
       # inspected = value.inspect
 
       # note that if the first line overflows due to the starting column then pp won't wrap it right

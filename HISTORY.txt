@@ -1,6 +1,8 @@
 == 0.6.4
 
 * `close_to?` also works on `Time`s, `Date`s, and `DateTime`s
+* tweak terminal width so exceptions wrap properly inside RSpec output
+* remove ParseTree and sourcify dependencies in favor of new ruby2ruby/ruby_parser
 
 == 0.6.3 2012/11/14
 

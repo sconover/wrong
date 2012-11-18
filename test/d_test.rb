@@ -24,7 +24,7 @@ describe "d" do
 
   it "pretty-prints the value" do
     begin
-      Wrong::Chunk.terminal_width = 20
+      Wrong::Terminal.width = 20
       x = ["a" * 10, "b" * 10]
       output = capturing do
         d { x }
@@ -33,7 +33,7 @@ describe "d" do
         "x is [\"aaaaaaaaaa\",\n \"bbbbbbbbbb\"]\n"
       }
     ensure
-      Wrong::Chunk.terminal_width = nil
+      Wrong::Terminal.width = nil
     end
   end
 

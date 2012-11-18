@@ -200,7 +200,7 @@ module Wrong
         end
 
         after do
-          Chunk.terminal_width = 80
+          Terminal.width = 80
         end
 
         it 'inspects its value' do
@@ -218,16 +218,16 @@ module Wrong
         end
 
         it "returns the terminal width" do
-          assert Chunk.terminal_width.is_a? Fixnum
-          assert Chunk.terminal_width > 0
+          assert Terminal.width.is_a? Fixnum
+          assert Terminal.width > 0
         end
 
         it "can fake the terminal width" do
-          Chunk.terminal_width = 66
-          assert Chunk.terminal_width == 66
+          Terminal.width = 66
+          assert Terminal.width == 66
         end
 
-        # def pretty_value(value, starting_col = 0, indent_wrapped_lines = 3, size = Chunk.terminal_size)
+        # def pretty_value(value, starting_col = 0, indent_wrapped_lines = 3, size = Terminal.size)
 
         it 'inserts newlines in really long values, wrapped at the given width' do
           abc = Weirdo.new("abcdefghijklmnopqrstuvwxyz")
@@ -240,7 +240,7 @@ uvwxyz
         end
 
         it 'inserts newlines in really long values, wrapped at the terminal width' do
-          Chunk.terminal_width = 10
+          Terminal.width = 10
           abc = Weirdo.new("abcdefghijklmnopqrstuvwxyz")
           pretty = message.pretty_value(abc, 0, 0)
           assert pretty == <<-DONE.chomp

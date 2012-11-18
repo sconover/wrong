@@ -1,4 +1,5 @@
 require "wrong"
+require "wrong/terminal"
 
 if Object.const_defined? :RSpec
   # RSpec 2
@@ -57,6 +58,9 @@ if Object.const_defined? :RSpec
      end
    end
  end
+
+  # tweak terminal width so exceptions wrap properly inside RSpec output
+  Wrong::Terminal.width -= 7
 
 elsif Object.const_defined? :Spec
   # RSpec 1
