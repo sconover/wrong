@@ -50,6 +50,10 @@ describe "advanced assert features" do
 
   it "can compare two hashes" do
     assert { {1=>2} == {1=>2} }
-    assert { {a:2} == {a:2} }
+    unless RUBY_VERSION < "1.9"
+      assert do
+        {a:2} == {a:2}
+      end
+    end
   end
 end

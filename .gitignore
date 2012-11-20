@@ -8,3 +8,6 @@ test/adapters/railsapp
 .DS_Store
 vendor/cache/
 
+vendor/cache
+test/adapters/rspec1/vendor/cache
+test/adapters/rspec2/vendor/cache

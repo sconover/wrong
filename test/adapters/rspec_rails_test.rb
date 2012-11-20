@@ -12,7 +12,7 @@ include Wrong
 # called rspec-rails-generate.sh -- if you dare
 
 
-if RUBY_VERSION == "1.9.2" # too many issues with other versions
+if RUBY_VERSION >= "1.9.2" # too many issues with other versions
 describe "testing rspec-rails" do
 
   [2].each do |rspec_version|

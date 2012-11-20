@@ -73,7 +73,6 @@ module Wrong
       while sexp.nil? && line_index + c < lines.size
         begin
           @chunk = lines[line_index..line_index+c].join("\n")
-
           capturing(:stderr) do  # new RubyParser is too loud
             sexp = @parser.parse(@chunk)
           end

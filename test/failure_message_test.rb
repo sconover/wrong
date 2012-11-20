@@ -1,5 +1,6 @@
 require "./test/test_helper"
 require "wrong/assert"
+require "wrong/chunk"
 require "wrong/failure_message"
 
 class BogusFormatter < Wrong::FailureMessage::Formatter
@@ -91,7 +92,7 @@ module Wrong
 
     describe "#details" do
       def details(&block)
-        @chunk = Chunk.from_block(block, 1)
+        @chunk = Wrong::Chunk.from_block(block, 1)
         message.details
       end
 
@@ -200,7 +201,7 @@ module Wrong
         end
 
         after do
-          Terminal.width = 80
+          Wrong::Terminal.width = 80
         end
 
         it 'inspects its value' do

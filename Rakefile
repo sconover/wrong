@@ -6,8 +6,8 @@ task :default => :test
 
 def separate
   Dir["./test/adapters/*_test.rb"] + [
-    "./test/message/test_context_test.rb",
-    "./test/assert_advanced_test.rb",
+      "./test/message/test_context_test.rb",
+      "./test/assert_advanced_test.rb",
   ]
 end
 
@@ -58,28 +58,35 @@ end
 # end
 
 namespace :rvm do
+  require 'rvm'
 
   # todo: use https://gist.github.com/674648 technique instead
-#  $: << ENV["HOME"] + "/.rvm/lib"
+  #  $: << ENV["HOME"] + "/.rvm/lib"
   require 'rvm'
 
   @rubies=['1.8.6',
            '1.8.7',
-           '1.9.1-p378',  # we can't use p429 or p431, see http://bugs.ruby-lang.org/issues/show/3584
+           '1.9.1-p378', # we can't use p429 or p431, see http://bugs.ruby-lang.org/issues/show/3584 and http://bugs.ruby-lang.org/issues/2404
            '1.9.2',
            '1.9.3',
            'jruby']
   @rubies_str = @rubies.join(', ')
 
   def rvm
-    rvm = `which rvm`.strip
-    raise 'rvm not available; go to http://rvm.beginrescueend.com' unless rvm
-    rvm
+    @rvm_path ||= begin
+      rvm = `which rvm`.strip
+      raise 'rvm not available; go to http://rvm.beginrescueend.com' unless rvm
+      rvm
+    end
   end
 
   def rvm_run(cmd, options = {})
     options = {:bundle_check => true}.merge(options)
     @rubies.each do |version|
+
+      available_versions = RVM.list_strings
+      version = available_versions.grep(/#{version}/).last
+
       puts "\n== Using #{version}"
       using = `#{rvm} #{version} exec true`
       if using =~ /not installed/
@@ -87,20 +94,18 @@ namespace :rvm do
       else
         if options[:bundle_check]
           Bundler.with_clean_env do
-            sys "#{rvm} #{version} exec bundle check"
+            prefix = "#{rvm} #{version} exec"
+            sys "#{prefix} bundle check"
             if $?.exitstatus != 0
-              puts "try rake rvm:install_bundler or rake rvm:install_gems"
+              sys("#{prefix} bundle install")
+              sys("#{prefix} bundle install --gemfile=#{File.dirname __FILE__}/test/adapters/rspec1/Gemfile")
+              sys("#{prefix} bundle install --gemfile=#{File.dirname __FILE__}/test/adapters/rspec2/Gemfile")
             end
           end
         end
 
         Bundler.with_clean_env do
           sys "#{rvm} #{version} exec #{cmd}"
-          if $?.exitstatus == 7
-            puts "try rake rvm:install_gems"
-          elsif $?.exitstatus == 1
-            # uh...
-          end
         end
       end
     end
@@ -119,13 +124,6 @@ namespace :rvm do
   desc "run 'gem install bundler' with rvm in each of #{@rubies_str}"
   task :install_bundler do
     rvm_run("gem install bundler", :bundle_check => false)
-  end
-
-  desc "run 'bundle install' with rvm in each of #{@rubies_str}"
-  task :install_gems do
-    rvm_run("bundle install", :bundle_check => false)
-    rvm_run("bundle install --gemfile=#{File.dirname __FILE__}/test/adapters/rspec1/Gemfile", :bundle_check => false)
-    rvm_run("bundle install --gemfile=#{File.dirname __FILE__}/test/adapters/rspec2/Gemfile", :bundle_check => false)
   end
 end
 

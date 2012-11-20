@@ -1,6 +1,6 @@
 source :rubygems
 
-gemspec name: "wrong"
+gemspec :name => "wrong"
 
 group :development, :test do
   gem "rvm"
