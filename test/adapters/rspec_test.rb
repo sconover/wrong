@@ -20,7 +20,7 @@ describe "testing rspec" do
         clear_bundler_env
         FileUtils.rm "#{dir}/Gemfile.lock", :force => true
 
-        sys "bundle check", nil do |output|
+        sys "bundle check", :ignore do |output|
           unless output == "The Gemfile's dependencies are satisfied\n"
             sys "bundle install --gemfile=#{dir}/Gemfile --local"
           end
@@ -35,7 +35,7 @@ describe "testing rspec" do
 
         Bundler.with_clean_env do
           # RSpec v1 exits with 0 on failure :-( (as do older rubies)
-          expected_status = (rspec_version == 1 || RUBY_VERSION =~ /^1\.8\./ || RUBY_VERSION == '1.9.1' ? nil : 1)
+          expected_status = (rspec_version == 1 || RUBY_VERSION =~ /^1\.8\./ || RUBY_VERSION == '1.9.1' ? :ignore : 1)
           spec_output = sys "ruby #{dir}/failing_spec.rb", expected_status
         end
       end

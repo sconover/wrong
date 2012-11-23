@@ -16,7 +16,7 @@ if RUBY_VERSION >= "1.9.2" # too many issues with other versions
 describe "testing rspec-rails" do
 
   [2].each do |rspec_version|
-    it "in version #{rspec_version}" do
+    it "in rspec version #{rspec_version}" do
       railsapp_dir = "#{here}/railsapp"
 
       unless File.exist?(railsapp_dir)
@@ -32,7 +32,7 @@ describe "testing rspec-rails" do
         FileUtils.rm "#{railsapp_dir}/Gemfile.lock", :force => true
 
         # todo: extract into common function
-        sys "bundle check" do |output|
+        sys "bundle check", :ignore do |output|
           unless output == "The Gemfile's dependencies are satisfied\n"
             sys "bundle install --gemfile=#{railsapp_dir}/Gemfile"
           end
@@ -47,7 +47,7 @@ describe "testing rspec-rails" do
         end
 
         spec_output = sys "rspec spec/wrong_spec.rb",
-                          (rspec_version == 1 || RUBY_VERSION =~ /^1\.8\./ || RUBY_VERSION == '1.9.1' ? nil : 1) # RSpec v1 exits with 0 on failure :-(
+                          (rspec_version == 1 || RUBY_VERSION =~ /^1\.8\./ || RUBY_VERSION == '1.9.1' ? :ignore : 1) # RSpec v1 exits with 0 on failure :-(
       end
 
       assert { spec_output.include? "1 example, 1 failure" }

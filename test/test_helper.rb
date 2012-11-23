@@ -37,8 +37,8 @@ def sys(cmd, expected_status = 0)
     # in Ruby 1.8, wait_thread is nil :-( so just pretend the process was successful (status 0)
     exit_status = (wait_thread.value.exitstatus if wait_thread) || 0
     output = stdout.read + stderr.read
-    unless expected_status.nil?
-      assert(cmd) { output and exit_status == expected_status }
+    unless expected_status == :ignore
+      assert(cmd) { cmd and output and exit_status == expected_status }
     end
     yield output if block_given?
     output
