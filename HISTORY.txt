@@ -1,4 +1,4 @@
-== 0.7.0
+== 0.7.0 2012/11/23
 
 * `close_to?` also works on `Time`s, `Date`s, and `DateTime`s
 * tweak terminal width so exceptions wrap properly inside RSpec output
