@@ -100,7 +100,13 @@ If you want to compare floats, try this:
 
 If you don't want `close_to?` cluttering up `Float` in your test runs then use `include Wrong::Assert` instead of `include Wrong`.
 
-`close_to?` also works on `Time`s, `Date`s, and `DateTime`s. (The default tolerance of 1 msec may be too small for you.)
+`close_to?` also works on `Time`s, `Date`s, and `DateTime`s. The default tolerance of 1 msec may be too small for you, so you might want to do something like:
+
+    assert { user.created_at.close_to?(Time.now, 2) }  # or 2.seconds
+
+`close_to?` also works inside RSpec should statements with the magic `be` matcher, e.g.
+
+    5.should be_close_to(6)
 
 ### d
 

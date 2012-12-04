@@ -33,7 +33,7 @@ module Wrong
   extend Wrong::Helpers
 end
 
-# This `require "wrong/close_to"` adds close_to? to Numeric.
+# This `require "wrong/close_to"` adds close_to? to Numeric, Date, Time, and DateTime.
 # If you don't like that, then
 # `require 'wrong/assert'` et al. individually and don't `require 'wrong/close_to'` or `require 'wrong'`
 require "wrong/close_to"
