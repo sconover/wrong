@@ -1,6 +1,8 @@
 ## "Feels so right, it can't be Wrong"
 
 ![Someone is Wrong on the Internet](http://imgs.xkcd.com/comics/duty_calls.png)
+ 
+Maintained by: Alex Chaffee <http://alexchaffee.com>
 
 ## Abstract ##
 
