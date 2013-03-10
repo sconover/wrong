@@ -1,4 +1,3 @@
-
 module Wrong
 
   def self.load_config
@@ -25,7 +24,7 @@ module Wrong
     end
 
     def self.read_here_or_higher(file, dir = ".")
-      File.read "#{dir}/#{file}"
+      File.read get_file_path(file, dir)
     rescue Errno::ENOENT, Errno::EACCES => e
       # we may be in a chdir underneath where the file is, so move up one level and try again
       parent = "#{dir}/..".gsub(/^(\.\/)*/, '')
@@ -33,6 +32,14 @@ module Wrong
         raise Errno::ENOENT, "couldn't find #{file}"
       end
       read_here_or_higher(file, parent)
+    end
+
+    def self.get_file_path(file, dir)
+      if File.file?(file)
+        file
+      else
+        "#{dir}/#{file}"
+      end
     end
 
     def initialize(string = nil)

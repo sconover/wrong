@@ -19,6 +19,20 @@ describe Chunk do
     end
   end
 
+  describe "#read_source_file" do
+    it "handles absolute file paths" do
+      chunk = Wrong::Chunk.new(nil, 0)
+      f = File.new "abs_file_path_test_file.tmp", "w"
+      abs_path = File.absolute_path(f.path)
+      assert(chunk.read_source_file(abs_path).is_a? String)
+    end
+    it "handles relative file paths" do
+      chunk = Wrong::Chunk.new(nil, 0)
+      rel_path = './chunk_test.rb'
+      assert(chunk.read_source_file(rel_path).is_a? String)
+    end
+  end
+
   describe "line numbers" do
     before do
       @chunk = Wrong::Chunk.new("foo.rb", 10)
