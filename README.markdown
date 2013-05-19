@@ -1,7 +1,7 @@
 ## "Feels so right, it can't be Wrong"
 
 ![Someone is Wrong on the Internet](http://imgs.xkcd.com/comics/duty_calls.png)
- 
+
 Maintained by: Alex Chaffee <http://alexchaffee.com>
 
 ## Abstract ##
@@ -302,6 +302,8 @@ Before you get your knickers in a twist about how this is totally unacceptable b
   * Passing a proc around and eventually calling assert on it might not work in some Ruby implementations.
 * Beware of Side Effects! (See discussion elsewhere in this document.)
 * "Doesn't all this parsing slow down my test run"?  No - this applies to failure cases only. If the assert block returns true then Wrong simply moves on.
+
+FYI, the [method_source gem](https://github.com/banister/method_source) uses a similar algorithm (keep grabbing lines of source code and [try to parse them](https://github.com/banister/method_source/blob/master/lib/method_source/code_helpers.rb#L66) until you stop getting parse errors).
 
 ## Explanations ##
 
