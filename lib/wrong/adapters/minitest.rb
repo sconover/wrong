@@ -10,8 +10,8 @@ class MiniTest::Unit::TestCase
   end
 
   if MiniTest::VERSION >= "5.0.6"
-    alias :_assertions :assertions
-    alias :"_assertions=" :"assertions="
+    alias_method :_assertions, :assertions
+    alias_method :"_assertions=", :"assertions="
   end
 
   def aver(valence, explanation = nil, depth = 0)
