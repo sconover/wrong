@@ -24,7 +24,6 @@ module Wrong
       message << right_str + "\n"
       message << diff_str + "\n"
       message
-
     end
 
     def compute_and_format(left, right)

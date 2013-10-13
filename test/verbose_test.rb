@@ -7,10 +7,10 @@ require "wrong/d"
 require "wrong/rainbow"
 
 describe "verbose assert" do
-  
+
   include Wrong::Helpers
   include Wrong::D
-  
+
   before do
     @m = Module.new do
       extend Wrong::Assert
@@ -18,7 +18,7 @@ describe "verbose assert" do
     Wrong.config.verbose
     @color_enabled = Sickill::Rainbow.enabled
   end
-  
+
   after do
     Wrong.config[:verbose] = nil
     Wrong.config[:color] = nil
@@ -28,7 +28,7 @@ describe "verbose assert" do
   it "sets the verbose flag" do
     assert Wrong.config[:verbose]
   end
-  
+
   it "prints the contents of a successful assert" do
     out = capturing {
       @m.assert { 2 + 2 == 4 }
@@ -42,7 +42,7 @@ describe "verbose assert" do
     }
     assert_equal "basic math: ((2 + 2) == 4)\n", out
   end
-  
+
   it "prints in color" do
     Wrong.config.color
     Sickill::Rainbow.enabled = true
