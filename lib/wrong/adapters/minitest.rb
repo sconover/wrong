@@ -13,5 +13,5 @@ class MiniTest::Unit::TestCase
     self._assertions += 1 # increment minitest's assert count
     super(valence, explanation, depth + 1) # apparently this passes along the default block
   end
-  
+
 end

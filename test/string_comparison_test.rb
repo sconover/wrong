@@ -6,7 +6,7 @@ module Wrong
 describe StringComparison do
 
   StringComparison = Wrong::StringComparison # so Ruby 1.9.1 can find it
-  
+
   before do
     # crank the window and prelude down for these tests
     @old_window = StringComparison.window

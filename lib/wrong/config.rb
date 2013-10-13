@@ -1,4 +1,3 @@
-
 module Wrong
 
   def self.load_config
