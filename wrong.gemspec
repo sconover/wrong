@@ -27,6 +27,6 @@ helper methods, like rescuing, capturing, and d.
   s.add_dependency "ruby_parser", ">= 3.0.1"
   s.add_dependency "ruby2ruby", ">= 2.0.1"
   s.add_dependency "sexp_processor", ">= 4.0"
-  s.add_dependency "diff-lcs", "~> 1.2.0"
+  s.add_dependency "diff-lcs", "~> 1.2.5"
 
 end

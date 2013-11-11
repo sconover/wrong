@@ -1,3 +1,7 @@
+== 0.7.1 2013/11/11
+
+* Bump diff-lcs version in gemspec for Cucumber compatibility
+
 == 0.7.0 2012/11/23
 
 * `close_to?` also works on `Time`s, `Date`s, and `DateTime`s
