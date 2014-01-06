@@ -6,7 +6,20 @@ if Object.const_defined? :RSpec
 
   if RSpec.const_defined? :Rails
     require 'rails/version'
-    if Rails::VERSION::MAJOR == 3
+    case Rails::VERSION::STRING
+    when /^4\.1/
+      # RSpec 2 plus Rails 4.1
+      module RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+        def define_assertion_delegators_with_removed
+          define_assertion_delegators_without_removed
+          class_eval do
+            remove_method :assert
+          end
+        end
+        alias_method_chain :define_assertion_delegators, :removed
+      end
+
+    when /^4\.0/, /^3\./
       # RSpec 2 plus Rails 3
       module RSpec::Rails::TestUnitAssertionAdapter
         included do
