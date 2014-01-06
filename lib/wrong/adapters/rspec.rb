@@ -29,6 +29,8 @@ if Object.const_defined? :RSpec
           end
         end
       end
+    else
+      raise "Wrong's RSpec adapter can't be applied to your Rails version #{Rails::VERSION::STRING}"
     end
   end
 
