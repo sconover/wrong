@@ -52,7 +52,7 @@ module Wrong
     end
 
     def chunk(s)
-      prefix, middle, suffix = "...", "", "..."
+      prefix, suffix = "...", "..."
 
       start = different_at - @@prelude
       if start < 0
