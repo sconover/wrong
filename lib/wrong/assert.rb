@@ -26,7 +26,7 @@ module Wrong
       if block.nil?
         begin
           super(*args) # if there's a framework assert method (sans block), then call it
-        rescue NoMethodError => e
+        rescue NoMethodError
           # note: we're not raising an AssertionFailedError because this is a programmer error, not a failed assertion
           raise "You must pass a block to Wrong's assert and deny methods"
         end

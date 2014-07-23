@@ -76,7 +76,7 @@ module Wrong
           capturing(:stderr) do  # new RubyParser is too loud
             sexp = @parser.parse(@chunk)
           end
-        rescue Racc::ParseError => e
+        rescue Racc::ParseError
           # loop and try again
           c += 1
         end
