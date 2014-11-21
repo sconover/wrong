@@ -4,7 +4,7 @@ module Wrong
   def self.load_config
     settings = begin
       Config.read_here_or_higher(".wrong")
-    rescue Errno::ENOENT => e
+    rescue Errno::ENOENT
       # couldn't find it
       nil # In Ruby 1.8, "e" would be returned here otherwise
     end
@@ -26,7 +26,7 @@ module Wrong
 
     def self.read_here_or_higher(file, dir = ".")
       File.read "#{dir}/#{file}"
-    rescue Errno::ENOENT, Errno::EACCES => e
+    rescue Errno::ENOENT, Errno::EACCES
       # we may be in a chdir underneath where the file is, so move up one level and try again
       parent = "#{dir}/..".gsub(/^(\.\/)*/, '')
       if File.expand_path(dir) == File.expand_path(parent)

@@ -76,7 +76,6 @@ module Wrong
     def details
       @details ||= begin
         require "wrong/rainbow" if Wrong.config[:color]
-        s = ""
         parts = chunk.parts
 
         parts.shift while parts.first == "()" # the parser adds this sometimes
