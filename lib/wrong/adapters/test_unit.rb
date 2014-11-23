@@ -13,7 +13,7 @@ Make sure to use Bundler or Rubygems to load the test-unit gem. For example:
 end
 
 if Test::Unit.const_defined? :TEST_UNIT_IMPLEMENTATION
-  wrong_adapter_failure "You are using MiniTest's compatibility layer, not the real Test::Unit."
+  $stderr.puts "You are using MiniTest's compatibility layer, not the real Test::Unit."
 end
 
 begin
@@ -24,6 +24,7 @@ begin
   require 'test/unit/failure'
   Test::Unit::TestResultFailureSupport # this class is only in 2.x, to catch mixups between 1.8's lib and gem versions
 rescue Exception => e
+  p e
   wrong_adapter_failure "You are using an outdated version of Test::Unit."
 end
 

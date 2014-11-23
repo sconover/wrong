@@ -5,10 +5,11 @@ Bundler.setup
 task :default => :test
 
 def separate
-  Dir["./test/adapters/*_test.rb"] + [
+  Dir["./test/adapters/*_test.rb"] +
+    [
       "./test/message/test_context_test.rb",
       "./test/assert_advanced_test.rb",
-  ]
+    ]
 end
 
 def sys cmd
@@ -20,16 +21,23 @@ end
 
 desc 'run all tests (in current ruby)'
 task :test do
-  all_passed = separate.collect do |test_file|
+  return_values = separate.collect do |test_file|
     puts "\n>> Separately running #{test_file} under #{ENV['RUBY_VERSION']}..."
-    Bundler.with_clean_env do
-      sys("ruby #{test_file}")
-    end
-  end.uniq == [true]
-  if !all_passed
-    at_exit { exit false }
+    sys("ruby #{test_file}")
   end
 
+  return_values += [
+    {"./test/adapters/minitest_test.rb" => "./Gemfile-minitest1"},
+    {"./test/adapters/minitest_test.rb" => "./Gemfile-minitest5"},
+    {"./test/adapters/test_unit_test.rb" => "./Gemfile-testunit"},
+  ].collect do |pair|
+    test_file = pair.keys.first
+    gemfile = pair.values.first
+    puts "\n>> Separately running #{test_file} under #{gemfile} and #{ENV['RUBY_VERSION']}..."
+    sys("BUNDLE_GEMFILE=#{gemfile} bundle exec ruby #{test_file}")
+  end
+  all_passed = return_values.uniq == [true]
+  at_exit { exit false } unless all_passed
   Rake::Task[:test_most].invoke
 end
 
@@ -69,13 +77,15 @@ namespace :rvm do
            '1.9.1-p378', # we can't use p429 or p431, see http://bugs.ruby-lang.org/issues/show/3584 and http://bugs.ruby-lang.org/issues/2404
            '1.9.2',
            '1.9.3',
+           '2.0.0',
+           '2.1.4',
            'jruby']
   @rubies_str = @rubies.join(', ')
 
   def rvm
     @rvm_path ||= begin
       rvm = `which rvm`.strip
-      raise 'rvm not available; go to http://rvm.beginrescueend.com' unless rvm
+      raise 'rvm not available; go to http://rvm.io' unless rvm
       rvm
     end
   end
@@ -115,6 +125,8 @@ namespace :rvm do
   task :test do
     rvm_run "bundle exec rake test"
     rvm_run "ruby ./test/suite.rb"
+    rvm_run ""
+
     # todo: fail if any test failed
     # todo: figure out a way to run suite with jruby --1.9 (it's harder than you'd think)
   end

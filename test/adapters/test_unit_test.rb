@@ -1,10 +1,8 @@
 here = File.dirname(__FILE__)
 $LOAD_PATH.unshift "#{here}/../../lib"
 
-gem "test-unit"
-require "test/unit"
-require "test/unit/autorunner"
-
+gem 'test-unit'
+require 'test/unit'
 require "wrong/adapters/test_unit"
 
 # get rid of atrocious Test::Unit color scheme (gray on green = puke)

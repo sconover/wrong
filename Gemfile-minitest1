@@ -6,7 +6,7 @@ group :development, :test do
   gem "rvm"
   gem "bundler"
   gem "rake"
-  gem "minitest", "~> 1.7.2"  # built in to ruby distro
+  gem "minitest", "~> 5.0"
 end
 
 platforms :jruby do

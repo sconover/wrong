@@ -1,3 +1,5 @@
+require 'date'
+
 module Wrong
   module CloseTo
     def close_to?(other, tolerance = 0.001)
@@ -8,7 +10,7 @@ module Wrong
       end
     end
   end
-  Numeric.send :include, CloseTo
-  Date.send :include, CloseTo
-  Time.send :include, CloseTo
+  ::Numeric.send :include, CloseTo
+  ::Date.send :include, CloseTo
+  ::Time.send :include, CloseTo
 end

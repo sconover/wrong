@@ -84,4 +84,5 @@ class Color
   end
 end
 
-MiniTest::Unit.autorun
+require 'wrong/adapters/minitest'
+Wrong::MiniTestAdapter.minitest_autorun
