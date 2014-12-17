@@ -50,6 +50,11 @@ module Wrong::MiniTestAdapter
     MiniTest::Assertion
   end
 
+  if MiniTest::VERSION >= "5.0.6"
+    alias_method :_assertions, :assertions
+    alias_method :"_assertions=", :"assertions="
+  end
+
   def aver(valence, explanation = nil, depth = 0)
     minitest_increment_assertions
     super(valence, explanation, depth + 1) # apparently this passes along the default block
