@@ -188,7 +188,9 @@ module Wrong
         while line.length > width
           s << line[0...width]
           s << newline(indent_wrapped_lines)
+          old_length = line.length
           line = line[width..-1]
+          return indented unless line.length < old_length
           if first_line
             width += starting_col - indent_wrapped_lines
             first_line = false
