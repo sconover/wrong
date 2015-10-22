@@ -7,8 +7,8 @@ if Object.const_defined? :RSpec
   if RSpec.const_defined? :Rails
     require 'rails/version'
     case Rails::VERSION::STRING
-    when /^4\.1/
-      # RSpec 2 plus Rails 4.1
+    when /^4\.[12]/
+      # RSpec 2 plus Rails 4.1/4.2
       module RSpec::Rails::MinitestAssertionAdapter::ClassMethods
         def define_assertion_delegators_with_removed
           define_assertion_delegators_without_removed
